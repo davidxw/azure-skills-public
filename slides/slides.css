@@ -1,0 +1,471 @@
+/* =============================================
+   Corporate Tech Slide Theme for reveal.js
+   ============================================= */
+
+:root {
+  --bg-primary: #0d1321;
+  --bg-card: rgba(255, 255, 255, 0.04);
+  --bg-card-border: rgba(255, 255, 255, 0.08);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --accent-blue: #4a9eff;
+  --accent-cyan: #5ce0d8;
+  --accent-lavender: #b8a9f5;
+  --accent-pink: #d4a5e5;
+  --gradient-title: linear-gradient(90deg, #5ce0d8, #7eb8f7, #b8a9f5, #d4a5e5);
+  --text-scale: 1.5;  /* Master text scale: 1 = default, 0.75 = 25% smaller, 1.25 = 25% larger */
+
+  /* Font size tiers — all scale with --text-scale via the .reveal base font-size */
+  --fs-xs: 0.6em;    /* fine print: stat descriptions, card text, table body */
+  --fs-s:  0.85em;   /* body: list items, subtitles, code, table headers */
+  --fs-m:  1.1em;    /* labels: h3, stat labels */
+  --fs-l:  2.0em;    /* display: h2, card icons */
+  --fs-xl: 3.0em;    /* hero: h1, stat numbers */
+}
+
+/* --- Base --- */
+.reveal {
+  background: var(--bg-primary);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: calc(var(--text-scale) * 100%);
+}
+
+.reveal .slides section {
+  padding: 48px 60px;
+  box-sizing: border-box;
+  height: 100%;
+  display: flex !important;
+  flex-direction: column;
+
+  overflow: hidden;
+}
+
+/* --- Section Divider Slides --- */
+.reveal .slides section[data-background-color] {
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* --- Headings --- */
+.reveal h1,
+.reveal h2 {
+  text-transform: none;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-align: left;
+}
+
+.reveal h1 {
+  font-size: var(--fs-xl);
+  background: var(--gradient-title);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.reveal h2 {
+  font-size: var(--fs-l);
+  background: var(--gradient-title);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.reveal h3 {
+  color: var(--accent-blue);
+  text-transform: none;
+  font-weight: 600;
+  font-size: var(--fs-m);
+  text-align: left
+}
+
+/* --- Body Text --- */
+.reveal p,
+.reveal li {
+  color: var(--text-primary);
+  font-weight: 400;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.reveal .subtitle {
+  color: var(--text-secondary);
+  font-size: var(--fs-s);
+  text-align: left;
+}
+
+/* --- Stat Blocks --- */
+.stats-row {
+  display: flex;
+  justify-content: center;
+  gap: 2em;
+  margin-top: 1em;
+  flex-shrink: 1;
+}
+
+.stat-block {
+  text-align: center;
+  flex: 1;
+  max-width: 280px;
+}
+
+.stat-number {
+  font-size: var(--fs-xl);
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.1;
+  margin-bottom: 0.1em;
+}
+
+.stat-label {
+  font-size: var(--fs-m);
+  font-weight: 700;
+  color: var(--accent-blue);
+  margin-bottom: 0.3em;
+}
+
+.stat-desc {
+  font-size: var(--fs-xs);
+  color: var(--text-secondary);
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+/* --- Card Grid --- */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1em;
+  margin-top: 1em;
+}
+
+.card-grid.cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.card-grid.cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--bg-card-border);
+  border-radius: 12px;
+  padding: 0.9em 0.8em;
+  text-align: center;
+}
+
+.card .card-icon {
+  font-size: var(--fs-l);
+  margin-bottom: 0.3em;
+  display: block;
+}
+
+.card .card-text {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+/* --- Two-Column Layout --- */
+.two-columns {
+  display: flex;
+  gap: 2em;
+  flex-shrink: 1;
+}
+
+.two-columns > * {
+  flex: 1;
+}
+
+/* --- Three-Column Layout --- */
+.three-columns {
+  display: flex;
+  gap: 2em;
+  flex-shrink: 1;
+}
+
+.three-columns > * {
+  flex: 1;
+}
+
+/* --- Lists --- */
+.reveal ul,
+.reveal ol {
+  text-align: left;
+}
+
+.reveal ul li,
+.reveal ol li {
+  margin-bottom: 0.4em;
+  font-size: var(--fs-s);
+}
+
+/* --- Accent Utilities --- */
+.text-blue { color: var(--accent-blue); }
+.text-cyan { color: var(--accent-cyan); }
+.text-pink { color: var(--accent-pink); }
+.text-lavender { color: var(--accent-lavender); }
+.text-secondary { color: var(--text-secondary); }
+.text-gradient {
+  background: var(--gradient-title);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* --- Highlight Box --- */
+.highlight-box {
+  background: var(--bg-card);
+  border: 1px solid var(--bg-card-border);
+  border-radius: 12px;
+  padding: 1.2em;
+  margin: 0.8em 0;
+  flex-shrink: 1;
+}
+
+/* --- Code Blocks --- */
+.reveal pre {
+  border-radius: 12px;
+  box-shadow: none;
+}
+
+.reveal pre code {
+  font-size: var(--fs-m);
+  line-height: 1.5;
+  border-radius: 12px;
+}
+
+/* --- Tables --- */
+.reveal table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 0.8em;
+  font-size: var(--fs-xs);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--bg-card-border);
+}
+
+.reveal table thead th {
+  background: rgba(74, 158, 255, 0.12);
+  color: var(--accent-blue);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: var(--fs-s);
+  letter-spacing: 0.04em;
+  padding: 0.7em 0.8em;
+  text-align: left;
+  border-bottom: 1px solid var(--bg-card-border);
+}
+
+.reveal table tbody td {
+  padding: 0.55em 0.8em;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--bg-card-border);
+  font-weight: 400;
+}
+
+.reveal table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.reveal table tbody tr:nth-child(even) {
+  background: var(--bg-card);
+}
+
+.reveal table tbody tr:hover {
+  background: rgba(74, 158, 255, 0.06);
+}
+
+.reveal table .status-done {
+  color: #5ce0d8;
+  font-weight: 700;
+}
+
+.reveal table .status-progress {
+  color: #f5c542;
+  font-weight: 700;
+}
+
+.reveal table .status-scheduled {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.reveal table .text-right {
+  text-align: right;
+}
+
+/* --- Card Grid (compact for dense slides) --- */
+.card-grid.compact .card {
+  padding: 0.6em 0.5em;
+}
+
+.card-grid.compact .card-icon {
+  font-size: var(--fs-m);
+  margin-bottom: 0.2em;
+}
+
+.card-grid.compact .card-text {
+  font-size: var(--fs-xs);
+}
+
+/* --- Feature List (service overview slides) --- */
+.feature-list {
+  text-align: left;
+}
+
+.feature-list .feature-title {
+  margin-bottom: 0.2em;
+  font-weight: 700;
+}
+
+.feature-list .feature-desc {
+  font-size: var(--fs-xs);
+  color: var(--text-secondary);
+  margin-top: 0;
+  line-height: 1.3;
+}
+
+.feature-list .feature-img {
+  border-radius: 12px;
+  max-height: 400px;
+}
+
+.reveal h2.service-heading {
+  background: none;
+  -webkit-text-fill-color: currentColor;
+}
+
+/* --- Title Hero (split image / text) --- */
+.reveal .slides section.title-hero {
+  padding: 0;
+}
+
+.title-hero .hero-layout {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+}
+
+.title-hero .hero-text {
+  flex: 0 0 45%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 48px 60px;
+  box-sizing: border-box;
+}
+
+.title-hero .hero-logo {
+  position: absolute;
+  top: 36px;
+  left: 48px;
+  height: 2em;
+}
+
+.title-hero h1,
+.title-hero h2 {
+  margin-bottom: 0.5em;
+  background: none;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: var(--accent-blue);
+  background-clip: unset;
+  color: var(--accent-blue);
+}
+
+.title-hero .hero-author {
+  color: var(--text-primary);
+  font-size: var(--fs-xs);
+  font-weight: 400;
+  line-height: 1.8;
+  margin: 0;
+  text-align: left;
+}
+
+.title-hero .hero-image {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+}
+
+.title-hero .hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* --- Text with Full Bleed Image --- */
+.reveal .slides section.text-image-bleed {
+  padding-right: 0;
+}
+
+.text-image-bleed .bleed-content {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.text-image-bleed .text-side {
+  flex: 0 0 33%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-right: 2em;
+  text-align: left;
+}
+
+.text-image-bleed .image-side {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+}
+
+.text-image-bleed .image-side img {
+  height: 100%;
+  width: auto;
+  max-width: none;
+  object-fit: cover;
+  object-position: left top;
+}
+
+/* --- Text with Image (fit to width) --- */
+
+
+.text-image .image-content {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.text-image .text-side {
+  flex: 0 0 33%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-right: 2em;
+  text-align: left;
+}
+
+.text-image .image-side {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+}
+
+.text-image .image-side img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  object-position: left top;
+}

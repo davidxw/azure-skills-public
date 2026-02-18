@@ -1,0 +1,1521 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Azure DevOps Pipelines</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/theme/black.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/highlight/monokai.css" />
+    <link rel="stylesheet" href="slides.css" />
+    <link rel="icon" type="image/svg+xml" href="https://revealjs.com/images/favicon.svg" />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+
+        <!-- ============================================= -->
+        <!-- TITLE SLIDE -->
+        <!-- ============================================= -->
+        <section class="title-hero">
+          <div class="hero-layout">
+            <div class="hero-text">
+              <svg class="hero-logo" viewBox="0 0 337 73" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="33" height="33" fill="#f25022"/><rect x="36" y="1" width="33" height="33" fill="#7fba00"/><rect x="1" y="36" width="33" height="33" fill="#00a4ef"/><rect x="36" y="36" width="33" height="33" fill="#ffb900"/><text x="82" y="50" fill="#ffffff" font-family="Segoe UI,sans-serif" font-size="34" font-weight="600">Microsoft</text></svg>
+              <h2>Azure DevOps and Automation</h2>
+              <p class="hero-author">David Watson<br>Cloud Solution Architect</p>
+            </div>
+            <div class="hero-image">
+              <img src="images/title.png" alt="Title">
+            </div>
+          </div>
+          <aside class="notes">
+            Welcome everyone. Today we're doing a 2-hour deep dive into Azure DevOps YAML Pipelines.
+            We will focus exclusively on YAML pipelines — not the classic UI-based editor.
+            By the end you'll be able to author, structure, and manage production-grade CI/CD pipelines.
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- AGENDA -->
+        <!-- ============================================= -->
+        <section>
+          <h2>Agenda</h2>
+          <div class="three-columns">
+            <div>
+              <h3>Intro to Azure DevOps</h3>
+              <ul>
+                <li>What is Azure DevOps?</li>
+                <li>Core Services Overview</li>
+                <li>Repos, Boards &amp; Pipelines</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Pipeline Fundamentals</h3>
+              <ul>
+                <li>Azure Pipelines</li>
+                <li>Pipeline Structure</li>
+                <li>Stages, Jobs &amp; Steps</li>
+                <li>Tasks &amp; Scripts</li>
+                <li>Triggers</li>
+                <li>Variables &amp; Expressions</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Advanced Topics</h3>
+              <ul>
+                <li>Agents &amp; Agent Pools</li>
+                <li>Service Connections &amp; Artifacts</li>
+                <li>Environments &amp; Approvals</li>
+                <li>Templates</li>
+                <li>Best Practices</li>
+              </ul>
+            </div>
+          </div>
+          <aside class="notes">
+            Here's our roadmap for the session.
+            Part 1 introduces Azure DevOps as a platform — what it is and the core services it provides.
+            Part 2 covers the fundamental building blocks of YAML pipelines — structure, triggers, and variables.
+            Part 3 goes deeper into agents, approvals, templates, and best practices.
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- PART 1: INTRO TO AZURE DEVOPS -->
+        <!-- ============================================= -->
+        <section data-background-color="#1b2a4a">
+          <h1>Introduction to Azure DevOps</h1>
+        </section>
+
+        <section>
+          <h2>Azure DevOps</h2>
+          <div class="card-grid cols-3" style="margin-top: 0.8em;">
+            <div class="card" style="text-align: left; padding: 0.8em;">
+              <div style="margin-bottom: 0.4em;">
+                <img src="images/boards.png" alt="Azure Boards" style="height: 2.2em; vertical-align: middle;" />
+              </div>
+              <div class="card-text" style="text-align: left;"><span style="color: #00897B; font-weight: 700;">Azure Boards</span></div>
+              <div style="font-size: var(--fs-xs); color: var(--text-secondary); line-height: 1.4; margin-top: 0.3em; text-align: left;">Agile tools to plan, track, and discuss work across your teams</div>
+            </div>
+            <div class="card" style="text-align: left; padding: 0.8em;">
+              <div style="margin-bottom: 0.4em;">
+                <img src="images/pipelines.png" alt="Azure Pipelines" style="height: 2.2em; vertical-align: middle;" />
+              </div>
+              <div class="card-text" style="text-align: left;"><span style="color: #1976D2; font-weight: 700;">Azure Pipelines</span></div>
+              <div style="font-size: var(--fs-xs); color: var(--text-secondary); line-height: 1.4; margin-top: 0.3em; text-align: left;">Build, test, and deploy with CI/CD for any language, platform, and cloud</div>
+            </div>
+            <div class="card" style="text-align: left; padding: 0.8em;">
+              <div style="margin-bottom: 0.4em;">
+                <img src="images/repos.png" alt="Azure Repos" style="height: 2.2em; vertical-align: middle;" />
+              </div>
+              <div class="card-text" style="text-align: left;"><span style="color: #E65100; font-weight: 700;">Azure Repos</span></div>
+              <div style="font-size: var(--fs-xs); color: var(--text-secondary); line-height: 1.4; margin-top: 0.3em; text-align: left;">Unlimited cloud-hosted Git repos with pull requests and advanced file management</div>
+            </div>
+            <div class="card" style="text-align: left; padding: 0.8em;">
+              <div style="margin-bottom: 0.4em;">
+                <img src="images/testplans.png" alt="Azure Test Plans" style="height: 2.2em; vertical-align: middle;" />
+              </div>
+              <div class="card-text" style="text-align: left;"><span style="color: #8E24AA; font-weight: 700;">Azure Test Plans</span></div>
+              <div style="font-size: var(--fs-xs); color: var(--text-secondary); line-height: 1.4; margin-top: 0.3em; text-align: left;">Manual and exploratory testing tools to ship with confidence</div>
+            </div>
+            <div class="card" style="text-align: left; padding: 0.8em;">
+              <div style="margin-bottom: 0.4em;">
+                <img src="images/artifacts.png" alt="Azure Artifacts" style="height: 2.2em; vertical-align: middle;" />
+              </div>
+              <div class="card-text" style="text-align: left;"><span style="color: #C62828; font-weight: 700;">Azure Artifacts</span></div>
+              <div style="font-size: var(--fs-xs); color: var(--text-secondary); line-height: 1.4; margin-top: 0.3em; text-align: left;">Create, host, and share packages with your team and CI/CD pipelines</div>
+            </div>
+          </div>
+          <aside class="notes">
+            Azure DevOps is a suite of development services covering the full DevOps lifecycle.
+            Azure Boards provides agile planning with Kanban boards, backlogs, and sprints.
+            Azure Pipelines is the CI/CD engine — this is what we'll deep dive into today.
+            Azure Repos provides Git-based source control with pull requests.
+            Azure Test Plans provides manual and exploratory testing tools.
+            Azure Artifacts hosts packages like NuGet, npm, Maven, and Python.
+            All five services integrate seamlessly with each other.
+          </aside>
+        </section>
+
+        <section class="text-image-bleed">
+          <h2 class="service-heading" style="color: #00897B;">Azure Boards</h2>
+          <div class="bleed-content">
+            <div class="text-side">
+              <p class="subtitle" style="text-align:left;">Track work with Kanban boards, backlogs, team dashboards, and custom reporting</p>
+              <div class="feature-list">
+                <p class="feature-title">Connected from idea to release</p>
+                <p class="feature-desc">Track ideas at every stage with code changes linked to work items</p>
+                <p class="feature-title">Scrum ready</p>
+                <p class="feature-desc">Built-in scrum boards and planning tools for sprints, stand-ups, and planning</p>
+                <p class="feature-title">Project insights</p>
+                <p class="feature-desc">Analytics tools and dashboard widgets for project health and status</p>
+              </div>
+            </div>
+            <div class="image-side">
+              <img src="images/boards-screenshot.png" alt="Azure Boards Kanban board screenshot" />
+            </div>
+          </div>
+          <aside class="notes">
+            Azure Boards provides a rich set of agile tools. Kanban boards give you a visual workflow,
+            backlogs help you plan sprints, and work items link directly to code changes in repos and
+            builds in pipelines. The analytics and dashboard widgets give leadership visibility into
+            project progress without needing to dig into the details.
+          </aside>
+        </section>
+
+        <section class="text-image-bleed">
+          <h2 class="service-heading" style="color: #E65100;">Azure Repos</h2>
+          <div class="bleed-content">
+            <div class="text-side">
+              <p class="subtitle" style="text-align:left;">Unlimited private Git repo hosting and TFVC support from hobby projects to the world's largest repositories</p>
+              <div class="feature-list">
+                <p class="feature-title">Works with your Git client</p>
+                <p class="feature-desc">Securely connect and push code from any IDE, editor, or Git client</p>
+                <p class="feature-title">Web hooks and API integration</p>
+                <p class="feature-desc">Add validations and extensions from the marketplace or build your own using web hooks and REST APIs</p>
+                <p class="feature-title">Semantic code search</p>
+                <p class="feature-desc">Quickly find what you're looking for with code-aware search that understands classes and variables</p>
+              </div>
+            </div>
+            <div class="image-side">
+              <img src="images/repos-screenshot.png" alt="Azure Repos pull requests screenshot" />
+            </div>
+          </div>
+          <aside class="notes">
+            Azure Repos provides unlimited private Git repositories. It works with any Git client
+            and supports branch policies, pull request reviews, and code search. TFVC is also
+            available for teams that need centralized version control. Web hooks and REST APIs
+            enable deep integration with your existing tools and workflows.
+          </aside>
+        </section>
+
+        <section class="text-image-bleed">
+          <h2 class="service-heading" style="color: #1976D2;">Azure Pipelines</h2>
+          <div class="bleed-content">
+            <div class="text-side">
+              <p class="subtitle" style="text-align:left;">Cloud-hosted pipelines for Linux, Windows and macOS, with unlimited minutes for open source</p>
+              <div class="feature-list">
+                <p class="feature-title">Any language, any platform, any cloud</p>
+                <p class="feature-desc">Build, test, and deploy Node.js, Python, Java, .NET, and more across Linux, macOS, and Windows</p>
+                <p class="feature-title">Extensible</p>
+                <p class="feature-desc">Community-built build, test, and deployment tasks plus hundreds of extensions from Slack to SonarCloud</p>
+                <p class="feature-title">Containers and Kubernetes</p>
+                <p class="feature-desc">Build and push images to container registries, deploy to individual hosts or Kubernetes</p>
+              </div>
+            </div>
+            <div class="image-side">
+              <img src="images/pipelines-screenshot.png" alt="Azure Pipelines build runs screenshot" />
+            </div>
+          </div>
+          <aside class="notes">
+            Azure Pipelines is the CI/CD engine of Azure DevOps. It supports any language and platform,
+            runs jobs in parallel on Linux, macOS, and Windows, and deploys to Azure, AWS, GCP, or
+            on-premises. It's best-in-class for open source with unlimited build minutes and up to
+            10 free parallel jobs. The extensibility model lets you add community tasks or write your own.
+          </aside>
+        </section>
+
+        <section class="text-image-bleed">
+          <h2 class="service-heading" style="color: #8E24AA;">Azure Test Plans</h2>
+          <div class="bleed-content">
+            <div class="text-side">
+              <p class="subtitle" style="text-align:left;">End-to-end traceability. Run tests, log defects, and track quality throughout your testing lifecycle</p>
+              <div class="feature-list">
+                <p class="feature-title">Capture rich data</p>
+                <p class="feature-desc">Capture scenario data as you test to make defects actionable. Create test cases from exploratory sessions</p>
+                <p class="feature-title">Test across web and desktop</p>
+                <p class="feature-desc">Complete scripted tests across desktop or web scenarios, on-premises or in the cloud</p>
+                <p class="feature-title">End-to-end traceability</p>
+                <p class="feature-desc">Leverage the same test tools across engineers and user acceptance testing stakeholders</p>
+              </div>
+            </div>
+            <div class="image-side">
+              <img src="images/testplans-screenshot.png" alt="Azure Test Plans dashboard screenshot" />
+            </div>
+          </div>
+          <aside class="notes">
+            Azure Test Plans provides manual and exploratory testing tools with full traceability
+            back to requirements and builds. You can capture rich data during test sessions,
+            run scripted tests across web and desktop, and get visibility into test coverage
+            and quality metrics through charts and dashboards.
+          </aside>
+        </section>
+
+        <section class="text-image-bleed">
+          <h2 class="service-heading" style="color: #C62828;">Azure Artifacts</h2>
+          <div class="bleed-content">
+            <div class="text-side">
+              <p class="subtitle" style="text-align:left;">Create and share Maven, npm, and NuGet package feeds — fully integrated into CI/CD pipelines</p>
+              <div class="feature-list">
+                <p class="feature-title">Manage all package types</p>
+                <p class="feature-desc">Universal artifact management for Maven, npm, and NuGet from public and private sources</p>
+                <p class="feature-title">Add packages to any pipeline</p>
+                <p class="feature-desc">Share packages with built-in CI/CD, versioning, and testing</p>
+                <p class="feature-title">Share code efficiently</p>
+                <p class="feature-desc">Easily share code across small teams and large enterprises</p>
+              </div>
+            </div>
+            <div class="image-side">
+              <img src="images/artifacts-screenshot.png" alt="Azure Artifacts feed screenshot" />
+            </div>
+          </div>
+          <aside class="notes">
+            Azure Artifacts provides package management for Maven, npm, NuGet, and Python packages.
+            You can create feeds from public and private sources, integrate them directly into your
+            CI/CD pipelines, and share packages across teams. It supports versioning, upstream sources,
+            and feed-level permissions for secure package distribution.
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- PART 2: Azure Pipelines -->
+        <!-- ============================================= -->
+        <section data-background-color="#1b2a4a">
+          <h1>Azure Pipelines</h1>
+        </section>
+
+        <section>
+          <h2>What are Azure Pipelines?</h2>
+          <ul>
+            <li class="fragment">Cloud-hosted CI/CD service in Azure DevOps</li>
+            <li class="fragment">Automates build, test, and deployment</li>
+            <li class="fragment">Works with any language, platform, or cloud</li>
+            <li class="fragment">Pipelines defined as <strong>code</strong> in YAML</li>
+            <li class="fragment">Version-controlled alongside your source</li>
+          </ul>
+          <aside class="notes">
+            Azure Pipelines is a fully managed CI/CD service. Unlike classic pipelines that use a GUI editor,
+            YAML pipelines are defined as code — meaning they live in your repo, go through code review,
+            and have full version history. This is the modern, recommended approach.
+          </aside>
+        </section>
+
+        <section>
+          <h2>CI vs CD Pipelines</h2>
+          <div class="two-columns">
+            <div>
+              <h3>Continuous Integration (CI)</h3>
+              <ul>
+                <li class="fragment">Triggered on every code change</li>
+                <li class="fragment">Compiles &amp; builds the application</li>
+                <li class="fragment">Runs automated tests</li>
+                <li class="fragment">Produces a versioned artifact</li>
+                <li class="fragment">For IaC projects: validates &amp; lints templates even without a traditional build</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Continuous Delivery (CD)</h3>
+              <ul>
+                <li class="fragment">Triggered after a successful CI build</li>
+                <li class="fragment">Deploys artifacts to target environments</li>
+                <li class="fragment">Promotes through stages (e.g. Dev → QA → Prod)</li>
+                <li class="fragment">May include approval gates</li>
+              </ul>
+            </div>
+          </div>
+          <aside class="notes">
+            Before we dive into Azure-specific features, let's clarify the two core pipeline concepts.
+            CI pipelines focus on integration — every time code is pushed, the pipeline builds the code,
+            runs tests, and produces a deployable artifact. The goal is fast feedback: catch bugs early.
+            CD pipelines take a successfully built artifact and deploy it across environments.
+            They typically promote through Dev, QA/Staging, and Production with approval gates in between.
+            Together, CI/CD forms an automated path from code commit to production deployment.
+            In Azure DevOps, a single YAML pipeline can handle both CI and CD as separate stages.
+          </aside>
+        </section>
+
+
+        <section>
+          <h2>Why YAML over Classic?</h2>
+          <div class="two-columns">
+            <div>
+              <h3>YAML Pipelines</h3>
+              <ul>
+                <li>Version-controlled</li>
+                <li>Code review via PRs</li>
+                <li>Branching &amp; merging</li>
+                <li>Templates &amp; reuse</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Classic Pipelines</h3>
+              <ul>
+                <li>GUI-based editor</li>
+                <li>No version control</li>
+                <li>Limited reusability</li>
+                <li>Being deprecated</li>
+              </ul>
+            </div>
+          </div>
+          <aside class="notes">
+            Microsoft is moving away from classic pipelines. YAML is the future — it gives you
+            pipeline-as-code with all the benefits of source control. Today we focus exclusively on YAML.
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- PIPELINE STRUCTURE -->
+        <!-- ============================================= -->
+        <section data-background-color="#1b2a4a">
+          <h1>Pipeline Structure</h1>
+        </section>
+
+        <section>
+          <h2>Pipeline Structure</h2>
+          <img src="https://learn.microsoft.com/en-us/azure/devops/pipelines/get-started/media/key-concepts-overview.svg"
+               alt="Azure Pipelines key concepts showing the relationship between pipeline, stages, jobs, and steps"
+               style="max-height: 500px; background: rgba(255,255,255,0.95); border-radius: 12px; padding: 16px;" />
+          <aside class="notes">
+            This diagram from Microsoft shows the hierarchy: a Pipeline contains Stages, Stages contain Jobs,
+            and Jobs contain Steps. A trigger tells the pipeline when to run. An agent executes each job.
+            We'll break down each of these concepts throughout the training.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Pipeline Structure</h2>
+          <p class="subtitle">The simplest possible pipeline</p>
+          <pre><code data-trim class="language-yaml">
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - script: echo Hello, world!
+    displayName: 'Run a one-line script'
+          </code></pre>
+          <aside class="notes">
+            This is the minimum viable pipeline. It triggers on the main branch, runs on
+            a Microsoft-hosted Ubuntu agent, and executes a single script step.
+            The file is typically named azure-pipelines.yml and lives in the repo root.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Full Pipeline Hierarchy</h2>
+          <pre><code data-trim class="language-yaml">
+trigger:
+  - main
+
+stages:
+  - stage: Build
+    jobs:
+      - job: BuildApp
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: DotNetCoreCLI@2
+            inputs:
+              command: 'build'
+
+  - stage: Deploy
+    dependsOn: Build
+    jobs:
+      - job: DeployApp
+        steps:
+          - script: echo Deploying...
+          </code></pre>
+          <aside class="notes">
+            Here's the full hierarchy: trigger → stages → jobs → steps.
+            When you have multiple stages, you create a multi-stage pipeline for CI/CD.
+            If you only need a single stage and single job, you can omit those keywords and
+            just write steps directly — Azure DevOps infers the structure.
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- STAGES, JOBS & STEPS -->
+        <!-- ============================================= -->
+        <section data-background-color="#1b2a4a">
+          <h1>Stages, Jobs &amp; Steps</h1>
+        </section>
+
+        <section>
+          <h2>Stages</h2>
+          <ul>
+            <li class="fragment">Logical division of a pipeline (Build, Test, Deploy)</li>
+            <li class="fragment">Run sequentially by default</li>
+            <li class="fragment">Can define dependencies with <code>dependsOn</code></li>
+            <li class="fragment">Each stage can target different environments</li>
+          </ul>
+          <pre class="fragment"><code data-trim class="language-yaml">
+stages:
+  - stage: Build
+    displayName: 'Build Stage'
+  - stage: Test
+    dependsOn: Build
+  - stage: Deploy
+    dependsOn: Test
+          </code></pre>
+          <aside class="notes">
+            Stages are the top-level organizational unit. A typical pattern is Build → Test → Deploy.
+            You can run stages in parallel by adjusting dependsOn or setting dependsOn to an empty array.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Jobs</h2>
+          <ul>
+            <li class="fragment">A unit of work that runs on <strong>one agent</strong></li>
+            <li class="fragment">Jobs within a stage run in parallel by default</li>
+            <li class="fragment">Use <code>dependsOn</code> to control ordering</li>
+            <li class="fragment">Each job gets a fresh agent workspace</li>
+          </ul>
+          <pre class="fragment"><code data-trim class="language-yaml">
+jobs:
+  - job: UnitTests
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - script: dotnet test
+
+  - job: IntegrationTests
+    dependsOn: UnitTests
+    steps:
+      - script: dotnet test --filter Category=Integration
+          </code></pre>
+          <aside class="notes">
+            Jobs run on agents. By default, jobs in the same stage run in parallel, which lets you
+            speed up your pipeline. Each job starts with a clean workspace - files don't carry over
+            between jobs unless you use artifacts.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Steps</h2>
+          <ul>
+            <li class="fragment">The smallest unit of execution</li>
+            <li class="fragment">Run sequentially within a job</li>
+            <li class="fragment">Three types: <code>script</code>, <code>task</code>, <code>checkout</code></li>
+            <li class="fragment">Each step runs in its own process on the agent</li>
+          </ul>
+          <pre class="fragment"><code data-trim class="language-yaml">
+steps:
+  - checkout: self          # Check out source code
+  - script: npm install     # Run a script
+  - task: PublishBuildArtifacts@1  # Run a task
+    inputs:
+      pathToPublish: '$(Build.ArtifactStagingDirectory)'
+          </code></pre>
+          <aside class="notes">
+            Steps are the actual work items. The checkout step gets your source code —
+            this happens automatically by default. Scripts let you run command-line commands.
+            Tasks are pre-built, reusable building blocks from the marketplace or built-in.
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- TASKS AND SCRIPTS -->
+        <!-- ============================================= -->
+        <section data-background-color="#1b2a4a">
+          <h1>Tasks &amp; Scripts</h1>
+        </section>
+
+        <section>
+          <h2>Tasks</h2>
+          <ul>
+            <li class="fragment">Pre-packaged, versioned automation units</li>
+            <li class="fragment">Hundreds available in the Marketplace</li>
+            <li class="fragment">Referenced as <code>TaskName@Version</code></li>
+            <li class="fragment">Inputs configured via the <code>inputs</code> property</li>
+          </ul>
+          <pre class="fragment"><code data-trim class="language-yaml">
+steps:
+  - task: UseDotNet@2
+    inputs:
+      packageType: 'sdk'
+      version: '8.x'
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'build'
+      projects: '**/*.csproj'
+          </code></pre>
+          <aside class="notes">
+            Tasks are the recommended way to perform common operations. They're versioned using the @ syntax
+            so you can pin to a major version. Microsoft provides built-in tasks for .NET, Node, Docker,
+            Azure deployments, and more. You can also install tasks from the Visual Studio Marketplace.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Script Steps</h2>
+          <p class="subtitle">Three ways to run inline scripts</p>
+          <pre><code data-trim class="language-yaml">
+steps:
+  # Cross-platform (runs cmd on Windows, bash on Linux/Mac)
+  - script: echo Hello from script
+    displayName: 'Cross-platform script'
+
+  # Bash specifically
+  - bash: |
+      echo "Running on $(Agent.OS)"
+      ./run-tests.sh
+    displayName: 'Bash script'
+
+  # PowerShell specifically
+  - powershell: |
+      Write-Host "Building project..."
+      dotnet build -c Release
+      dotnet build -c Release
+    displayName: 'PowerShell script'
+          </code></pre>
+          <aside class="notes">
+            You have three script keywords: script is cross-platform, bash forces bash,
+            and powershell runs PowerShell. Use the pipe character for multi-line scripts.
+            There's also pwsh for PowerShell Core which works cross-platform.
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- TRIGGERS -->
+        <!-- ============================================= -->
+        <section data-background-color="#1b2a4a">
+          <h1>Triggers</h1>
+        </section>
+
+        <section>
+          <h2>CI Triggers</h2>
+          <p class="subtitle">Automatically run on code changes</p>
+          <pre><code data-trim class="language-yaml">
+# Simple — trigger on specific branches
+trigger:
+  - main
+  - release/*
+
+# Detailed — include/exclude branches and paths
+trigger:
+  branches:
+    include:
+      - main
+      - feature/*
+    exclude:
+      - feature/experimental
+  paths:
+    include:
+      - src/**
+    exclude:
+      - docs/**
+          </code></pre>
+          <aside class="notes">
+            CI triggers fire when code is pushed. You can filter by branch and path.
+            Path filters are powerful — you can skip pipeline runs when only docs change.
+            Use 'trigger: none' to disable CI triggers entirely.
+          </aside>
+        </section>
+
+        <section>
+          <h2>PR Triggers</h2>
+          <p class="subtitle">Run validation on pull requests</p>
+          <pre><code data-trim class="language-yaml">
+pr:
+  branches:
+    include:
+      - main
+      - release/*
+  paths:
+    include:
+      - src/**
+    exclude:
+      - '*.md'
+          </code></pre>
+          <aside class="notes">
+            PR triggers validate pull requests before merging. Note that PR triggers are
+            configured in YAML for GitHub repos but are set via branch policies for
+            Azure Repos — this is a common gotcha. You can combine both CI and PR triggers
+            in the same YAML file.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Scheduled Triggers</h2>
+          <p class="subtitle">Run pipelines on a schedule using cron syntax</p>
+          <pre><code data-trim class="language-yaml">
+schedules:
+  - cron: '0 2 * * Mon-Fri'
+    displayName: 'Weekday 2am build'
+    branches:
+      include:
+        - main
+    always: true    # Run even if no changes
+
+  - cron: '0 8 * * Sun'
+    displayName: 'Weekly full test'
+    branches:
+      include:
+        - main
+    always: false   # Only if changes exist
+          </code></pre>
+          <aside class="notes">
+            Scheduled triggers use standard cron syntax. The 'always' flag controls whether
+            the pipeline runs even when there are no code changes. Times are in UTC.
+            You can have multiple schedules targeting different branches.
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- VARIABLES -->
+        <!-- ============================================= -->
+        <section data-background-color="#1b2a4a">
+          <h1>Variables &amp; Expressions</h1>
+        </section>
+
+        <section>
+          <h2>Variables</h2>
+          <p class="subtitle">Storing and using values in your pipeline</p>
+          <pre><code data-trim class="language-yaml">
+# Inline variables
+variables:
+  buildConfiguration: 'Release'
+  dotnetVersion: '8.x'
+
+steps:
+  - script: dotnet build -c $(buildConfiguration)
+  - task: UseDotNet@2
+    inputs:
+      version: $(dotnetVersion)
+          </code></pre>
+          <aside class="notes">
+            Variables let you define values once and reference them throughout the pipeline
+            using the dollar-parentheses syntax. This avoids repetition and makes
+            your pipelines easier to maintain.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Variable Scoping</h2>
+          <p class="subtitle">Variables can be scoped at multiple levels</p>
+          <pre><code data-trim class="language-yaml">
+variables:          # Pipeline-level
+  globalVar: 'shared'
+
+stages:
+  - stage: Build
+    variables:      # Stage-level
+      stageVar: 'build-only'
+    jobs:
+      - job: Compile
+        variables:  # Job-level
+          jobVar: 'compile-only'
+        steps:
+          - script: |
+              echo $(globalVar)   # Works
+              echo $(stageVar)    # Works
+              echo $(jobVar)      # Works
+          </code></pre>
+          <aside class="notes">
+            Variables can be set at pipeline, stage, or job level. A variable set at a higher
+            level is available to all lower levels. Variables set at the job level are only
+            available within that job. This scoping helps you organize configuration values.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Variable Groups &amp; Secrets</h2>
+          <ul>
+            <li class="fragment">Variable groups store values in the Azure DevOps UI</li>
+            <li class="fragment">Link to Azure Key Vault for secrets</li>
+            <li class="fragment">Secrets are masked in logs automatically</li>
+            <li class="fragment">Referenced with the <code>group</code> keyword</li>
+          </ul>
+          <pre class="fragment"><code data-trim class="language-yaml">
+variables:
+  - group: my-variable-group    # From Library
+  - name: localVar
+    value: 'inline-value'
+  - name: secretVar
+    value: $(my-secret)         # From linked Key Vault
+          </code></pre>
+          <aside class="notes">
+            Variable groups are managed in the Library section of Azure DevOps.
+            They're great for environment-specific config and secrets. You can link
+            a variable group to Azure Key Vault to pull secrets automatically.
+            Secret variables are never echoed to logs.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Predefined Variables</h2>
+          <ul>
+            <li class="fragment">Azure DevOps automatically sets <strong>dozens</strong> of variables on every run</li>
+            <li class="fragment">Provide context about the build, repo, agent, and environment</li>
+            <li class="fragment">Referenced with <code>$(Variable.Name)</code> syntax</li>
+            <li class="fragment">Available in YAML values, scripts, and task inputs</li>
+            <li class="fragment">Grouped by prefix: <span class="text-cyan">Build.*</span>, <span class="text-lavender">System.*</span>, <span class="text-pink">Agent.*</span>, <span class="text-blue">Pipeline.*</span></li>
+          </ul>
+          <aside class="notes">
+            Azure DevOps automatically populates many variables before your pipeline even starts.
+            These give you metadata about the current run — which branch triggered it, the build number,
+            the agent OS, file paths, and more. You don't need to define them — they're just available.
+            They're grouped by prefix: Build for build info, System for system-level info, Agent for agent details,
+            and Pipeline for pipeline metadata. Let's look at the most useful ones.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Predefined Variables — Build &amp; System</h2>
+          <table>
+            <thead>
+              <tr><th>Variable</th><th>Description</th><th>Example Value</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>Build.SourceBranch</code></td><td>Full ref of the triggering branch</td><td><code>refs/heads/main</code></td></tr>
+              <tr><td><code>Build.SourceBranchName</code></td><td>Short branch name</td><td><code>main</code></td></tr>
+              <tr><td><code>Build.BuildId</code></td><td>Unique numeric ID for this run</td><td><code>4827</code></td></tr>
+              <tr><td><code>Build.BuildNumber</code></td><td>Formatted run name</td><td><code>20260217.3</code></td></tr>
+              <tr><td><code>Build.Repository.Name</code></td><td>Name of the source repository</td><td><code>my-app</code></td></tr>
+              <tr><td><code>Build.SourceVersion</code></td><td>Commit SHA that triggered the run</td><td><code>a1b2c3d...</code></td></tr>
+              <tr><td><code>Build.Reason</code></td><td>Why the build ran</td><td><code>IndividualCI</code></td></tr>
+              <tr><td><code>System.TeamProject</code></td><td>Name of the Azure DevOps project</td><td><code>MyProject</code></td></tr>
+            </tbody>
+          </table>
+          <aside class="notes">
+            Build.SourceBranch gives the full ref path while SourceBranchName gives just the last segment.
+            Build.BuildId is a unique number that always increments, great for tagging artifacts.
+            Build.Reason tells you what triggered the run — IndividualCI for a push, PullRequest for a PR,
+            Schedule for a scheduled run, Manual for someone clicking Run. System.TeamProject is useful
+            when templates are shared across projects.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Predefined Variables — Paths &amp; Agent</h2>
+          <table>
+            <thead>
+              <tr><th>Variable</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>Build.ArtifactStagingDirectory</code></td><td>Local path for staging artifacts before publishing</td></tr>
+              <tr><td><code>Build.SourcesDirectory</code></td><td>Local path where source code is checked out</td></tr>
+              <tr><td><code>System.DefaultWorkingDirectory</code></td><td>Default working directory (same as sources dir)</td></tr>
+              <tr><td><code>Pipeline.Workspace</code></td><td>Root workspace directory for the pipeline</td></tr>
+              <tr><td><code>Agent.OS</code></td><td>Operating system of the agent</td></tr>
+              <tr><td><code>Agent.MachineName</code></td><td>Name of the agent machine</td></tr>
+              <tr><td><code>Agent.TempDirectory</code></td><td>Temp folder, cleaned after each job</td></tr>
+              <tr><td><code>Agent.ToolsDirectory</code></td><td>Cached tools directory (e.g., .NET, Node)</td></tr>
+            </tbody>
+          </table>
+          <aside class="notes">
+            Path variables are critical for scripts. Build.ArtifactStagingDirectory is where you copy files
+            before publishing as artifacts. Build.SourcesDirectory is where your repo is cloned.
+            Pipeline.Workspace is the root that contains sources, artifacts, and test results.
+            Agent.OS is useful for conditional steps — you can check if you're on Windows or Linux.
+            Agent.TempDirectory is cleaned after each job so it's safe for temporary files.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Conditions &amp; Expressions</h2>
+          <p class="subtitle">Control when stages, jobs, or steps run</p>
+          <pre><code data-trim class="language-yaml">
+steps:
+  - script: echo 'Running on main branch'
+    condition: eq(variables['Build.SourceBranch'],
+                  'refs/heads/main')
+
+  - script: echo 'Previous step failed'
+    condition: failed()
+
+stages:
+  - stage: DeployProd
+    condition: and(succeeded(),
+      eq(variables['Build.SourceBranch'],
+         'refs/heads/main'))
+          </code></pre>
+          <aside class="notes">
+            Conditions let you control execution flow. Common functions are succeeded(), failed(),
+            always(), eq(), ne(), and(), or(), and contains(). You can apply conditions at the
+            step, job, or stage level. By default everything has condition: succeeded().
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- AGENTS & AGENT POOLS -->
+        <!-- ============================================= -->
+        <section data-background-color="#1b2a4a">
+          <h1>Agents &amp; Agent Pools</h1>
+        </section>
+
+        <section>
+          <h2>Agents &amp; Agent Pools</h2>
+          <div class="highlight-box" style="text-align: center;">
+            <p style="margin:0 0 0.5em 0;"><span class="text-cyan" style="font-size: var(--fs-m); font-weight: 700;">Azure DevOps</span></p>
+            <div style="display: flex; justify-content: center; gap: 1.5em;">
+              <div style="background: rgba(74,158,255,0.10); border: 1px solid rgba(74,158,255,0.3); border-radius: 10px; padding: 0.6em 1em; min-width: 180px;">
+                <p style="margin:0; font-weight:700; color: var(--accent-blue); font-size: var(--fs-s);">Microsoft-hosted Pool</p>
+                <div style="display: flex; gap: 0.5em; justify-content: center; margin-top: 0.4em;">
+                  <span style="background: var(--bg-card); border: 1px solid var(--bg-card-border); border-radius: 6px; padding: 0.3em 0.5em; font-size: var(--fs-xs);">Agent 1</span>
+                  <span style="background: var(--bg-card); border: 1px solid var(--bg-card-border); border-radius: 6px; padding: 0.3em 0.5em; font-size: var(--fs-xs);">Agent 2</span>
+                  <span style="background: var(--bg-card); border: 1px solid var(--bg-card-border); border-radius: 6px; padding: 0.3em 0.5em; font-size: var(--fs-xs);">Agent 3</span>
+                </div>
+              </div>
+              <div style="background: rgba(184,169,245,0.10); border: 1px solid rgba(184,169,245,0.3); border-radius: 10px; padding: 0.6em 1em; min-width: 180px;">
+                <p style="margin:0; font-weight:700; color: var(--accent-lavender); font-size: var(--fs-s);">Self-hosted Pool</p>
+                <div style="display: flex; gap: 0.5em; justify-content: center; margin-top: 0.4em;">
+                  <span style="background: var(--bg-card); border: 1px solid var(--bg-card-border); border-radius: 6px; padding: 0.3em 0.5em; font-size: var(--fs-xs);">Agent 1</span>
+                  <span style="background: var(--bg-card); border: 1px solid var(--bg-card-border); border-radius: 6px; padding: 0.3em 0.5em; font-size: var(--fs-xs);">Agent 2</span>
+                </div>
+              </div>
+            </div>
+            <p style="margin: 0.6em 0 0 0; font-size: var(--fs-xs); color: var(--text-secondary);">Jobs are assigned to available agents from the specified pool</p>
+          </div>
+          <aside class="notes">
+            An agent is a computing environment that runs your pipeline jobs. Agents are organized into
+            agent pools. When a job runs, Azure DevOps assigns it to an available agent from the specified pool.
+            There are two types: Microsoft-hosted and self-hosted.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Microsoft-hosted vs Self-hosted</h2>
+          <div class="two-columns">
+            <div>
+              <h3>Microsoft-hosted</h3>
+              <ul>
+                <li>Fresh VM per job</li>
+                <li>Maintenance-free</li>
+                <li>Pre-installed tools</li>
+                <li>Limited customization</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Self-hosted</h3>
+              <ul>
+                <li>You manage the machine</li>
+                <li>Persistent between runs</li>
+                <li>Full control over tools</li>
+                <li>Can access private networks</li>
+              </ul>
+            </div>
+          </div>
+          <aside class="notes">
+            Microsoft-hosted agents give you a clean VM every time — great for most scenarios.
+            Self-hosted agents are machines you install and maintain yourself. Use self-hosted
+            when you need special software, hardware, or network access that Microsoft-hosted
+            agents don't provide. Self-hosted agents can be VMs, physical machines, or containers.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Specifying Agent Pools</h2>
+          <pre><code data-trim class="language-yaml">
+# Microsoft-hosted — by VM image name
+pool:
+  vmImage: 'ubuntu-latest'    # or windows-latest, macos-latest
+
+# Self-hosted — by pool name
+pool:
+  name: 'MySelfHostedPool'
+  demands:
+    - npm
+    - Agent.OS -equals Linux
+
+# Per-job pool selection
+jobs:
+  - job: LinuxBuild
+    pool:
+      vmImage: 'ubuntu-latest'
+  - job: WindowsBuild
+    pool:
+      vmImage: 'windows-latest'
+          </code></pre>
+          <aside class="notes">
+            For Microsoft-hosted, you specify vmImage. Common choices are ubuntu-latest,
+            windows-latest, and macos-latest. For self-hosted pools, use the pool name
+            and optionally add demands to filter agents by capability. You can set the pool
+            at pipeline, stage, or job level — job-level overrides higher levels.
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- ENVIRONMENTS & APPROVALS -->
+        <!-- ============================================= -->
+        <section data-background-color="#1b2a4a">
+          <h1>Environments &amp; Approvals</h1>
+        </section>
+
+        <section>
+          <h2>Environments</h2>
+          <ul>
+            <li class="fragment">Named targets for deployment (Dev, Staging, Prod)</li>
+            <li class="fragment">Track deployment history and status</li>
+            <li class="fragment">Attach approvals and checks</li>
+            <li class="fragment">Used with <code>deployment</code> jobs</li>
+          </ul>
+          <pre class="fragment"><code data-trim class="language-yaml">
+jobs:
+  - deployment: DeployWeb
+    environment: 'Production'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - script: echo Deploying to production
+          </code></pre>
+          <aside class="notes">
+            Environments represent your deployment targets. They're created in the Azure DevOps
+            portal and referenced in your YAML. The deployment job type lets you use deployment
+            strategies like runOnce, rolling, or canary. Environments provide traceability —
+            you can see which commits are deployed where.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Approvals &amp; Checks</h2>
+          <div style="display: flex; align-items: center; justify-content: center; gap: 0.6em; margin: 0.6em 0;">
+            <div style="background: rgba(74,158,255,0.12); border: 1px solid rgba(74,158,255,0.3); border-radius: 10px; padding: 0.5em 0.8em; text-align: center;">
+              <span style="font-size: var(--fs-s); font-weight: 700; color: var(--accent-blue);">Pipeline<br/>runs</span>
+            </div>
+            <span style="font-size: var(--fs-l); color: var(--text-secondary);">→</span>
+            <div style="background: rgba(92,224,216,0.12); border: 1px solid rgba(92,224,216,0.3); border-radius: 10px; padding: 0.5em 0.8em; text-align: center;">
+              <span style="font-size: var(--fs-s); font-weight: 700; color: var(--accent-cyan);">Stage<br/>starts</span>
+            </div>
+            <span style="font-size: var(--fs-l); color: var(--text-secondary);">→</span>
+            <div style="background: rgba(245,197,66,0.15); border: 1px solid rgba(245,197,66,0.35); border-radius: 10px; padding: 0.5em 0.8em; text-align: center;">
+              <span style="font-size: var(--fs-s); font-weight: 700; color: #f5c542;">⏸ Checks<br/>evaluate</span>
+            </div>
+            <span style="font-size: var(--fs-l); color: var(--text-secondary);">→</span>
+            <div style="background: rgba(92,224,216,0.12); border: 1px solid rgba(92,224,216,0.3); border-radius: 10px; padding: 0.5em 0.8em; text-align: center;">
+              <span style="font-size: var(--fs-s); font-weight: 700; color: var(--accent-cyan);">✅ Approved<br/>→ Deploy</span>
+            </div>
+          </div>
+          <ul>
+            <li class="fragment">Configured on Environments, not in YAML</li>
+            <li class="fragment">Manual approvals, business hours, branch control</li>
+            <li class="fragment">Pipeline pauses until all checks pass</li>
+          </ul>
+          <aside class="notes">
+            Approvals and checks are set on environments through the Azure DevOps UI, not in the YAML file itself.
+            This is a security feature — pipeline authors can't bypass approvals by editing the YAML.
+            Types include manual approval, business hours gate, branch control, required template,
+            and invoke Azure Function or REST API checks.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Approval Types</h2>
+          <div class="card-grid cols-3">
+            <div class="card">
+              <span class="card-icon">👤</span>
+              <div class="card-text">Manual Approval<br/><span class="text-secondary">Designated approvers</span></div>
+            </div>
+            <div class="card">
+              <span class="card-icon">🕐</span>
+              <div class="card-text">Business Hours<br/><span class="text-secondary">Time-window gates</span></div>
+            </div>
+            <div class="card">
+              <span class="card-icon">🔀</span>
+              <div class="card-text">Branch Control<br/><span class="text-secondary">Restrict source branches</span></div>
+            </div>
+            <div class="card">
+              <span class="card-icon">📋</span>
+              <div class="card-text">Required Template<br/><span class="text-secondary">Enforce YAML templates</span></div>
+            </div>
+            <div class="card">
+              <span class="card-icon">🔌</span>
+              <div class="card-text">Invoke REST API<br/><span class="text-secondary">Custom validation</span></div>
+            </div>
+            <div class="card">
+              <span class="card-icon">⚡</span>
+              <div class="card-text">Azure Function<br/><span class="text-secondary">Serverless checks</span></div>
+            </div>
+          </div>
+          <aside class="notes">
+            There are several check types. Manual approval is the most common — you assign specific
+            people or groups who must approve before the pipeline continues. Business hours ensures
+            deployments only happen during working hours. Branch control ensures only approved
+            branches can deploy to an environment. Required template forces pipelines to extend
+            an approved template — great for governance.
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- REUSING PIPELINES — TEMPLATES -->
+        <!-- ============================================= -->
+        <section data-background-color="#1b2a4a">
+          <h1>Templates</h1>
+        </section>
+
+        <section>
+          <h2>Templates — Reusing Pipelines</h2>
+          <ul>
+            <li class="fragment">DRY principle for pipelines</li>
+            <li class="fragment">Define reusable steps, jobs, or stages</li>
+            <li class="fragment">Accept parameters for customization</li>
+            <li class="fragment">Share across repos via <code>resources</code></li>
+            <li class="fragment">Enforce governance with <code>extends</code></li>
+          </ul>
+          <aside class="notes">
+            Templates are the primary mechanism for reuse in Azure Pipelines.
+            Instead of copying and pasting YAML across pipelines, you extract common
+            logic into template files and reference them. There are four template types:
+            step, job, stage, and variable templates. Plus the extends keyword for governance.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Step Template</h2>
+          <div class="two-columns">
+            <div>
+              <h3>Template File</h3>
+              <pre><code data-trim class="language-yaml">
+# templates/build-steps.yml
+parameters:
+  - name: configuration
+    default: 'Release'
+
+steps:
+  - task: UseDotNet@2
+    inputs:
+      version: '8.x'
+  - script: |
+      dotnet build \
+        -c ${{ parameters.configuration }}
+              </code></pre>
+            </div>
+            <div>
+              <h3>Main Pipeline</h3>
+              <pre><code data-trim class="language-yaml">
+# azure-pipelines.yml
+steps:
+  - template: templates/build-steps.yml
+    parameters:
+      configuration: 'Debug'
+              </code></pre>
+            </div>
+          </div>
+          <aside class="notes">
+            Step templates let you define a reusable sequence of steps. They accept parameters
+            so the calling pipeline can customize behavior. The double-curly-brace syntax
+            is a compile-time expression — it's resolved before the pipeline runs. This is
+            the most granular level of template reuse.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Job &amp; Stage Templates</h2>
+          <pre><code data-trim class="language-yaml">
+# templates/deploy-stage.yml
+parameters:
+  - name: environment
+    type: string
+  - name: vmImage
+    default: 'ubuntu-latest'
+
+stages:
+  - stage: Deploy_${{ parameters.environment }}
+    jobs:
+      - deployment: Deploy
+        environment: ${{ parameters.environment }}
+        pool:
+          vmImage: ${{ parameters.vmImage }}
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: echo Deploying to ${{ parameters.environment }}
+          </code></pre>
+          <aside class="notes">
+            Job and stage templates work the same way — you define a whole job or stage in a
+            template file and reference it. This is powerful for creating standardized
+            deployment stages that are reused across many pipelines. Note the use of
+            parameter expressions in the stage name to create unique identifiers.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Using Stage Templates</h2>
+          <pre><code data-trim class="language-yaml">
+# azure-pipelines.yml
+trigger:
+  - main
+
+stages:
+  - stage: Build
+    jobs:
+      - job: BuildApp
+        steps:
+          - script: dotnet build
+
+  - template: templates/deploy-stage.yml
+    parameters:
+      environment: 'Staging'
+
+  - template: templates/deploy-stage.yml
+    parameters:
+      environment: 'Production'
+          </code></pre>
+          <aside class="notes">
+            Here's how you call a stage template. Notice how the same deploy template is reused
+            for both Staging and Production — just with different parameters. This eliminates
+            duplication and ensures consistency. If you change the deploy process, you update
+            one template and all pipelines benefit.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Extends vs Include Templates</h2>
+          <p class="subtitle">Two fundamentally different approaches</p>
+          <div class="two-columns">
+            <div>
+              <h3>Include (template:)</h3>
+              <ul>
+                <li>Inserts steps/jobs/stages into <strong>your</strong> pipeline</li>
+                <li>Pipeline author has full control</li>
+                <li>Can add anything before or after</li>
+                <li>Great for <strong>reuse</strong></li>
+              </ul>
+            </div>
+            <div>
+              <h3>Extends (extends:)</h3>
+              <ul>
+                <li>Your pipeline runs <strong>inside</strong> the template</li>
+                <li>Template author has control</li>
+                <li>Pipeline author fills in the gaps</li>
+                <li>Great for <strong>governance</strong></li>
+              </ul>
+            </div>
+          </div>
+          <aside class="notes">
+            This is the critical distinction. With include-style templates, the pipeline author is in charge —
+            they pull in reusable pieces wherever they want. With extends, the template author is in charge —
+            they define the overall structure and the pipeline author can only customize the parts the template
+            allows. Think of include as a library you call, and extends as a framework you plug into.
+            Use include for convenience and reuse. Use extends when you need to enforce standards that
+            pipeline authors cannot bypass.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Extends Template — How It Works</h2>
+          <div class="two-columns">
+            <div>
+              <h3>Template (owned by platform team)</h3>
+              <pre><code data-trim class="language-yaml">
+# templates/secure-pipeline.yml
+parameters:
+  - name: buildSteps
+    type: stepList
+    default: []
+
+stages:
+  - stage: Build
+    jobs:
+      - job: Build
+        steps:
+          - task: CredScan@3
+          - ${{ each step in parameters.buildSteps }}:
+            - ${{ step }}
+          - task: PublishSecurityAnalysis@0
+              </code></pre>
+            </div>
+            <div>
+              <h3>Pipeline (owned by dev team)</h3>
+              <pre><code data-trim class="language-yaml">
+# azure-pipelines.yml
+trigger:
+  - main
+
+extends:
+  template: templates/secure-pipeline.yml
+  parameters:
+    buildSteps:
+      - script: dotnet build
+      - script: dotnet test
+              </code></pre>
+            </div>
+          </div>
+          <aside class="notes">
+            On the left is the template owned by the platform or security team. It defines CredScan
+            at the start and PublishSecurityAnalysis at the end — these always run and cannot be removed.
+            The template accepts a buildSteps parameter and iterates over it using the each expression.
+            On the right, the dev team's pipeline uses extends to plug into this template. They can only
+            provide their build steps — they cannot skip the security tasks. The template wraps around
+            the consumer's code like a sandwich.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Enforcing Extends with Checks</h2>
+          <ul>
+            <li class="fragment">Use the <strong>Required Template</strong> check on environments</li>
+            <li class="fragment">Pipeline must extend an approved template to deploy</li>
+            <li class="fragment">Prevents teams from bypassing governance</li>
+            <li class="fragment">Combine with branch control for full protection</li>
+          </ul>
+          <div class="highlight-box fragment">
+            <p style="margin: 0;"><span class="text-cyan" style="font-weight: 700;">Environment: Production</span></p>
+            <p style="margin: 0.3em 0 0 0;">Check: Pipeline must extend <code>templates/secure-pipeline.yml</code> from <code>MyProject/pipeline-templates</code></p>
+          </div>
+          <aside class="notes">
+            Extends templates become truly powerful when combined with the Required Template check on environments.
+            You configure the Production environment to require that any pipeline deploying to it must extend
+            a specific approved template. If a developer creates a pipeline that doesn't extend the template,
+            it simply cannot deploy to Production — Azure DevOps blocks it at the environment check stage.
+            This is the recommended governance pattern for enterprise organizations. Add branch control
+            to ensure only main branch can deploy, and you have a robust, tamper-proof CI/CD pipeline.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Cross-Repo Templates</h2>
+          <p class="subtitle">Share templates across repositories</p>
+          <pre><code data-trim class="language-yaml">
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: MyProject/pipeline-templates
+      ref: refs/tags/v1.0
+
+stages:
+  - template: stages/build.yml@templates
+    parameters:
+      solution: '**/*.sln'
+
+  - template: stages/deploy.yml@templates
+    parameters:
+      environment: 'Production'
+          </code></pre>
+          <aside class="notes">
+            You can reference templates from other repositories using the resources section.
+            This is ideal for organizations that maintain a central templates repository.
+            Use a ref tag to pin to a specific version for stability. The @templates suffix
+            tells Azure DevOps which repository to pull the template from. This works with
+            Azure Repos and GitHub repositories.
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- SERVICE CONNECTIONS & ARTIFACTS -->
+        <!-- ============================================= -->
+        <section data-background-color="#1b2a4a">
+          <h1>Service Connections &amp; Artifacts</h1>
+        </section>
+
+        <section>
+          <h2>Service Connections</h2>
+          <ul>
+            <li class="fragment">Secure links to external services</li>
+            <li class="fragment">Azure, Docker, Kubernetes, npm, NuGet, etc.</li>
+            <li class="fragment">Managed in Project Settings</li>
+            <li class="fragment">Credentials stored securely — never in YAML</li>
+          </ul>
+          <pre class="fragment"><code data-trim class="language-yaml">
+steps:
+  - task: AzureWebApp@1
+    inputs:
+      azureSubscription: 'my-azure-connection'
+      appName: 'my-web-app'
+      package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
+          </code></pre>
+          <aside class="notes">
+            Service connections are how pipelines authenticate to external systems without
+            exposing credentials in your YAML. You create them in Azure DevOps project settings.
+            The most common is an Azure Resource Manager service connection for deploying to Azure.
+            They use workload identity federation or service principals under the hood.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Pipeline Artifacts</h2>
+          <p class="subtitle">Pass files between jobs and stages</p>
+          <pre><code data-trim class="language-yaml">
+# Publish artifacts in the Build stage
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)'
+    artifact: 'drop'
+
+# Download artifacts in the Deploy stage
+- task: DownloadPipelineArtifact@2
+  inputs:
+    artifact: 'drop'
+    path: '$(Pipeline.Workspace)/drop'
+          </code></pre>
+          <aside class="notes">
+            Since each job runs on a fresh agent, you use artifacts to pass build outputs
+            between jobs and stages. Publish your build output as a pipeline artifact in
+            the Build stage, then download it in the Deploy stage. Deployment jobs
+            automatically download artifacts from the triggering run.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Putting It All Together</h2>
+          <p class="subtitle">A complete CI/CD pipeline</p>
+          <pre><code data-trim class="language-yaml" style="font-size: 0.55em; line-height: 1.35;">
+trigger:
+  branches:
+    include: [ main ]
+
+variables:
+  buildConfiguration: 'Release'
+
+stages:
+  - stage: Build
+    jobs:
+      - job: BuildAndTest
+        pool: { vmImage: 'ubuntu-latest' }
+        steps:
+          - task: UseDotNet@2
+            inputs: { version: '8.x' }
+          - script: dotnet build -c $(buildConfiguration)
+          - script: dotnet test --no-build
+          - task: PublishPipelineArtifact@1
+            inputs:
+              targetPath: '$(Build.ArtifactStagingDirectory)'
+              artifact: 'drop'
+
+  - stage: DeployStaging
+    dependsOn: Build
+    jobs:
+      - deployment: Deploy
+        environment: 'Staging'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: AzureWebApp@1
+                  inputs:
+                    azureSubscription: 'azure-conn'
+                    appName: 'myapp-staging'
+
+  - stage: DeployProd
+    dependsOn: DeployStaging
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+    jobs:
+      - deployment: Deploy
+        environment: 'Production'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: AzureWebApp@1
+                  inputs:
+                    azureSubscription: 'azure-conn'
+                    appName: 'myapp-prod'
+          </code></pre>
+          <aside class="notes">
+            This is a realistic multi-stage pipeline bringing together everything we've covered:
+            CI triggers, variables, stages with dependencies, build tasks, artifacts, deployment jobs
+            with environments, conditions, and Azure service connections. The Production stage
+            only runs from the main branch and would have manual approval on the environment.
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- BEST PRACTICES -->
+        <!-- ============================================= -->
+        <section data-background-color="#1b2a4a">
+          <h1>Best Practices</h1>
+        </section>
+
+        <section>
+          <h2>Best Practices</h2>
+          <ul>
+            <li class="fragment">Use templates to avoid duplication</li>
+            <li class="fragment">Pin task versions — <code>Task@2</code> not <code>Task</code></li>
+            <li class="fragment">Store secrets in Variable Groups or Key Vault</li>
+            <li class="fragment">Use path triggers to avoid unnecessary runs</li>
+            <li class="fragment">Add meaningful <code>displayName</code> to all steps</li>
+          </ul>
+          <aside class="notes">
+            These practices will save you time and headaches. Templates prevent duplication
+            and enforce standards. Pinning task versions prevents breaking changes when a task
+            is updated. Never put secrets in YAML — always use variable groups or Key Vault.
+            Path triggers are an easy performance win. Display names make logs readable
+            when debugging failed pipelines.
+          </aside>
+        </section>
+
+        <section>
+          <h2>More Best Practices</h2>
+          <ul>
+            <li class="fragment">Use <code>extends</code> templates for governance</li>
+            <li class="fragment">Keep pipelines small — compose with templates</li>
+            <li class="fragment">Use environments with approvals for production</li>
+            <li class="fragment">Test pipeline changes in feature branches</li>
+            <li class="fragment">Document non-obvious pipeline logic in comments</li>
+          </ul>
+          <aside class="notes">
+            The extends template pattern is essential for enterprise governance.
+            Keep individual pipeline files small and readable by composing templates.
+            Always use environments with approval checks for production deployments.
+            Since pipelines are code, test changes in feature branches before merging to main.
+            Add YAML comments to explain complex conditions or expressions.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Key Takeaways</h2>
+          <div class="card-grid cols-3">
+            <div class="card">
+              <span class="card-icon">📐</span>
+              <div class="card-text">Pipeline → Stages → Jobs → Steps</div>
+            </div>
+            <div class="card">
+              <span class="card-icon">⚡</span>
+              <div class="card-text">Triggers control when pipelines run</div>
+            </div>
+            <div class="card">
+              <span class="card-icon">🔧</span>
+              <div class="card-text">Tasks &amp; scripts do the work</div>
+            </div>
+            <div class="card">
+              <span class="card-icon">📦</span>
+              <div class="card-text">Variables store config &amp; secrets</div>
+            </div>
+            <div class="card">
+              <span class="card-icon">🔄</span>
+              <div class="card-text">Templates enable reuse</div>
+            </div>
+            <div class="card">
+              <span class="card-icon">✅</span>
+              <div class="card-text">Environments &amp; approvals gate deploys</div>
+            </div>
+          </div>
+          <aside class="notes">
+            To wrap up: pipelines are structured as stages, jobs, and steps. Triggers automate when
+            pipelines run. Tasks and scripts do the actual work. Variables and variable groups manage
+            configuration. Templates are the key to reusability and governance. And environments with
+            approvals provide the safety gates around production deployments.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Resources</h2>
+          <div class="highlight-box">
+            <ul>
+              <li><a href="https://learn.microsoft.com/en-us/azure/devops/pipelines/?view=azure-devops" style="color: var(--accent-blue);">Azure Pipelines Documentation</a></li>
+              <li><a href="https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/?view=azure-devops" style="color: var(--accent-blue);">YAML Schema Reference</a></li>
+              <li><a href="https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/?view=azure-pipelines" style="color: var(--accent-blue);">Task Reference</a></li>
+              <li><a href="https://learn.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops" style="color: var(--accent-blue);">Templates Documentation</a></li>
+            </ul>
+          </div>
+          <aside class="notes">
+            Here are the key documentation links. The YAML schema reference is particularly useful —
+            it documents every keyword and property available. Bookmark the task reference for
+            looking up task inputs. Microsoft keeps these docs up to date with new features.
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- CLOSING -->
+        <!-- ============================================= -->
+        <section>
+          <h1>Questions?</h1>
+          <p class="subtitle">Thank you for attending</p>
+          <aside class="notes">
+            Open the floor for questions. Remind attendees about the documentation links
+            and encourage them to practice by creating a pipeline in a test project.
+          </aside>
+        </section>
+
+      </div>
+    </div>
+
+    <script src="slides.js"></script>
+  </body>
+</html>

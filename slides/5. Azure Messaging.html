@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Azure Messaging</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/theme/black.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/highlight/monokai.css" />
+  <link rel="stylesheet" href="slides.css" />
+  <link rel="icon" type="image/svg+xml" href="https://revealjs.com/images/favicon.svg">
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ============================================= -->
+      <!-- TITLE SLIDE -->
+      <!-- ============================================= -->
+      <section class="title-hero">
+        <div class="hero-layout">
+          <div class="hero-text">
+            <svg class="hero-logo" viewBox="0 0 337 73" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="33" height="33" fill="#f25022"/><rect x="36" y="1" width="33" height="33" fill="#7fba00"/><rect x="1" y="36" width="33" height="33" fill="#00a4ef"/><rect x="36" y="36" width="33" height="33" fill="#ffb900"/><text x="82" y="50" fill="#ffffff" font-family="Segoe UI,sans-serif" font-size="34" font-weight="600">Microsoft</text></svg>
+            <h2>Azure Messaging</h2>
+            <p class="hero-author">David Watson<br>Cloud Solution Architect</p>
+          </div>
+          <div class="hero-image">
+            <img src="images/title.png" alt="Title">
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- AGENDA -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Agenda</h2>
+        <div class="card-grid cols-3">
+          <div class="card">
+            <span class="card-icon">💬</span>
+            <div class="card-text">Messages vs Events</div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/general/10840-icon-service-Storage-Queue.svg" alt="Storage Queues" style="height:1.6em;vertical-align:middle;"></span>
+            <div class="card-text">Azure Storage Queues</div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/integration/10836-icon-service-Azure-Service-Bus.svg" alt="Service Bus" style="height:1.6em;vertical-align:middle;"></span>
+            <div class="card-text">Azure Service Bus</div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/analytics/00039-icon-service-Event-Hubs.svg" alt="Event Hubs" style="height:1.6em;vertical-align:middle;"></span>
+            <div class="card-text">Azure Event Hubs</div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/integration/10206-icon-service-Event-Grid-Topics.svg" alt="Event Grid" style="height:1.6em;vertical-align:middle;"></span>
+            <div class="card-text">Azure Event Grid</div>
+          </div>
+          <div class="card">
+            <span class="card-icon">🧭</span>
+            <div class="card-text">Choosing the Right Service</div>
+          </div>
+        </div>
+        <aside class="notes">
+          Walk through the agenda — we'll cover the foundational concepts of messages vs events, 
+          then deep dive into each of the four core Azure messaging services, and finish with 
+          guidance on choosing the right service for different scenarios.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- MESSAGES vs EVENTS -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Messages vs Events</h2>
+        <div class="two-columns">
+          <div>
+            <h3>Messages</h3>
+            <ul>
+              <li class="fragment">Raw data produced by one service to be consumed by another</li>
+              <li class="fragment">Contains the <strong>data itself</strong>, not just a reference</li>
+              <li class="fragment">Sender has an expectation about how the message is handled</li>
+              <li class="fragment">A <strong>contract</strong> exists between sender and receiver</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Events</h3>
+            <ul>
+              <li class="fragment">Lightweight <strong>notification</strong> that something happened</li>
+              <li class="fragment">Contains metadata, not necessarily the full data payload</li>
+              <li class="fragment">Publisher has <strong>no expectation</strong> about handling</li>
+              <li class="fragment">Zero or many subscribers can react independently</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          The key distinction: messages carry data and imply a contract between sender and receiver.
+          Events are notifications — the publisher fires and forgets. This distinction drives which
+          Azure service you should use.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- MESSAGING PATTERNS -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Core Messaging Patterns</h2>
+        <div class="two-columns">
+          <div>
+            <h3>Point-to-Point (Queue)</h3>
+            <ul>
+              <li class="fragment">One sender, one receiver</li>
+              <li class="fragment">Competing consumers pattern</li>
+              <li class="fragment">Message consumed <strong>once</strong></li>
+              <li class="fragment">Load leveling &amp; decoupling</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Publish / Subscribe</h3>
+            <ul>
+              <li class="fragment">One publisher, many subscribers</li>
+              <li class="fragment">Each subscriber gets a <strong>copy</strong></li>
+              <li class="fragment">Fan-out distribution</li>
+              <li class="fragment">Subscriber filtering</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          These are the two foundational patterns. Queues give you point-to-point with competing 
+          consumers — great for work distribution and load leveling. Pub/Sub fans out to multiple 
+          independent subscribers — great for event-driven architectures. Both patterns appear 
+          across Azure messaging services.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- AZURE MESSAGING SERVICES OVERVIEW -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Azure Messaging Services</h2>
+        <div class="card-grid cols-2">
+          <div class="card">
+            <span class="card-icon"><img src="Icons/general/10840-icon-service-Storage-Queue.svg" alt="Storage Queues" style="height:1.6em;vertical-align:middle;"></span>
+            <div class="card-text">Storage Queues<br><span class="text-secondary">Simple, high-volume queuing</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/integration/10836-icon-service-Azure-Service-Bus.svg" alt="Service Bus" style="height:1.6em;vertical-align:middle;"></span>
+            <div class="card-text">Service Bus<br><span class="text-secondary">Enterprise messaging broker</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/analytics/00039-icon-service-Event-Hubs.svg" alt="Event Hubs" style="height:1.6em;vertical-align:middle;"></span>
+            <div class="card-text">Event Hubs<br><span class="text-secondary">Big data streaming</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/integration/10206-icon-service-Event-Grid-Topics.svg" alt="Event Grid" style="height:1.6em;vertical-align:middle;"></span>
+            <div class="card-text">Event Grid<br><span class="text-secondary">Reactive event routing</span></div>
+          </div>
+        </div>
+        <aside class="notes">
+          Four core messaging services in Azure. Storage Queues for simple scenarios, Service Bus 
+          for enterprise messaging with advanced features, Event Hubs for high-throughput streaming, 
+          and Event Grid for reactive event-driven architectures. We'll deep dive into each.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- SECTION DIVIDER: STORAGE QUEUES -->
+      <!-- ============================================= -->
+      <section data-background-color="#0a1628">
+        <h1>Azure Storage Queues</h1>
+        <p class="subtitle">Simple, scalable message queuing</p>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- AZURE STORAGE QUEUES -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Azure Storage Queues</h2>
+        <div class="two-columns">
+          <div>
+            <h3>What Is It?</h3>
+            <ul>
+              <li class="fragment">Simple queue built on Azure Storage</li>
+              <li class="fragment">Part of every storage account</li>
+              <li class="fragment">REST-based access anywhere</li>
+              <li class="fragment">Messages up to <strong>64 KB</strong></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Key Characteristics</h3>
+            <ul>
+              <li class="fragment">Queue can exceed <strong>80 GB</strong> total</li>
+              <li class="fragment">Server-side logs of all transactions</li>
+              <li class="fragment">At-least-once delivery</li>
+              <li class="fragment">TTL up to <strong>7 days</strong> (or unlimited)</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Storage Queues are the simplest Azure messaging option. They're part of Azure Storage, 
+          so you get them automatically with any storage account. Great for large backlogs of work 
+          and simple decoupling. Limited feature set compared to Service Bus but extremely cost-effective 
+          and capable of handling massive volumes.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- STORAGE QUEUES - WHEN TO USE -->
+      <!-- ============================================= -->
+      <section>
+        <h2>When to Use Storage Queues</h2>
+        <ul>
+          <li class="fragment">Simple work queue / job dispatch</li>
+          <li class="fragment">Queue size may exceed <strong>80 GB</strong></li>
+          <li class="fragment">You need server-side <strong>transaction logs</strong></li>
+          <li class="fragment">Minimal feature requirements (no ordering, sessions, dead-letter)</li>
+          <li class="fragment"><strong>Cost-sensitive</strong> workloads with high message volume</li>
+        </ul>
+        <aside class="notes">
+          Use Storage Queues when simplicity and cost are your top priorities. If you need advanced 
+          features like message ordering, sessions, dead-lettering, or pub/sub — look at Service Bus instead.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- SECTION DIVIDER: SERVICE BUS -->
+      <!-- ============================================= -->
+      <section data-background-color="#0a1628">
+        <h1>Azure Service Bus</h1>
+        <p class="subtitle">Enterprise-grade message broker</p>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- SERVICE BUS OVERVIEW -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Azure Service Bus</h2>
+        <ul>
+          <li class="fragment">Fully managed <strong>enterprise message broker</strong></li>
+          <li class="fragment">Supports <strong>queues</strong> (point-to-point) and <strong>topics</strong> (pub/sub)</li>
+          <li class="fragment">Messages up to <strong>256 KB</strong> (Standard) / <strong>100 MB</strong> (Premium)</li>
+          <li class="fragment">AMQP 1.0, HTTP/REST, and client SDK access</li>
+          <li class="fragment">Tiers: <span class="text-cyan">Basic</span> → <span class="text-lavender">Standard</span> → <span class="text-pink">Premium</span></li>
+        </ul>
+        <aside class="notes">
+          Service Bus is the workhorse of Azure messaging. It's a fully managed broker with 
+          support for both queue and topic (pub/sub) patterns. Premium tier gives you dedicated 
+          resources, larger messages, VNet integration, and geo-disaster recovery.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- SERVICE BUS: QUEUES -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Service Bus Queues</h2>
+        <div class="two-columns">
+          <div>
+            <h3>How It Works</h3>
+            <ul>
+              <li class="fragment">FIFO delivery with <strong>sessions</strong></li>
+              <li class="fragment">Competing consumers pattern</li>
+              <li class="fragment">Peek-lock or receive-and-delete</li>
+              <li class="fragment">Dead-letter queue (DLQ)</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Delivery Guarantees</h3>
+            <ul>
+              <li class="fragment"><strong>At-least-once</strong> (peek-lock)</li>
+              <li class="fragment"><strong>At-most-once</strong> (receive-and-delete)</li>
+              <li class="fragment">Duplicate detection</li>
+              <li class="fragment">Message deferral</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Service Bus queues offer much richer semantics than Storage Queues. Peek-lock gives you 
+          at-least-once delivery with client acknowledgement. Sessions enable ordered processing 
+          and stateful workflows. Dead-letter queues catch poison messages automatically.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- SERVICE BUS: TOPICS & SUBSCRIPTIONS -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Service Bus Topics &amp; Subscriptions</h2>
+        <div class="two-columns">
+          <div>
+            <h3>Publish / Subscribe</h3>
+            <ul>
+              <li class="fragment">Publisher sends to a <strong>topic</strong></li>
+              <li class="fragment">Each subscription gets a <strong>copy</strong></li>
+              <li class="fragment">Up to 2,000 subscriptions per topic</li>
+              <li class="fragment">Works with all queue features</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Subscription Filters</h3>
+            <ul>
+              <li class="fragment"><strong>SQL filter</strong> — match on properties</li>
+              <li class="fragment"><strong>Correlation filter</strong> — match specific fields</li>
+              <li class="fragment"><strong>Boolean filter</strong> — true/false (all or none)</li>
+              <li class="fragment">Filter actions can modify message properties</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Topics and subscriptions give you pub/sub messaging. Each subscription acts as a virtual 
+          queue that receives a copy of each message. Filters let subscribers receive only the messages 
+          they care about — very powerful for complex routing scenarios without code changes.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- SERVICE BUS: ADVANCED FEATURES -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Service Bus Advanced Features</h2>
+        <div class="card-grid cols-3">
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-cyan)">⏱️</span>
+            <div class="card-text">Scheduled Delivery<br><span class="text-secondary">Delay message processing</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-blue)">🔄</span>
+            <div class="card-text">Auto-Forwarding<br><span class="text-secondary">Chain queues &amp; topics</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-lavender)">💀</span>
+            <div class="card-text">Dead-Lettering<br><span class="text-secondary">Isolate failed messages</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-pink)">🔁</span>
+            <div class="card-text">Duplicate Detection<br><span class="text-secondary">Idempotent processing</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-cyan)">📦</span>
+            <div class="card-text">Sessions<br><span class="text-secondary">Ordered &amp; grouped delivery</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-blue)">🌍</span>
+            <div class="card-text">Geo-DR<br><span class="text-secondary">Cross-region failover</span></div>
+          </div>
+        </div>
+        <aside class="notes">
+          These advanced features set Service Bus apart. Scheduled delivery lets you post 
+          messages that become available at a future time. Auto-forwarding chains entities together.
+          Sessions enable FIFO and stateful processing. Geo-DR provides cross-region metadata failover 
+          (Premium tier only). Dead-lettering catches messages that can't be delivered or processed.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- SERVICE BUS TIERS -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Service Bus Tiers</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Basic</th>
+              <th>Standard</th>
+              <th>Premium</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Queues</td>
+              <td class="status-done">✓</td>
+              <td class="status-done">✓</td>
+              <td class="status-done">✓</td>
+            </tr>
+            <tr>
+              <td>Topics / Subscriptions</td>
+              <td>—</td>
+              <td class="status-done">✓</td>
+              <td class="status-done">✓</td>
+            </tr>
+            <tr>
+              <td>Max Message Size</td>
+              <td>256 KB</td>
+              <td>256 KB</td>
+              <td>100 MB</td>
+            </tr>
+            <tr>
+              <td>Dedicated Resources</td>
+              <td>—</td>
+              <td>—</td>
+              <td class="status-done">✓</td>
+            </tr>
+            <tr>
+              <td>VNet / Private Endpoint</td>
+              <td>—</td>
+              <td>—</td>
+              <td class="status-done">✓</td>
+            </tr>
+            <tr>
+              <td>Geo-Disaster Recovery</td>
+              <td>—</td>
+              <td>—</td>
+              <td class="status-done">✓</td>
+            </tr>
+          </tbody>
+        </table>
+        <aside class="notes">
+          Basic tier is queues only — no topics. Standard adds pub/sub and is brokered messaging 
+          on shared infrastructure. Premium gives you isolated, dedicated resources with predictable 
+          performance, large message support, VNet integration, and geo-DR. Most production enterprise 
+          workloads should target Premium.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- SECTION DIVIDER: EVENT HUBS -->
+      <!-- ============================================= -->
+      <section data-background-color="#0a1628">
+        <h1>Azure Event Hubs</h1>
+        <p class="subtitle">Big data streaming platform</p>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- EVENT HUBS OVERVIEW -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Azure Event Hubs</h2>
+        <ul>
+          <li class="fragment">Fully managed <strong>event streaming</strong> platform</li>
+          <li class="fragment">Millions of events per second at <strong>low latency</strong></li>
+          <li class="fragment">Apache Kafka compatible (Kafka endpoint)</li>
+          <li class="fragment">Retention: <strong>1–90 days</strong> (Standard) / up to unlimited (Premium/Dedicated)</li>
+          <li class="fragment">Designed for <strong>telemetry, logging, and analytics</strong> pipelines</li>
+        </ul>
+        <aside class="notes">
+          Event Hubs is Azure's big data streaming service. Think of it as a cloud-native Apache 
+          Kafka — in fact it provides a Kafka-compatible endpoint. It's designed for massive throughput 
+          scenarios: IoT telemetry, application logging, clickstream analytics, and real-time dashboards.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- EVENT HUBS: KEY CONCEPTS -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Event Hubs Key Concepts</h2>
+        <div class="card-grid cols-3">
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-cyan)">📊</span>
+            <div class="card-text">Partitions<br><span class="text-secondary">Parallel event streams for scale</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-blue)">👥</span>
+            <div class="card-text">Consumer Groups<br><span class="text-secondary">Independent views of the stream</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-lavender)">📸</span>
+            <div class="card-text">Capture<br><span class="text-secondary">Auto-archive to Blob / Data Lake</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-pink)">⚡</span>
+            <div class="card-text">Throughput Units<br><span class="text-secondary">1 TU = 1 MB/s in, 2 MB/s out</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-cyan)">🕐</span>
+            <div class="card-text">Event Retention<br><span class="text-secondary">Time-based message store</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-blue)">📍</span>
+            <div class="card-text">Checkpointing<br><span class="text-secondary">Track consumer position</span></div>
+          </div>
+        </div>
+        <aside class="notes">
+          Partitions are the unit of parallelism — more partitions = more concurrent readers. 
+          Consumer groups let different applications read the same stream independently with their own 
+          offset. Capture automatically writes events to Blob Storage or Data Lake in Avro format. 
+          Throughput units control your capacity and cost. Checkpointing lets consumers resume from 
+          where they left off.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- EVENT HUBS vs KAFKA -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Event Hubs &amp; Apache Kafka</h2>
+        <div class="two-columns">
+          <div>
+            <h3>Kafka Compatibility</h3>
+            <ul>
+              <li class="fragment">Kafka producer/consumer APIs work directly</li>
+              <li class="fragment">No Kafka cluster to manage</li>
+              <li class="fragment"><strong>Standard</strong> tier and above</li>
+              <li class="fragment">Kafka Connect &amp; Streams supported</li>
+            </ul>
+          </div>
+          <div>
+            <h3>When to Use Kafka Endpoint</h3>
+            <ul>
+              <li class="fragment">Migrating existing Kafka workloads</li>
+              <li class="fragment">Multi-cloud / hybrid scenarios</li>
+              <li class="fragment">Leveraging Kafka ecosystem tools</li>
+              <li class="fragment">Avoiding operational overhead</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          The Kafka endpoint is a huge differentiator. Existing Kafka applications can point at Event Hubs 
+          with just a connection string change — no code changes. You get managed infrastructure without 
+          running your own Kafka clusters. Available on Standard tier and above.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- SECTION DIVIDER: EVENT GRID -->
+      <!-- ============================================= -->
+      <section data-background-color="#0a1628">
+        <h1>Azure Event Grid</h1>
+        <p class="subtitle">Reactive, event-driven architectures</p>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- EVENT GRID OVERVIEW -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Azure Event Grid</h2>
+        <ul>
+          <li class="fragment">Fully managed <strong>event routing</strong> service</li>
+          <li class="fragment">First-class support for <strong>Azure service events</strong></li>
+          <li class="fragment">React to state changes with <strong>near real-time</strong> delivery</li>
+          <li class="fragment"><strong>Push-based</strong> delivery model (HTTP webhooks, Functions, etc.)</li>
+          <li class="fragment">Pay per event — <strong>no idle cost</strong></li>
+        </ul>
+        <aside class="notes">
+          Event Grid is purpose-built for event-driven architectures. It connects event sources 
+          (Azure services, custom apps) to event handlers (Functions, Logic Apps, webhooks) with 
+          minimal code. It's push-based, meaning events are delivered to subscribers immediately. 
+          And the consumption-based pricing means no cost when there's no activity.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- EVENT GRID: KEY CONCEPTS -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Event Grid Concepts</h2>
+        <div class="two-columns">
+          <div>
+            <h3>Event Sources</h3>
+            <ul>
+              <li class="fragment">Azure Blob Storage</li>
+              <li class="fragment">Resource Groups / Subscriptions</li>
+              <li class="fragment">IoT Hub, Service Bus, Event Hubs</li>
+              <li class="fragment">Custom topics (your apps)</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Event Handlers</h3>
+            <ul>
+              <li class="fragment">Azure Functions</li>
+              <li class="fragment">Logic Apps</li>
+              <li class="fragment">Webhooks (any HTTP endpoint)</li>
+              <li class="fragment">Storage Queues, Service Bus, Event Hubs</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Event Grid has dozens of built-in sources from Azure services. When a blob is created, a 
+          VM is deallocated, or a resource group changes — Event Grid can route that event to any handler.
+          Custom topics let you publish events from your own applications into the same routing fabric.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- EVENT GRID: FEATURES -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Event Grid Features</h2>
+        <div class="card-grid cols-3">
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-cyan)">🔍</span>
+            <div class="card-text">Event Filtering<br><span class="text-secondary">Subject, type, or advanced filters</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-blue)">🔄</span>
+            <div class="card-text">Retry &amp; Dead-Letter<br><span class="text-secondary">Built-in retry policies</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-lavender)">📡</span>
+            <div class="card-text">Fan-Out<br><span class="text-secondary">Multiple subscribers per topic</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-pink)">🔐</span>
+            <div class="card-text">Security<br><span class="text-secondary">Webhook validation &amp; Azure AD</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-cyan)">📋</span>
+            <div class="card-text">CloudEvents<br><span class="text-secondary">CNCF standard event schema</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-blue)">⏱️</span>
+            <div class="card-text">High Availability<br><span class="text-secondary">Built-in zone redundancy</span></div>
+          </div>
+        </div>
+        <aside class="notes">
+          Event Grid filtering lets you control exactly which events reach each subscriber — filter by 
+          event type, subject prefix/suffix, or advanced operators on the data payload. Built-in retry 
+          with exponential backoff and dead-lettering to Blob Storage. Supports both Event Grid schema 
+          and the CNCF CloudEvents standard.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- SERVICE COMPARISON TABLE -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Service Comparison</h2>
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Storage Queues</th>
+              <th>Service Bus</th>
+              <th>Event Hubs</th>
+              <th>Event Grid</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Pattern</strong></td>
+              <td>Queue</td>
+              <td>Queue + Pub/Sub</td>
+              <td>Streaming</td>
+              <td>Reactive events</td>
+            </tr>
+            <tr>
+              <td><strong>Delivery</strong></td>
+              <td>At-least-once</td>
+              <td>At-least / At-most</td>
+              <td>At-least-once</td>
+              <td>At-least-once</td>
+            </tr>
+            <tr>
+              <td><strong>Protocol</strong></td>
+              <td>HTTP/REST</td>
+              <td>AMQP, HTTP</td>
+              <td>AMQP, Kafka, HTTP</td>
+              <td>HTTP (push)</td>
+            </tr>
+            <tr>
+              <td><strong>Throughput</strong></td>
+              <td>High</td>
+              <td>Medium–High</td>
+              <td>Very High</td>
+              <td>Very High</td>
+            </tr>
+            <tr>
+              <td><strong>Ordering</strong></td>
+              <td>No</td>
+              <td>FIFO (sessions)</td>
+              <td>Per partition</td>
+              <td>No</td>
+            </tr>
+            <tr>
+              <td><strong>Max Msg Size</strong></td>
+              <td>64 KB</td>
+              <td>256 KB – 100 MB</td>
+              <td>1 MB (256 KB std)</td>
+              <td>1 MB</td>
+            </tr>
+          </tbody>
+        </table>
+        <aside class="notes">
+          This comparison table helps position each service. Storage Queues for simple, high-volume 
+          queue scenarios. Service Bus when you need enterprise features like sessions, DLQ, and 
+          transactions. Event Hubs for massive streaming throughput. Event Grid for reactive, 
+          push-based event routing.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- CHOOSING THE RIGHT SERVICE -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Choosing the Right Service</h2>
+        <div class="card-grid cols-2">
+          <div class="card">
+            <span class="card-icon"><img src="Icons/general/10840-icon-service-Storage-Queue.svg" alt="Storage Queues" style="height:1.6em;vertical-align:middle;"></span>
+            <div class="card-text"><span class="text-cyan">Storage Queues</span><br><span class="text-secondary">Simple decoupling, large backlogs, cost-effective</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/integration/10836-icon-service-Azure-Service-Bus.svg" alt="Service Bus" style="height:1.6em;vertical-align:middle;"></span>
+            <div class="card-text"><span class="text-lavender">Service Bus</span><br><span class="text-secondary">Enterprise messaging, ordering, transactions, DLQ</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/analytics/00039-icon-service-Event-Hubs.svg" alt="Event Hubs" style="height:1.6em;vertical-align:middle;"></span>
+            <div class="card-text"><span class="text-cyan">Event Hubs</span><br><span class="text-secondary">High-throughput streaming, telemetry, Kafka migration</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/integration/10206-icon-service-Event-Grid-Topics.svg" alt="Event Grid" style="height:1.6em;vertical-align:middle;"></span>
+            <div class="card-text"><span class="text-pink">Event Grid</span><br><span class="text-secondary">Event-driven reactions, Azure service integration</span></div>
+          </div>
+        </div>
+        <aside class="notes">
+          Ask these questions: Do I need simple queuing? Storage Queues. Do I need enterprise 
+          messaging features? Service Bus. Am I ingesting massive event/telemetry streams? Event Hubs. 
+          Do I need to react to Azure service events? Event Grid. Often you'll combine multiple 
+          services in a single architecture.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- DECISION FRAMEWORK -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Decision Framework</h2>
+        <ul>
+          <li class="fragment"><strong>Need ordered delivery or transactions?</strong> → Service Bus</li>
+          <li class="fragment"><strong>Millions of events/second at low latency?</strong> → Event Hubs</li>
+          <li class="fragment"><strong>React to Azure resource changes?</strong> → Event Grid</li>
+          <li class="fragment"><strong>Simple queue with no frills?</strong> → Storage Queues</li>
+          <li class="fragment"><strong>Combine services</strong> — e.g., Event Grid triggers a Function that writes to Service Bus</li>
+        </ul>
+        <aside class="notes">
+          In practice, these services are often used together. A common pattern: Event Grid 
+          detects a blob upload, triggers a Function, which processes the file and pushes results 
+          to a Service Bus queue for downstream systems. The decision framework helps you pick the 
+          right tool for each part of your architecture.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- KEY TAKEAWAYS -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Key Takeaways</h2>
+        <div class="highlight-box">
+          <ul>
+            <li><strong>Messages vs Events</strong> — understand the distinction to choose correctly</li>
+            <li><strong>Storage Queues</strong> — simple, cost-effective, massive scale</li>
+            <li><strong>Service Bus</strong> — enterprise broker with rich feature set</li>
+            <li><strong>Event Hubs</strong> — big data streaming, Kafka-compatible</li>
+            <li><strong>Event Grid</strong> — reactive event routing, push-based</li>
+          </ul>
+        </div>
+        <aside class="notes">
+          Recap the five key points. The most important takeaway is understanding the difference 
+          between messages and events, as that drives your service selection. Each service has a 
+          sweet spot — there's no single best choice, it depends on the scenario.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- CLOSING -->
+      <!-- ============================================= -->
+      <section>
+        <h2 class="r-fit-text">Questions?</h2>
+        <p class="subtitle">Thank you!</p>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="slides.js"></script>
+</body>
+
+</html>
