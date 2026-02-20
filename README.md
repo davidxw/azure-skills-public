@@ -30,4 +30,4 @@ To save as PDF, open the PDF link, print, and select "Save as PDF".
 
 [3. App Platforms and Databases](labs/3.%20App%20Platforms%20and%20Databases.md)
 
-[4. Integration Services and Messaging](labs/4.%20Integration%20Services.md)
+[4. Integration Services](labs/4.%20Integration%20Services.md)
