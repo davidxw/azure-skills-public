@@ -1,6 +1,6 @@
 # Azure Skill Series
 
-### Slides:
+### Slides (COMMING SOON)
 
 To view the slide, click in the link. Slide show controls are:
 * Next slide - right arrow or space
