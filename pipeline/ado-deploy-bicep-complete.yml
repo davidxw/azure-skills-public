@@ -1,0 +1,76 @@
+### START MODULE 2
+trigger:
+  none
+
+# For demo purposes, we will trigger the pipeline manually. In a real project, you would likely want to trigger on changes to your infrastructure code, for example:
+# trigger:
+#   branches:
+#     include: [main]
+#   paths:
+#     include: [infra/**]
+
+parameters:
+- name: rgNameParam
+  displayName: Target resource group name
+  type: string
+
+variables:
+  templateFile: 'infra/main.bicep'
+  rgName: ${{ parameters.rgNameParam }}
+  location: 'australiaeast'
+  service-connection: 'azure-dev'
+
+stages:
+  - stage: Validate
+    jobs:
+      - job: Lint
+        steps:
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: '$(service-connection)'
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: az bicep build --file $(templateFile) --verbose
+### END MODULE 2
+
+### START MODULE 3
+
+  - stage: DeployDev
+    dependsOn: Validate # implicit condition to only run if dependant stage succeeds
+    condition: 
+    jobs:
+      - deployment: Deploy
+        environment: Dev
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                - task: AzureResourceManagerTemplateDeployment@3
+                  inputs:
+                    azureResourceManagerConnection: '$(service-connection)'
+                    resourceGroupName: '$(rgName)'
+                    location: '$(location)'
+                    csmFile: '$(templateFile)'
+### END MODULE 3
+
+### START MODULE 4
+  - stage: DeployProd
+    dependsOn: DeployDev
+    # only deploy to prod if deploying from main branch. Requires explicit check of previous stage success
+    condition: and(succeeded('DeployDev'),eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      - deployment: Deploy
+        environment: Prod
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                - task: AzureResourceManagerTemplateDeployment@3
+                  inputs:
+                    azureResourceManagerConnection: '$(service-connection)' # would be a different subscription outside the lab environment
+                    resourceGroupName: '$(rgName)'
+                    location: '$(location)'
+                    csmFile: '$(templateFile)'
+### END MODULE 4
