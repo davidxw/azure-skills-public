@@ -427,12 +427,16 @@
   overflow: hidden;
   display: flex;
   align-items: flex-start;
+  position: relative;
+  min-width: 0;
 }
 
 .text-image-bleed .image-side img {
+  position: absolute;
+  top: 0;
+  left: 0;
   height: 100%;
-  width: auto;
-  max-width: none;
+  width: 100%;
   object-fit: cover;
   object-position: left top;
 }

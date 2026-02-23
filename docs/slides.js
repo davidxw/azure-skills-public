@@ -13,6 +13,9 @@
     transition: 'fade',
     controls: 'speaker-only',
     progress: false,
-    pdfSeparateFragments: false
+    pdfSeparateFragments: false,
+    slideNumber: 'c/t' ,
+    showSlideNumber: 'speaker' 
+
   });
 })();
