@@ -15,7 +15,8 @@
     progress: false,
     pdfSeparateFragments: false,
     slideNumber: 'c/t' ,
-    showSlideNumber: 'speaker' 
+    showSlideNumber: 'speaker',
+    mouseWheel: true
 
   });
 })();

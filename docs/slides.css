@@ -473,3 +473,13 @@
   object-fit: contain;
   object-position: left top;
 }
+
+/* --- Slide Footer Links --- */
+.reveal .slides .slide-links {
+  position: absolute;
+  bottom: 12px;
+  left: 60px;
+  right: 60px;
+  margin: 0;
+  text-align: right;
+}
