@@ -1,3 +1,7 @@
+/*
+A simple Bicep template to create a storage account with a unique name based on the resource group ID.
+*/
+
 param prefix string = 'store'
 param location string = resourceGroup().location
 
