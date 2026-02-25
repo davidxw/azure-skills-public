@@ -1,0 +1,1969 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>App Platforms and Databases</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/theme/black.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/highlight/monokai.css" />
+  <link rel="stylesheet" href="slides.css" />
+  <link rel="icon" type="image/svg+xml" href="Icons/web/10035-icon-service-App-Services.svg" />
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ============================================= -->
+      <!-- TITLE SLIDE -->
+      <!-- ============================================= -->
+      <section class="title-hero">
+        <div class="hero-layout">
+          <div class="hero-text">
+            <svg class="hero-logo" viewBox="0 0 337 73" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="33" height="33" fill="#f25022"/><rect x="36" y="1" width="33" height="33" fill="#7fba00"/><rect x="1" y="36" width="33" height="33" fill="#00a4ef"/><rect x="36" y="36" width="33" height="33" fill="#ffb900"/><text x="82" y="50" fill="#ffffff" font-family="Segoe UI,sans-serif" font-size="34" font-weight="600">Microsoft</text></svg>
+            <h2>App Platforms &amp; Databases</h2>
+            <p class="hero-author">David Watson<br>Cloud Solution Architect</p>
+          </div>
+          <div class="hero-image">
+            <img src="images/title.png" alt="Title">
+          </div>
+        </div>
+        <aside class="notes">
+          Welcome to the App Platforms and Databases session. We'll spend roughly 2.5 hours covering Azure compute options,
+          Key Vault fundamentals, and Azure's two flagship database services. We'll include hands-on comparisons, SKU breakdowns,
+          and decision guides to help you choose the right service for your workloads.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- AGENDA -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Agenda</h2>
+        <div class="card-grid cols-3">
+          <div class="card">
+            <span class="card-icon"><img src="Icons/app services/10035-icon-service-App-Services.svg" alt="App Services" style="height:1em"></span>
+            <div class="card-text">Azure Application Hosting</div>
+            <div class="text-secondary" style="margin-top:0.3em"><small>App Service, Functions, ACI, ACA, AKS</small></div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/security/10245-icon-service-Key-Vaults.svg" alt="Key Vault" style="height:1em"></span>
+            <div class="card-text">Azure Key Vault</div>
+            <div class="text-secondary" style="margin-top:0.3em"><small>Secrets, Keys, Certificates</small></div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/databases/02390-icon-service-Azure-SQL.svg" alt="Azure SQL" style="height:1em"></span>
+            <div class="card-text">Azure Databases</div>
+            <div class="text-secondary" style="margin-top:0.3em"><small>Azure SQL &amp; Cosmos DB</small></div>
+          </div>
+        </div>
+        <aside class="notes">
+          Three major blocks today. We'll start with application hosting — covering PaaS, serverless, and container platforms.
+          Then Key Vault fundamentals. Finally, a deep look at Azure SQL and Cosmos DB with guidance on when to use each.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- PART 1: AZURE APPLICATION HOSTING -->
+      <!-- ============================================= -->
+      <section data-background-color="#1a1a3e">
+        <h1>Azure Application Hosting</h1>
+        <p class="subtitle">App Service &bull; Functions &bull; Container Platforms</p>
+        <aside class="notes">
+          Part 1 — we'll cover the spectrum of Azure compute services from fully managed PaaS through serverless
+          to container orchestration. Each has its sweet spot.
+        </aside>
+      </section>
+
+      <!-- Cloud Application Hosting Continuum -->
+      <section>
+        <h2>Cloud Application Hosting Continuum</h2>
+
+        <!-- Platform icons row -->
+        <div class="card-grid" style="margin-top:0.5em;gap:0.8em;">
+          <div class="card" style="padding:0.5em 0.4em;">
+            <span class="card-icon"><img src="Icons/compute/10021-icon-service-Virtual-Machine.svg" alt="IaaS" style="height:1.6em;"></span>
+            <div class="card-text" style="margin-top:0.1em;"><strong>IaaS</strong><br><span class="text-secondary">Infrastructure Platform</span></div>
+          </div>
+          <div class="card" style="padding:0.5em 0.4em;">
+            <span class="card-icon"><img src="Icons/compute/10023-icon-service-Kubernetes-Services.svg" alt="CaaS" style="height:1.6em;"></span>
+            <div class="card-text" style="margin-top:0.1em;"><strong>CaaS</strong><br><span class="text-secondary">Container Platform</span></div>
+          </div>
+          <div class="card" style="padding:0.5em 0.4em;">
+            <span class="card-icon"><img src="Icons/compute/10035-icon-service-App-Services.svg" alt="PaaS" style="height:1.6em;"></span>
+            <div class="card-text" style="margin-top:0.1em;"><strong>PaaS</strong><br><span class="text-secondary">Application Platform</span></div>
+          </div>
+          <div class="card" style="padding:0.5em 0.4em;">
+            <span class="card-icon"><img src="Icons/compute/10029-icon-service-Function-Apps.svg" alt="FaaS" style="height:1.6em;"></span>
+            <div class="card-text" style="margin-top:0.1em;"><strong>FaaS</strong><br><span class="text-secondary">Serverless Platform</span></div>
+          </div>
+        </div>
+
+        <!-- Comparison table -->
+        <table style="margin-top:0.5em;">
+          <tbody>
+            <tr><td><h4 style="color:var(--text-secondary);font-weight:600;">Challenges</h4></td></tr>
+            <tr>
+              <td>Patching, Management, Deployment</td>
+              <td>Management (Container &amp; Pod)</td>
+              <td>Limitations of Execution environment</td>
+              <td>Cold start, long running process</td>
+            </tr>
+            <tr><td><h4 style="padding-top:0.5em;color:var(--text-secondary);font-weight:600;">What you get</h4></td></tr>
+            <tr>
+              <td>Curated VM Hosting</td>
+              <td>Curated Orchestration</td>
+              <td>Curated Execution Environment</td>
+              <td>Scale to &lsquo;zero&rsquo;</td>
+            </tr>
+            <tr><td colspan="4"><h4 style="padding-top:0.5em;color:var(--text-secondary);font-weight:600;">Technology Decisions</h4></td></tr>
+            <tr>
+              <td colspan="2" style="text-align:center;color:var(--text-secondary);font-weight:600;">IT / Infra focused Value Prop</td>
+              <td colspan="2" style="text-align:center;color:var(--text-secondary);font-weight:600;">Dev / App Admin focused Value Prop</td>
+            </tr>
+            <tr>
+              <td colspan="4" style="padding:0;border-bottom:none;">
+                <div style="padding:0.25em 0.8em;display:flex;justify-content:space-between;">
+                  <span style="font-size:var(--fs-s);">⬅ <strong>More Control</strong> of execution environment</span>
+                  <span style="font-size:var(--fs-s);"><strong>Less Control</strong> of execution environment ➡</span>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="4" style="padding:0;border-bottom:none;">
+                <div style="padding:0.25em 0.8em;display:flex;justify-content:space-between;">
+                  <span style="font-size:var(--fs-s);">⬅ <strong>Less Agile</strong> development &amp; deployment</span>
+                  <span style="font-size:var(--fs-s);"><strong>More Agile</strong> development &amp; deployment ➡</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <aside class="notes">
+          This continuum shows the trade-offs across cloud hosting models. Moving from IaaS to FaaS, you give up control
+          of the execution environment but gain agility in development and deployment. IaaS (VMs) gives full OS control
+          but requires patching and management. CaaS (Kubernetes/ACA) abstracts the OS but you manage containers and pods.
+          PaaS (App Service) provides a curated execution environment with some constraints. FaaS (Functions) scales to
+          zero but introduces cold starts and execution time limits. Choose based on your team's priorities: infrastructure
+          control vs. developer velocity.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- APP SERVICE -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Azure App Service</h2>
+        <h3>Fully managed platform for web applications (PaaS)</h3>
+        <ul>
+          <li>HTTP-based hosting for web apps, REST APIs, and mobile backends</li>
+          <li>Supports .NET, Java, Node.js, Python, PHP, Ruby, and containers</li>
+          <li>Built-in autoscale, CI/CD, deployment slots, and custom domains</li>
+          <li>Runs on Windows or Linux App Service Plans</li>
+          <li>Enterprise-grade SLA — up to 99.95%</li>
+        </ul>
+        <aside class="notes">
+          App Service is Azure's flagship PaaS for web workloads. It abstracts away infrastructure concerns — OS patching,
+          load balancing, scaling — so teams can focus on code. It supports both code-based and container-based deployments.
+          Key differentiator: integrated DevOps features like deployment slots for zero-downtime releases.
+        </aside>
+      </section>
+
+      <section>
+        <h2>App Service Key Features</h2>
+        <div class="card-grid">
+          <div class="card">
+            <span class="card-icon"><img src="Icons/general/10849-icon-service-Web-Slots.svg" alt="Deployment Slots" style="height:1em"></span>
+            <div class="card-text">Deployment Slots</div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/monitor/10832-icon-service-Auto-Scale.svg" alt="Auto Scale" style="height:1em"></span>
+            <div class="card-text">Auto Scale</div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/app services/00050-icon-service-App-Service-Domains.svg" alt="Custom Domains" style="height:1em"></span>
+            <div class="card-text">Custom Domains &amp; TLS</div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/networking/10061-icon-service-Virtual-Networks.svg" alt="VNet Integration" style="height:1em"></span>
+            <div class="card-text">VNet Integration</div>
+          </div>
+        </div>
+        <aside class="notes">
+          Deployment slots let you stage releases and swap with zero downtime. Auto scale adjusts instances based on metrics.
+          Custom domains with managed TLS certificates are included at Standard tier and above. VNet integration enables
+          private connectivity to backends. These features make App Service production-ready out of the box.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Deployment Slots</h2>
+        <h3>Zero-downtime releases with staging environments</h3>
+        <ul>
+          <li>Each slot is a <strong>live app</strong> with its own hostname and config</li>
+          <li><strong>Swap</strong> traffic between slots instantly — no cold start</li>
+          <li>Slot-specific app settings (e.g., staging DB connection string)</li>
+          <li><strong>Auto-swap</strong> — deploy to staging, auto-promote to production</li>
+          <li>Available from <strong>Standard</strong> tier and above (up to 20 slots)</li>
+        </ul>
+        <aside class="notes">
+          Deployment slots are separate instances of your app within the same App Service Plan. Each slot has its own
+          URL (e.g., myapp-staging.azurewebsites.net). The key operation is swap — this instantly redirects production
+          traffic to the staged version by swapping VIPs. The staged slot warms up before the swap, so users never
+          hit a cold instance. You can mark settings as "slot-specific" so that database connection strings, feature
+          flags, etc. stay with the slot and don't move during a swap. Auto-swap automates the promotion from staging
+          to production after each deployment. Use this pattern for blue-green deployments and A/B testing.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Auto Scale</h2>
+        <h3>Automatically adjust capacity to match demand</h3>
+        <ul>
+          <li>Scale <strong>out</strong> (add instances) or <strong>in</strong> (remove instances) automatically</li>
+          <li>Rules based on <strong>CPU %</strong>, <strong>memory %</strong>, <strong>HTTP queue length</strong>, or custom metrics</li>
+          <li>Schedule-based scaling — e.g., more instances during business hours</li>
+          <li>Cooldown periods prevent flapping (default 5 min)</li>
+          <li>Available from <strong>Standard</strong> tier — Premium v3 supports up to 30 instances</li>
+        </ul>
+        <aside class="notes">
+          Autoscale is rule-based — you define conditions and actions. For example: "if average CPU > 70% for 10 minutes,
+          add 2 instances." Always pair scale-out rules with corresponding scale-in rules to avoid runaway costs. You
+          can combine metric-based and schedule-based rules — e.g., baseline of 3 instances, scale to 10 during peak hours,
+          and further scale based on CPU spikes. The cooldown period prevents rapid oscillation between scaling actions.
+          Monitor autoscale activity in the Activity Log and set up alerts for scale events. For predictable traffic
+          patterns, schedule-based scaling is more efficient than reactive metric-based scaling.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Custom Domains &amp; TLS</h2>
+        <h3>Production-ready web hosting with your brand</h3>
+        <ul>
+          <li>Map <strong>custom domains</strong> via CNAME or A records</li>
+          <li><strong>Free managed certificates</strong> — auto-renewed, zero config (Standard+)</li>
+          <li>Bring your own certificate or import from <strong>Key Vault</strong></li>
+          <li>Enforce <strong>HTTPS-only</strong> and minimum TLS version (1.2 recommended)</li>
+          <li>SNI SSL included at no extra cost; IP SSL for legacy clients</li>
+        </ul>
+        <aside class="notes">
+          Every App Service app gets a default *.azurewebsites.net hostname with TLS. For production, map your custom
+          domain (e.g., www.contoso.com). Free managed certificates are available at Standard tier and above — Azure
+          handles issuance and renewal automatically via DigiCert. For wildcard certs, SAN certs, or EV certs, bring
+          your own or reference one stored in Key Vault for centralized management. Always enable HTTPS-only to redirect
+          HTTP to HTTPS. Set minimum TLS to 1.2 — TLS 1.0 and 1.1 are deprecated. SNI SSL (Server Name Indication) is
+          the modern default and doesn't require a dedicated IP.
+        </aside>
+      </section>
+
+      <section>
+        <h2>App Service Networking</h2>
+        <div class="two-columns">
+          <div>
+            <h3>Inbound</h3>
+            <ul>
+              <li>App-assigned &amp; custom domains</li>
+              <li>IP-based access restrictions</li>
+              <li>Private Endpoints</li>
+              <li>App Gateway / Front Door integration</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Outbound</h3>
+            <ul>
+              <li>VNet Integration (regional)</li>
+              <li>NAT Gateway for static outbound IP</li>
+              <li>Hybrid Connections</li>
+              <li>Service Endpoints / Private Link</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Networking is a key consideration when deploying to App Service. For inbound, Private Endpoints let you expose the
+          app only within a VNet. For outbound, VNet Integration routes outbound traffic through a VNet subnet, enabling
+          access to private resources. Hybrid Connections provide connectivity to on-premises systems without VPN.
+          Use NAT Gateway when you need a predictable static outbound IP.
+        </aside>
+      </section>
+
+      <section>
+        <h2>VNet Integration</h2>
+        <img src="https://learn.microsoft.com/en-us/azure/app-service/media/networking-features/vnet-integration.png"
+             alt="Diagram showing App Service VNet Integration routing outbound traffic through a VNet subnet to reach private resources"
+             style="max-height: 420px; border-radius: 12px; background: white; padding: 10px;">
+        <p class="subtitle"><small>Source: Microsoft Learn — App Service networking features</small></p>
+        <aside class="notes">
+          This diagram from the Azure documentation shows how VNet Integration works. Your app's outbound traffic is
+          routed through a delegated subnet in your VNet. From there it can reach private resources — databases behind
+          private endpoints, on-premises resources via ExpressRoute or VPN, and other VNet-connected services. Combined
+          with Private Endpoints for inbound, you can fully isolate your App Service from the public internet.
+        </aside>
+      </section>
+
+      <section>
+        <h2>App Service Plans</h2>
+        <h3>Compute resources that power your apps</h3>
+        <ul>
+          <li>Apps run on an <strong>App Service Plan</strong> — a set of VMs</li>
+          <li>Multiple apps can share the same plan to optimize cost</li>
+          <li>Plan tier determines features, scale limits, and SLA</li>
+          <li>Scale <strong class="text-cyan">up</strong> (bigger VM) or <strong class="text-cyan">out</strong> (more instances)</li>
+        </ul>
+        <aside class="notes">
+          Think of an App Service Plan as the "server farm" behind your apps. The plan defines how much CPU, RAM, and storage
+          each instance gets, and how many instances you can run. You can host multiple apps on one plan — they all share the
+          same compute. This is a key cost optimization strategy.
+        </aside>
+      </section>
+
+      <section>
+        <h2>App Service Plan Tiers</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Tier</th>
+              <th>Use Case</th>
+              <th>Scale Out</th>
+              <th>Key Features</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong class="text-cyan">Free / Shared</strong></td>
+              <td>Dev / test</td>
+              <td>—</td>
+              <td>Shared infrastructure, no SLA</td>
+            </tr>
+            <tr>
+              <td><strong class="text-cyan">Basic</strong></td>
+              <td>Low-traffic apps</td>
+              <td>Up to 3</td>
+              <td>Dedicated VMs, custom domains</td>
+            </tr>
+            <tr>
+              <td><strong class="text-cyan">Standard</strong></td>
+              <td>Production</td>
+              <td>Up to 10</td>
+              <td>Autoscale, slots, VNet, backups</td>
+            </tr>
+            <tr>
+              <td><strong class="text-cyan">Premium v3</strong></td>
+              <td>High-performance</td>
+              <td>Up to 30</td>
+              <td>Faster CPUs, more memory, zone redundancy</td>
+            </tr>
+            <tr>
+              <td><strong class="text-cyan">Isolated v2</strong></td>
+              <td>Compliance / isolation</td>
+              <td>Up to 100</td>
+              <td>Private ASE, single-tenant, network isolation</td>
+            </tr>
+          </tbody>
+        </table>
+        <aside class="notes">
+          Walk through tiers from bottom to top. Free/Shared: fine for prototyping but shared infra and no SLA.
+          Basic: dedicated VMs but no autoscale or slots. Standard: the sweet spot for most production workloads —
+          adds autoscale, deployment slots, daily backups, and VNet integration. Premium v3: faster hardware, more RAM,
+          and availability zone support. Isolated v2: runs in a fully private App Service Environment (ASE) for
+          regulatory/compliance scenarios — single-tenant, VNet-injected. Most teams start at Standard and move to
+          Premium v3 as they grow.
+        </aside>
+      </section>
+
+      <section>
+        <h2>App Service Best Practices</h2>
+        <ul>
+          <li>Use <strong>deployment slots</strong> for zero-downtime releases</li>
+          <li>Enable <strong>health checks</strong> to auto-replace unhealthy instances</li>
+          <li>Use <strong>managed identities</strong> — avoid storing credentials</li>
+          <li>Enable <strong>diagnostic logging</strong> and integrate with App Insights</li>
+          <li>Configure <strong>autoscale rules</strong> based on CPU, memory, or HTTP queue</li>
+        </ul>
+        <aside class="notes">
+          Deployment slots: always deploy to a staging slot, warm it up, then swap. Health checks: App Service can ping
+          an endpoint and restart instances that fail. Managed identities: use system-assigned or user-assigned managed
+          identity to authenticate to Key Vault, SQL, Storage, etc. without secrets. Diagnostic logging: enable app logs,
+          web server logs, and integrate with Application Insights for full observability. Autoscale: configure rules to
+          handle traffic spikes automatically.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- AZURE FUNCTIONS -->
+      <!-- ============================================= -->
+      <section data-background-color="#1a1a3e">
+        <h1>Azure Functions</h1>
+        <p class="subtitle">Serverless compute — event-driven code at scale</p>
+        <aside class="notes">
+          Now we move from PaaS to serverless. Azure Functions takes the abstraction further — you don't think about
+          servers or plans at all. You write functions that respond to events, and Azure handles the rest.
+        </aside>
+      </section>
+
+      <section>
+        <h2>What is Serverless?</h2>
+        <div class="stats-row">
+          <div class="stat-block">
+            <div class="stat-number">0</div>
+            <div class="stat-label">Servers to Manage</div>
+            <div class="stat-desc">Infrastructure fully abstracted</div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-number">∞</div>
+            <div class="stat-label">Elastic Scale</div>
+            <div class="stat-desc">Scale from zero to thousands</div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-number">$</div>
+            <div class="stat-label">Pay Per Execution</div>
+            <div class="stat-desc">Consumption-based pricing model</div>
+          </div>
+        </div>
+        <aside class="notes">
+          Serverless doesn't mean no servers — it means you don't manage them. Key characteristics: automatic scaling
+          including scale-to-zero, pay-per-execution pricing (Consumption plan), and event-driven execution. You focus
+          purely on business logic. The trade-off is less control over the runtime environment.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Azure Functions Overview</h2>
+        <ul>
+          <li>Write small, focused functions triggered by events</li>
+          <li>Supports C#, JavaScript, F#, Java, and Python (Go, Rust, others via custom handlers)</li>
+          <li><strong>Triggers</strong> start execution — <strong>Bindings</strong> connect to services</li>
+          <li>Stateless by default; <strong>Durable Functions</strong> for workflows</li>
+          <li>Multiple hosting options with different scale &amp; pricing models</li>
+        </ul>
+        <aside class="notes">
+          Azure Functions is Microsoft's serverless compute service. A function is a small piece of code that runs in
+          response to a trigger — HTTP requests, queue messages, timer schedules, blob changes, etc. Bindings are
+          declarative connections to other services (input and output) that reduce boilerplate code. Durable Functions
+          extend the model to support long-running, stateful workflows.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Functions Programming Model</h2>
+        <div class="three-columns" style="align-items:flex-end; text-align:center; margin-top:0.5em;">
+          <div style="display:flex; flex-direction:column; justify-content:flex-end;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.05em; justify-items:center;">
+              <img src="Icons/integration/10206-icon-service-Event-Grid-Topics.svg" alt="Event Grid" style="height:2.2em;">
+              <img src="Icons/integration/10836-icon-service-Azure-Service-Bus.svg" alt="Service Bus" style="height:2.2em;">
+              <img src="Icons/general/10840-icon-service-Storage-Queue.svg" alt="Queue" style="height:2.2em;">
+              <img src="Icons/general/10780-icon-service-Blob-Block.svg" alt="Blob" style="height:2.2em;">
+              <img src="Icons/databases/10121-icon-service-Azure-Cosmos-DB.svg" alt="Cosmos DB" style="height:2.2em;">
+              <img src="Icons/iot/10182-icon-service-IoT-Hub.svg" alt="IoT Hub" style="height:2.2em;">
+            </div>
+            <div class="stat-desc" style="margin-top:0.5em;">React to timers, HTTP, or events from your favorite Azure services</div>
+            <div class="stat-label" style="margin-top:0.4em;">Triggers / Inputs</div>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:0.3em;">
+            <div style="font-size:3em; color:var(--text-secondary);">→</div>
+            <img src="Icons/compute/10029-icon-service-Function-Apps.svg" alt="Azure Functions" style="height:4em;">
+            <div class="stat-desc">Author in C#, F#, Node.js, Java, Python, PowerShell &amp; more</div>
+            <div class="stat-label" style="margin-top:0.2em;">Code</div>
+          </div>
+          <div style="display:flex; flex-direction:column; justify-content:flex-end;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.05em; justify-items:center;">
+              <img src="Icons/databases/10121-icon-service-Azure-Cosmos-DB.svg" alt="Cosmos DB" style="height:2.2em;">
+              <img src="Icons/databases/10130-icon-service-SQL-Database.svg" alt="SQL Database" style="height:2.2em;">
+              <img src="Icons/integration/10836-icon-service-Azure-Service-Bus.svg" alt="Service Bus" style="height:2.2em;">
+              <img src="Icons/storage/10086-icon-service-Storage-Accounts.svg" alt="Storage" style="height:2.2em;">
+            </div>
+            <div class="stat-desc" style="margin-top:0.5em;">Send results to an ever-growing collection of services</div>
+            <div class="stat-label" style="margin-top:0.4em;">Outputs</div>
+          </div>
+        </div>
+        <aside class="notes">
+          This is the Azure Functions programming model in a nutshell. On the left: triggers and inputs — events that
+          start your function (HTTP requests, timer schedules, queue messages, blob uploads, Event Grid events, Cosmos DB
+          change feed, etc.). In the middle: your code — write in your language of choice, focus purely on business logic.
+          On the right: outputs — bindings that send results to other services (queues, databases, blobs, SendGrid, etc.)
+          without boilerplate SDK code. Durable Functions add stateful orchestration on top of this model for workflows
+          that chain, fan-out, or wait for external events.
+        </aside>
+      </section>
+
+      <section class="text-image">
+        <h2>Triggers, Inputs and Outputs → Bindings</h2>
+        <div class="image-content">
+          <div class="text-side">
+            <p>Azure Functions features input and output bindings which provide a means of pulling data or pushing data to other services.</p>
+            <p>These bindings work for both Microsoft and third-party services without the need to hard-coding integrations.</p>
+          </div>
+          <div class="image-side" style="background:#fff; border-radius:12px;">
+            <img src="images/triggers-and-bindings.png" alt="Triggers and Bindings diagram showing trigger object, input binding, your code, output binding, and output object">
+          </div>
+        </div>
+        <aside class="notes">
+          Triggers define HOW a function is invoked — HTTP, Timer, Queue, Blob, Event Grid, Cosmos DB change feed, and more.
+          Bindings are a declarative way to connect to data sources. Input bindings read data (e.g., a Cosmos DB document),
+          output bindings write data (e.g., a queue message or blob). You declare them in configuration rather than writing
+          SDK-specific connection code. This keeps your function code clean and focused on business logic.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Function Code</h2>
+        <div style="flex:1; display:flex; align-items:center; justify-content:center; min-height:0;">
+          <img src="images/function-code0.png" alt="Annotated Azure Functions code sample showing Input, Output, Function Trigger, and Function Code" style="max-width:100%; max-height:100%; object-fit:contain;">
+        </div>
+      </section>
+      <section>
+        <h2>Function Code</h2>
+        <div style="flex:1; display:flex; align-items:center; justify-content:center; min-height:0;">
+          <img src="images/function-code1.png" alt="Annotated Azure Functions code sample showing Input, Output, Function Trigger, and Function Code" style="max-width:100%; max-height:100%; object-fit:contain;">
+        </div>
+      </section>
+      <section>
+        <h2>Functions Hosting Plans</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Plan</th>
+              <th>Scale</th>
+              <th>Pricing</th>
+              <th>Best For</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong class="text-cyan">Consumption</strong></td>
+              <td>Auto (0 → 200)</td>
+              <td>Pay per execution</td>
+              <td>Sporadic / bursty workloads</td>
+            </tr>
+            <tr>
+              <td><strong class="text-cyan">Flex Consumption</strong></td>
+              <td>Auto (0 → 1000)</td>
+              <td>Pay per execution</td>
+              <td>High-scale serverless, VNet</td>
+            </tr>
+            <tr>
+              <td><strong class="text-cyan">Premium (EP)</strong></td>
+              <td>Event-driven (1 → 100)</td>
+              <td>Pre-warmed instances</td>
+              <td>No cold start, VNet, longer runs</td>
+            </tr>
+            <tr>
+              <td><strong class="text-cyan">Dedicated (ASP)</strong></td>
+              <td>Manual / autoscale</td>
+              <td>App Service Plan</td>
+              <td>Existing ASP, predictable load</td>
+            </tr>
+            <tr>
+              <td><strong class="text-cyan">Container Apps</strong></td>
+              <td>Event-driven (0 → 300)</td>
+              <td>Per usage</td>
+              <td>Containerized functions, microservices</td>
+            </tr>
+          </tbody>
+        </table>
+        <aside class="notes">
+          Consumption: the classic serverless plan — scale to zero, pay only when running, but has cold start latency (~1-3s).
+          Flex Consumption: newer plan that brings VNet integration and higher scale limits while keeping scale-to-zero.
+          Premium: eliminates cold starts with pre-warmed instances, adds VNet integration, and allows longer execution times
+          (up to 60 min). Dedicated: runs on an App Service Plan — useful if you already have one. Container Apps hosting:
+          lets you deploy functions as containers within Azure Container Apps for microservice architectures.
+        </aside>
+      </section>
+
+      <!-- <section>
+        <h2>Durable Functions</h2>
+        <h3>Stateful workflows in serverless</h3>
+        <ul>
+          <li><strong>Orchestrator functions</strong> — define workflow logic in code</li>
+          <li><strong>Activity functions</strong> — individual steps in the workflow</li>
+          <li>Patterns: chaining, fan-out/fan-in, async HTTP, monitors</li>
+          <li>State managed automatically via storage provider</li>
+          <li>Long-running — can run for hours, days, or indefinitely</li>
+        </ul>
+        <aside class="notes">
+          Durable Functions extend Azure Functions with stateful orchestrations. The orchestrator function defines the
+          workflow — calling activity functions in sequence, in parallel (fan-out/fan-in), or waiting for external events.
+          State is automatically checkpointed. Common patterns: chaining (step A → B → C), fan-out/fan-in (process N items
+          in parallel, then aggregate), async HTTP APIs (start a long operation, poll for completion), and monitors
+          (periodic polling with backoff).
+        </aside>
+      </section> -->
+
+      <section>
+        <h2>Functions Best Practices</h2>
+        <ul>
+          <li>Keep functions <strong>small and focused</strong> — single responsibility</li>
+          <li>Use <strong>bindings</strong> over manual SDK calls where possible</li>
+          <li>Handle <strong>idempotency</strong> — functions may retry on failure</li>
+          <li>Use <strong>managed identities</strong> for service authentication</li>
+          <li>Monitor with <strong>Application Insights</strong> integration</li>
+        </ul>
+        <aside class="notes">
+          Functions should be short-lived and stateless (use Durable Functions for state). Bindings reduce boilerplate.
+          Idempotency is critical — if a queue message is dequeued and the function crashes mid-processing, it will be
+          retried. Design functions to handle duplicate invocations gracefully. Use managed identity to connect to
+          Key Vault, Storage, SQL, etc. without connection strings. Always enable App Insights for distributed tracing.
+        </aside>
+      </section>
+
+      <section>
+        <h2>When to Use Functions vs App Service</h2>
+        <div class="two-columns">
+          <div>
+            <h3 class="text-cyan">Azure Functions</h3>
+            <ul>
+              <li>Event-driven / reactive workloads</li>
+              <li>Background processing &amp; automation</li>
+              <li>Sporadic or unpredictable traffic</li>
+              <li>Pay-per-execution cost model</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lavender">App Service</h3>
+            <ul>
+              <li>Full web applications &amp; APIs</li>
+              <li>Steady-state traffic patterns</li>
+              <li>Need deployment slots &amp; staging</li>
+              <li>Long-running HTTP processes</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Use Functions when you have event-driven workloads, background processing (queue processing, file processing),
+          scheduled jobs, or highly variable traffic where you benefit from scale-to-zero. Use App Service when you
+          have a traditional web app or API with steady traffic, need deployment slots for blue-green deployments,
+          or have long-running HTTP requests. Functions can also run on App Service Plans, blurring the line.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- CONTAINER PLATFORMS -->
+      <!-- ============================================= -->
+      <section data-background-color="#1a1a3e">
+        <h1>Container Platforms</h1>
+        <p class="subtitle">ACI &bull; Azure Container Apps &bull; AKS &bull; AKS Automatic</p>
+        <aside class="notes">
+          Now we enter the container world. Azure offers a spectrum of container services — from simple single-container
+          execution to full Kubernetes orchestration. We'll look at each and help you choose the right one.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Why Containers?</h2>
+        <div class="card-grid">
+          <div class="card">
+            <span class="card-icon"><img src="Icons/containers/10104-icon-service-Container-Instances.svg" alt="Container" style="height:1em"></span>
+            <div class="card-text">Portable</div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/containers/10105-icon-service-Container-Registries.svg" alt="Container Registry" style="height:1em"></span>
+            <div class="card-text">Consistent</div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/other/02989-icon-service-Container-Apps-Environments.svg" alt="Container Apps" style="height:1em"></span>
+            <div class="card-text">Lightweight</div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/compute/10023-icon-service-Kubernetes-Services.svg" alt="Kubernetes" style="height:1em"></span>
+            <div class="card-text">Microservices</div>
+          </div>
+        </div>
+        <aside class="notes">
+          Containers package application code with its dependencies into a standardized unit. Portable: runs the same
+          locally, in CI/CD, and in production. Consistent: eliminates "works on my machine" problems. Lightweight:
+          shares the host OS kernel, starts in seconds, uses less resources than VMs. Microservices: containers are the
+          natural deployment unit for microservice architectures.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Azure Container Instances (ACI)</h2>
+        <h3>Simplest way to run a container in Azure</h3>
+        <ul>
+          <li>Run containers <strong>on demand</strong> without managing infrastructure</li>
+          <li>Per-second billing — pay only while the container runs</li>
+          <li>Supports Linux and Windows containers</li>
+          <li>Container groups for multi-container (sidecar) patterns</li>
+          <li>VNet deployment for private networking</li>
+        </ul>
+        <aside class="notes">
+          ACI is the fastest path to running a container in Azure. No cluster setup, no orchestration to manage.
+          Great for burst compute, build agents, batch jobs, or simple applications. Container groups let you co-locate
+          related containers sharing the same lifecycle and network (like a Kubernetes pod). Supports GPU workloads for
+          ML inference. Limitations: no built-in service discovery, load balancing, or rolling updates — for those,
+          look at Container Apps or AKS.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Azure Container Apps (ACA)</h2>
+        <h3>Serverless containers built on Kubernetes</h3>
+        <ul>
+          <li>Fully managed serverless container platform</li>
+          <li>Built on Kubernetes + Envoy + KEDA + Dapr</li>
+          <li>Scale to zero — event-driven auto-scaling</li>
+          <li>Built-in service discovery, ingress, and traffic splitting</li>
+          <li>No Kubernetes expertise required</li>
+        </ul>
+        <aside class="notes">
+          Azure Container Apps is the sweet spot between ACI simplicity and AKS power. It's built on Kubernetes under the
+          hood but abstracts away all cluster management. KEDA enables scaling based on events (queues, HTTP, custom metrics).
+          Dapr provides microservice building blocks (service invocation, state, pub/sub). Envoy handles ingress routing
+          and traffic splitting for blue-green and canary deployments. You get Kubernetes-level capabilities without
+          needing to be a Kubernetes expert.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Container Apps Features</h2>
+        <div class="card-grid">
+          <div class="card">
+            <span class="card-icon"><img src="Icons/monitor/10832-icon-service-Auto-Scale.svg" alt="Auto Scale" style="height:1em"></span>
+            <div class="card-text">KEDA Auto-scaling</div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/networking/10065-icon-service-Traffic-Manager-Profiles.svg" alt="Traffic Manager" style="height:1em"></span>
+            <div class="card-text">Traffic Splitting</div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/other/02989-icon-service-Container-Apps-Environments.svg" alt="Container Apps" style="height:1em"></span>
+            <div class="card-text">Dapr Integration</div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/identity/10227-icon-service-Entra-Managed-Identities.svg" alt="Managed Identity" style="height:1em"></span>
+            <div class="card-text">Managed Identity &amp; VNet</div>
+          </div>
+        </div>
+        <aside class="notes">
+          KEDA auto-scaling: scale based on HTTP traffic, queue depth, Kafka lag, cron schedules, or any custom metric.
+          Traffic splitting: route a percentage of traffic to a new revision for canary testing. Dapr: opt-in sidecars
+          for service-to-service invocation, state management, pub/sub, and secrets. Networking: VNet integration,
+          internal-only environments, and managed identity for secure access to Azure resources.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Azure Kubernetes Service (AKS)</h2>
+        <h3>Managed Kubernetes for full control</h3>
+        <ul>
+          <li>Fully managed Kubernetes control plane — free</li>
+          <li>You manage worker node pools, networking, and configuration</li>
+          <li>Full Kubernetes API — any workload, any tooling</li>
+          <li>Advanced networking: Azure CNI, Cilium, service mesh support</li>
+          <li>Integrates with ACR, Azure AD, Monitor, Key Vault, Policy</li>
+        </ul>
+        <aside class="notes">
+          AKS gives you the full power of Kubernetes with a managed control plane. Azure handles API server availability,
+          etcd, and control plane upgrades. You manage node pools (VM sizes, scaling, OS updates). AKS is the right choice
+          when you need full Kubernetes flexibility — custom operators, specific networking requirements, GPU workloads,
+          stateful workloads with persistent volumes, or multi-tenant cluster isolation. The trade-off is operational
+          complexity — you need Kubernetes expertise on your team.
+        </aside>
+      </section>
+
+      <section>
+        <h2>AKS Architecture</h2>
+        <img src="https://learn.microsoft.com/en-us/azure/aks/media/concepts-clusters-workloads/control-plane-and-nodes.png"
+             alt="AKS architecture showing control plane managed by Azure and customer-managed node pools"
+             style="max-height: 480px; border-radius: 12px; background: white; padding: 10px;">
+        <p class="subtitle"><small>Source: Microsoft Learn — AKS cluster architecture</small></p>
+        <aside class="notes">
+          This diagram from the Azure documentation shows the AKS architecture. The control plane (API server, etcd,
+          scheduler, controller manager) is fully managed by Azure. You manage the node pools — groups of VMs that
+          run your containerized workloads. You can have multiple node pools with different VM sizes for different
+          workload types (e.g., GPU nodes for ML, memory-optimized for caching). Nodes run kubelet and kube-proxy.
+        </aside>
+      </section>
+
+      <section>
+        <h2>AKS Automatic</h2>
+        <h3>AKS with opinionated, production-ready defaults</h3>
+        <ul>
+          <li>Preconfigured with Microsoft's <strong>best practice</strong> settings</li>
+          <li>Node auto-provisioning — automatic VM sizing and scaling</li>
+          <li>Built-in monitoring, network policies, and pod sandboxing</li>
+          <li>Automated upgrades and patching</li>
+          <li>Reduces operational overhead while retaining Kubernetes API</li>
+        </ul>
+        <aside class="notes">
+          AKS Automatic (GA Fall 2024) is designed for teams that want Kubernetes but don't want to fine-tune every setting.
+          It applies Microsoft's recommended defaults for security, networking, monitoring, and scaling. Node auto-provisioning
+          lets the cluster automatically choose VM sizes based on workload requirements — no manual node pool configuration.
+          Automated upgrades keep the cluster current. Think of it as AKS with guardrails and automation built in.
+          You still get the full Kubernetes API, so you can customize when needed.
+        </aside>
+      </section>
+
+      <section>
+        <h2>AKS vs AKS Automatic</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Capability</th>
+              <th>AKS Standard</th>
+              <th>AKS Automatic</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Node pool management</td>
+              <td>Manual configuration</td>
+              <td>Auto-provisioned</td>
+            </tr>
+            <tr>
+              <td>Cluster upgrades</td>
+              <td>Manual or scheduled</td>
+              <td>Fully automated</td>
+            </tr>
+            <tr>
+              <td>Security defaults</td>
+              <td>Configurable</td>
+              <td>Preconfigured best practices</td>
+            </tr>
+            <tr>
+              <td>Monitoring</td>
+              <td>Opt-in setup</td>
+              <td>Built-in by default</td>
+            </tr>
+            <tr>
+              <td>Kubernetes API access</td>
+              <td>Full</td>
+              <td>Full</td>
+            </tr>
+          </tbody>
+        </table>
+        <aside class="notes">
+          Key difference: AKS Standard gives you full control and responsibility. AKS Automatic makes opinionated decisions
+          for you based on Microsoft's best practices. Both expose the same Kubernetes API, so your workloads work on either.
+          AKS Automatic is best for teams that want Kubernetes without the ops burden. AKS Standard is for teams that need
+          fine-grained control over every cluster aspect.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Container Platform Comparison</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>ACI</th>
+              <th>Container Apps</th>
+              <th>AKS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Scale to zero</td>
+              <td class="status-done">✓</td>
+              <td class="status-done">✓</td>
+              <td>With KEDA add-on</td>
+            </tr>
+            <tr>
+              <td>Orchestration</td>
+              <td>None</td>
+              <td>Managed (K8s)</td>
+              <td>Full Kubernetes</td>
+            </tr>
+            <tr>
+              <td>Service discovery</td>
+              <td>—</td>
+              <td>Built-in</td>
+              <td>CoreDNS</td>
+            </tr>
+            <tr>
+              <td>Ops complexity</td>
+              <td>Minimal</td>
+              <td>Low</td>
+              <td>High</td>
+            </tr>
+            <tr>
+              <td>K8s expertise needed</td>
+              <td>No</td>
+              <td>No</td>
+              <td>Yes</td>
+            </tr>
+          </tbody>
+        </table>
+        <aside class="notes">
+          This comparison captures the trade-offs. ACI: simplest, no orchestration. ACA: middle ground — orchestration,
+          service discovery, scaling, without Kubernetes expertise. AKS: full power and flexibility but highest ops burden.
+          Container Apps is increasingly the default choice for many teams — it covers 80% of container use cases with
+          significantly less complexity than AKS.
+        </aside>
+      </section>
+
+      <section>
+        <h2>When to Use Which Container Service</h2>
+        <div class="two-columns">
+          <div>
+            <h3 class="text-cyan">ACI</h3>
+            <ul>
+              <li>Simple single-container tasks</li>
+              <li>Batch jobs &amp; build agents</li>
+              <li>Burst capacity from AKS</li>
+            </ul>
+            <h3 class="text-lavender">Container Apps</h3>
+            <ul>
+              <li>Microservices &amp; APIs</li>
+              <li>Event-driven processing</li>
+              <li>Teams without K8s skills</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-pink">AKS / AKS Automatic</h3>
+            <ul>
+              <li>Complex multi-service apps</li>
+              <li>Custom operators / CRDs</li>
+              <li>Stateful workloads</li>
+              <li>GPU / HPC workloads</li>
+              <li>Multi-tenant clusters</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Decision guide: Start with "do I need Kubernetes?" If no, use ACA. If you just need to run a container
+          briefly, use ACI. If you need full Kubernetes, consider AKS Automatic first for reduced ops, then AKS Standard
+          if you need fine-grained control. Container Apps covers microservices, web APIs, background processors, and
+          event-driven workloads. AKS is for teams that need full Kubernetes power — custom operators, stateful
+          workloads with persistent volumes, advanced networking, or multi-tenant isolation.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- COMPUTE DECISION GUIDE -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Azure Compute Decision Guide</h2>
+        <img src="https://learn.microsoft.com/en-us/azure/architecture/guide/technology-choices/images/compute-choices.png"
+             alt="Azure compute decision tree flowchart from Azure Architecture Center"
+             style="max-height: 480px; border-radius: 12px; background: white; padding: 10px; object-fit: contain;">
+        <p class="text-secondary slide-links"><small><a href="https://learn.microsoft.com/en-us/azure/architecture/guide/technology-choices/compute-decision-tree">Azure Architecture Center — Choose an Azure compute service</a></small></p>
+        <aside class="notes">
+          This decision tree from the Azure Architecture Center helps you navigate the full range of Azure compute options.
+          Start with your requirements: Do you need full control? → VMs. Web app or API? → App Service. Event-driven? →
+          Functions. Containers without K8s? → Container Apps. Full orchestration? → AKS. The key takeaway: start with
+          the highest-level abstraction that meets your requirements, and only move to lower-level services when you need
+          the additional control.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Compute Services Summary</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th>Model</th>
+              <th>Scale</th>
+              <th>Best For</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong class="text-cyan">App Service</strong></td>
+              <td>PaaS</td>
+              <td>Manual / Auto</td>
+              <td>Web apps &amp; APIs</td>
+            </tr>
+            <tr>
+              <td><strong class="text-cyan">Functions</strong></td>
+              <td>Serverless</td>
+              <td>Event-driven</td>
+              <td>Event processing, automation</td>
+            </tr>
+            <tr>
+              <td><strong class="text-cyan">ACI</strong></td>
+              <td>Container</td>
+              <td>On-demand</td>
+              <td>Simple tasks, batch</td>
+            </tr>
+            <tr>
+              <td><strong class="text-cyan">Container Apps</strong></td>
+              <td>Serverless container</td>
+              <td>Event-driven (0→N)</td>
+              <td>Microservices</td>
+            </tr>
+            <tr>
+              <td><strong class="text-cyan">AKS</strong></td>
+              <td>Managed K8s</td>
+              <td>Cluster autoscaler</td>
+              <td>Complex orchestration</td>
+            </tr>
+          </tbody>
+        </table>
+        <aside class="notes">
+          Quick reference card for all five compute services. App Service: traditional PaaS web hosting. Functions:
+          serverless event-driven code. ACI: run and forget containers. Container Apps: managed serverless containers.
+          AKS: full Kubernetes. Each serves a different complexity/control trade-off point.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- PART 2: KEY VAULT -->
+      <!-- ============================================= -->
+      <section data-background-color="#1a1a3e">
+        <h1>Azure Key Vault</h1>
+        <p class="subtitle">Centralized secrets, keys, and certificate management</p>
+        <aside class="notes">
+          Moving to Part 2 — Azure Key Vault. This is the foundational service for managing sensitive configuration
+          in Azure. Every production Azure deployment should use Key Vault.
+        </aside>
+      </section>
+
+      <section>
+        <h2>What is Azure Key Vault?</h2>
+        <ul>
+          <li>Cloud service for securely storing and accessing <strong>secrets</strong></li>
+          <li>Centralized management of <strong>keys</strong>, <strong>secrets</strong>, and <strong>certificates</strong></li>
+          <li>FIPS 140-2 validated — HSM-backed in Premium tier</li>
+          <li>Integrated with Azure RBAC and Azure AD authentication</li>
+          <li>Full audit logging via Azure Monitor / Log Analytics</li>
+        </ul>
+        <aside class="notes">
+          Key Vault stores three types of objects: cryptographic keys, secrets (connection strings, passwords, API keys),
+          and X.509 certificates. It centralizes secret management so applications never store credentials in code or config.
+          All access is authenticated via Azure AD and authorized via RBAC or vault access policies. Every operation is
+          logged for audit purposes. HSM-backed keys (Premium tier) meet the most stringent compliance requirements.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Key Vault Object Types</h2>
+        <div class="card-grid cols-3">
+          <div class="card">
+            <span class="card-icon"><img src="Icons/security/10245-icon-service-Key-Vaults.svg" alt="Keys" style="height:1em"></span>
+            <div class="card-text">Keys</div>
+            <div class="text-secondary"><small>RSA &amp; EC keys for encrypt, sign, wrap</small></div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/security/10245-icon-service-Key-Vaults.svg" alt="Secrets" style="height:1em"></span>
+            <div class="card-text">Secrets</div>
+            <div class="text-secondary"><small>Connection strings, passwords, API keys</small></div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/app services/00049-icon-service-App-Service-Certificates.svg" alt="Certificates" style="height:1em"></span>
+            <div class="card-text">Certificates</div>
+            <div class="text-secondary"><small>TLS/SSL certs with auto-renewal</small></div>
+          </div>
+        </div>
+        <aside class="notes">
+          Keys: used for cryptographic operations — encryption, decryption, signing, wrapping other keys. Can be software-
+          or HSM-protected. Used with Azure Disk Encryption, Storage encryption (CMK), SQL TDE. Secrets: arbitrary byte
+          sequences up to 25KB — typically connection strings, passwords, API keys, SAS tokens. Versioned with optional
+          expiry dates. Certificates: manages the full lifecycle of X.509 certificates — creation, renewal, and import.
+          Integrates with DigiCert and GlobalSign CAs for auto-renewal.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Key Vault Tiers</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Standard</th>
+              <th>Premium</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Software-protected keys</td>
+              <td class="status-done">✓</td>
+              <td class="status-done">✓</td>
+            </tr>
+            <tr>
+              <td>HSM-protected keys</td>
+              <td>—</td>
+              <td class="status-done">✓</td>
+            </tr>
+            <tr>
+              <td>Secrets &amp; certificates</td>
+              <td class="status-done">✓</td>
+              <td class="status-done">✓</td>
+            </tr>
+            <tr>
+              <td>Managed HSM</td>
+              <td>—</td>
+              <td>Separate service</td>
+            </tr>
+            <tr>
+              <td>FIPS 140-2 Level</td>
+              <td>Level 1</td>
+              <td>Level 2 (HSM)</td>
+            </tr>
+          </tbody>
+        </table>
+        <aside class="notes">
+          Standard tier: software-protected keys, secrets, and certificates. Cost-effective for most scenarios.
+          Premium tier: adds HSM-protected keys — cryptographic operations happen inside a hardware security module.
+          Required for certain compliance frameworks (PCI DSS, HIPAA). For even stricter requirements, Managed HSM is
+          a separate offering that provides single-tenant, FIPS 140-2 Level 3 validated HSMs. Most teams start with
+          Standard and move to Premium only when compliance requires HSM-backed keys.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Access Control Models</h2>
+        <div class="two-columns">
+          <div>
+            <h3 class="text-cyan">Azure RBAC (Recommended)</h3>
+            <ul>
+              <li>Granular, per-object permissions</li>
+              <li>Consistent with Azure IAM</li>
+              <li>Key Vault Secrets User role</li>
+              <li>Key Vault Crypto Officer role</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lavender">Vault Access Policies</h3>
+            <ul>
+              <li>Legacy model — per-vault</li>
+              <li>All-or-nothing per principal</li>
+              <li>Max 1024 policies per vault</li>
+              <li>Still supported, not recommended</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Azure RBAC is the recommended access model. It provides granular permissions — you can grant a service principal
+          access to read only specific secrets without granting access to keys. Built-in roles: Key Vault Secrets User
+          (read secrets), Key Vault Crypto User (use keys), Key Vault Administrator (full control), etc. Access Policies
+          is the legacy model — it grants permissions at the vault level for an entire principal. Still available but
+          RBAC is preferred for better governance and consistency with the rest of Azure.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Key Vault Networking</h2>
+        <ul>
+          <li><strong>Public endpoint</strong> — accessible over internet with firewall rules</li>
+          <li><strong>Service endpoints</strong> — restrict to specific VNet subnets</li>
+          <li><strong>Private endpoints</strong> — fully private via Azure Private Link</li>
+          <li><strong>Trusted services bypass</strong> — allow Azure services access</li>
+          <li>Recommendation: use <strong>Private Endpoints</strong> for production</li>
+        </ul>
+        <aside class="notes">
+          Key Vault supports multiple network access configurations. Default is public with all networks allowed. You can
+          lock it down with firewall rules (allow specific IPs), service endpoints (allow specific VNet subnets), or
+          private endpoints (fully private, no public exposure). For production, always use private endpoints. Enable
+          "trusted services bypass" so Azure services like Backup, Disk Encryption, and App Service can still access
+          the vault even with network restrictions.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Key Vault Best Practices</h2>
+        <ul>
+          <li>Use <strong>managed identities</strong> to access Key Vault — no secrets in code</li>
+          <li>Enable <strong>soft delete</strong> and <strong>purge protection</strong> (on by default)</li>
+          <li>Use <strong>separate vaults</strong> per environment (dev, staging, prod)</li>
+          <li>Set <strong>expiration dates</strong> on secrets and rotate regularly</li>
+          <li>Enable <strong>diagnostic logging</strong> for audit and compliance</li>
+        </ul>
+        <aside class="notes">
+          Managed identities eliminate the "secret zero" problem — you don't need a secret to get to Key Vault. Soft delete
+          retains deleted objects for 7-90 days; purge protection prevents permanent deletion during that period. Separate
+          vaults reduce blast radius — a compromised dev vault doesn't expose prod secrets. Expiration dates trigger
+          events via Event Grid for automated rotation. Always send diagnostic logs to Log Analytics for audit trails.
+          Also: use Key Vault references in App Service/Functions to automatically pull secrets into app configuration.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Key Vault Integration Patterns</h2>
+        <div class="card-grid">
+          <div class="card">
+            <span class="card-icon"><img src="Icons/app services/10035-icon-service-App-Services.svg" alt="App Service" style="height:1em"></span>
+            <div class="card-text">App Service / Functions References</div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/compute/10023-icon-service-Kubernetes-Services.svg" alt="AKS" style="height:1em"></span>
+            <div class="card-text">AKS CSI Secret Store Driver</div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/security/10245-icon-service-Key-Vaults.svg" alt="Key Vault" style="height:1em"></span>
+            <div class="card-text">Disk &amp; Storage Encryption (CMK)</div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/devops/10261-icon-service-Azure-DevOps.svg" alt="Azure DevOps" style="height:1em"></span>
+            <div class="card-text">Azure DevOps Variable Groups</div>
+          </div>
+        </div>
+        <aside class="notes">
+          Key Vault references: App Service and Functions can reference Key Vault secrets directly in application settings
+          using @Microsoft.KeyVault(SecretUri=...) syntax. CSI Secret Store: AKS can mount Key Vault secrets as volumes
+          in pods using the Secrets Store CSI Driver. CMK: use Key Vault keys for customer-managed encryption of Azure
+          Storage, SQL, Cosmos DB, Disks, etc. Azure DevOps: link variable groups to Key Vault for pipeline secret
+          injection without exposing values.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- PART 3: DATABASES -->
+      <!-- ============================================= -->
+      <section data-background-color="#1a1a3e">
+        <h1>Azure Databases</h1>
+        <p class="subtitle">Azure SQL &bull; Azure Cosmos DB</p>
+        <aside class="notes">
+          Part 3 — Azure's two flagship database services. Azure SQL for relational workloads and Cosmos DB for
+          globally distributed NoSQL. We'll cover fundamentals, SKU options, and when to use each.
+        </aside>
+      </section>
+
+      <!-- SQL vs NoSQL -->
+      <section>
+        <h2>SQL vs NoSQL Databases</h2>
+        <div class="two-columns">
+          <div>
+            <h3 class="text-cyan">SQL (Relational)</h3>
+            <ul>
+              <li>Structured data with fixed schema</li>
+              <li>Tables, rows, and columns</li>
+              <li>ACID transactions</li>
+              <li>Joins across related tables</li>
+              <li>Best for: transactional apps, reporting, well-defined data models</li>
+              <li><strong>Azure SQL</strong> (and others)</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lavender">NoSQL (Non-Relational)</h3>
+            <ul>
+              <li>Flexible or schema-less data</li>
+              <li>Documents, key-value, graph, or column-family</li>
+              <li>Horizontal scale-out</li>
+              <li>Optimised for specific access patterns</li>
+              <li>Best for: high-volume, low-latency, evolving schemas</li>
+              <li><strong>Azure Cosmos DB</strong></li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Before diving into Azure-specific services, it's important to understand the fundamental difference between SQL
+          and NoSQL databases. SQL databases enforce a rigid schema — every row in a table has the same columns. This is
+          ideal when your data model is well-defined and relationships between entities matter (orders → line items →
+          products). ACID transactions guarantee consistency. NoSQL databases trade strict schema and joins for flexibility
+          and horizontal scalability. Document databases (like Cosmos DB) store semi-structured JSON — great when each
+          record can have different fields. Key-value stores offer ultra-fast lookups. Graph databases model relationships
+          natively. The choice isn't either/or — modern applications often use both (polyglot persistence).
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- AZURE SQL -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Azure SQL — The Family</h2>
+        <h3>Fully managed relational database service</h3>
+        <ul>
+          <li>Built on the SQL Server engine — full T-SQL compatibility</li>
+          <li>Intelligent performance tuning and threat detection</li>
+          <li>Built-in high availability — up to 99.995% SLA</li>
+          <li>Three deployment models for different scenarios</li>
+        </ul>
+        <aside class="notes">
+          Azure SQL is not just "SQL Server in the cloud" — it's a family of managed database services built on the
+          SQL Server engine but enhanced with Azure-native capabilities. Automatic tuning, intelligent query processing,
+          built-in threat detection, and automated backups with point-in-time restore. The key decision is which
+          deployment model fits your needs.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Azure SQL Deployment Options</h2>
+        <div class="card-grid cols-3">
+          <div class="card">
+            <span class="card-icon"><img src="Icons/databases/10130-icon-service-SQL-Database.svg" alt="SQL Database" style="height:1em"></span>
+            <div class="card-text">SQL Database</div>
+            <div class="text-secondary"><small>Single or elastic pool — fully managed</small></div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/databases/10136-icon-service-SQL-Managed-Instance.svg" alt="SQL Managed Instance" style="height:1em"></span>
+            <div class="card-text">SQL Managed Instance</div>
+            <div class="text-secondary"><small>Near 100% SQL Server compatibility</small></div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/databases/10124-icon-service-Azure-SQL-VM.svg" alt="SQL VM" style="height:1em"></span>
+            <div class="card-text">SQL Server on Azure VMs</div>
+            <div class="text-secondary"><small>Full OS &amp; engine control</small></div>
+          </div>
+        </div>
+        <aside class="notes">
+          SQL Database: the most managed option — individual databases or elastic pool for sharing resources. Best for
+          new cloud-native applications. SQL Managed Instance: designed for migrations — near 100% compatibility with
+          on-premises SQL Server, including SQL Agent, CLR, cross-database queries. VNet-injected. SQL Server on VMs:
+          IaaS option when you need full OS access, specific SQL Server versions, or features not in the managed offerings
+          (like SSIS, SSRS natively on the VM). Most new projects should start with SQL Database.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Deployment Options Comparison</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>SQL Database</th>
+              <th>Managed Instance</th>
+              <th>SQL on VMs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Management</td>
+              <td>Fully managed</td>
+              <td>Fully managed</td>
+              <td>Self-managed</td>
+            </tr>
+            <tr>
+              <td>SQL Server compat.</td>
+              <td>~95%</td>
+              <td>~99%</td>
+              <td>100%</td>
+            </tr>
+            <tr>
+              <td>VNet native</td>
+              <td>Private endpoint</td>
+              <td class="status-done">✓ (injected)</td>
+              <td class="status-done">✓</td>
+            </tr>
+            <tr>
+              <td>Cross-DB queries</td>
+              <td>Elastic query</td>
+              <td class="status-done">✓</td>
+              <td class="status-done">✓</td>
+            </tr>
+            <tr>
+              <td>Best for</td>
+              <td>New apps</td>
+              <td>Migrations</td>
+              <td>Full control</td>
+            </tr>
+          </tbody>
+        </table>
+        <aside class="notes">
+          SQL Database: most managed, some SQL Server features not available (no SQL Agent, limited CLR). Managed Instance:
+          nearly 100% compatibility — supports SQL Agent, cross-database queries, CLR, Service Broker. Ideal for lift-and-shift
+          migrations. SQL on VMs: full control but you manage everything — OS, patching, backups, HA. Use the Azure
+          Migrate assessment tool to determine which deployment option fits your existing on-premises databases.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Purchasing Models</h2>
+        <div class="two-columns">
+          <div>
+            <h3 class="text-cyan">DTU Model</h3>
+            <ul>
+              <li>Bundled compute, IO, storage</li>
+              <li>Simple — pre-configured tiers</li>
+              <li>Good for predictable workloads</li>
+              <li>SQL Database only</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lavender">vCore Model</h3>
+            <ul>
+              <li>Independent CPU, memory, storage</li>
+              <li>Flexible — scale components separately</li>
+              <li>Azure Hybrid Benefit eligible</li>
+              <li>Both SQL DB &amp; Managed Instance</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          DTU (Database Transaction Unit): a blended measure of CPU, memory, and IO. You pick a tier (Basic, Standard,
+          Premium) and get a bundle. Simple to understand but less flexible. vCore: choose the number of cores, memory
+          comes along, and storage is independent. Gives more control and enables Azure Hybrid Benefit (use existing
+          SQL Server licenses for up to 55% savings). The serverless compute tier (vCore only) auto-pauses and scales
+          to save costs on intermittent workloads. Most production workloads use vCore for flexibility.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Azure SQL Service Tiers</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Tier</th>
+              <th>Use Case</th>
+              <th>Storage</th>
+              <th>SLA</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong class="text-cyan">General Purpose</strong></td>
+              <td>Most workloads</td>
+              <td>Up to 16 TB</td>
+              <td>99.99%</td>
+            </tr>
+            <tr>
+              <td><strong class="text-cyan">Business Critical</strong></td>
+              <td>Low-latency, HA</td>
+              <td>Up to 16 TB</td>
+              <td>99.995%</td>
+            </tr>
+            <tr>
+              <td><strong class="text-cyan">Hyperscale</strong></td>
+              <td>Large / elastic scale</td>
+              <td>Up to 100 TB</td>
+              <td>99.995%</td>
+            </tr>
+          </tbody>
+        </table>
+        <aside class="notes">
+          General Purpose: remote storage, 5-10ms latency, best for most workloads. Business Critical: local SSD storage,
+          1-2ms latency, built-in read replica, zone-redundant. Hyperscale: unique architecture with instant backups
+          regardless of size, rapid scale-up, and up to 100TB. Hyperscale supports up to 4 read replicas for read
+          scale-out. Starting point: General Purpose for most apps, Business Critical for latency-sensitive OLTP,
+          Hyperscale for very large databases or databases that need rapid scaling.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Azure SQL — Serverless Compute</h2>
+        <h3>Auto-pause and auto-scale for variable workloads</h3>
+        <ul>
+          <li>Available in <strong>General Purpose</strong> tier (vCore model)</li>
+          <li>Auto-scales vCores based on workload demand</li>
+          <li><strong>Auto-pause</strong> after inactivity — pay only for storage</li>
+          <li>Auto-resumes on first connection (~1 min cold start)</li>
+          <li>Great for dev/test and intermittent workloads</li>
+        </ul>
+        <aside class="notes">
+          Serverless compute tier is a cost optimization for databases with intermittent use. Configure a min and max
+          vCore range — the database scales within that range based on CPU demand. After a configurable idle period
+          (min 1 hour), the database auto-pauses and you pay only for storage. First connection triggers auto-resume,
+          which takes about a minute. Not suitable for workloads that need instant response at all times, but excellent
+          for dev/test environments, periodic reporting databases, or applications with unpredictable usage patterns.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Azure SQL Security</h2>
+        <div class="card-grid">
+          <div class="card">
+            <span class="card-icon"><img src="Icons/security/10245-icon-service-Key-Vaults.svg" alt="Encryption" style="height:1em"></span>
+            <div class="card-text">TDE &amp; Always Encrypted</div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/security/10241-icon-service-Microsoft-Defender-for-Cloud.svg" alt="Defender" style="height:1em"></span>
+            <div class="card-text">Advanced Threat Protection</div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/databases/10130-icon-service-SQL-Database.svg" alt="SQL Database" style="height:1em"></span>
+            <div class="card-text">Dynamic Data Masking</div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/management + governance/00011-icon-service-Compliance.svg" alt="Compliance" style="height:1em"></span>
+            <div class="card-text">Auditing &amp; Compliance</div>
+          </div>
+        </div>
+        <aside class="notes">
+          TDE: Transparent Data Encryption — encrypts data at rest by default. Always Encrypted: client-side encryption
+          for sensitive columns — the database never sees plaintext. Advanced Threat Protection: detects anomalous
+          database activity, SQL injection attempts, and brute force attacks. Dynamic Data Masking: masks sensitive data
+          in query results for non-privileged users. Auditing: track all database events to Log Analytics, Event Hub,
+          or Storage. Row-Level Security: filter rows based on user context. Azure SQL has defense in depth built in.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Azure SQL Best Practices</h2>
+        <ul>
+          <li>Use <strong>Azure AD authentication</strong> over SQL authentication</li>
+          <li>Enable <strong>auto-failover groups</strong> for geo-redundancy</li>
+          <li>Configure <strong>long-term backup retention</strong> (up to 10 years)</li>
+          <li>Use <strong>elastic pools</strong> for multi-tenant SaaS with variable per-tenant load</li>
+          <li>Monitor with <strong>Intelligent Insights</strong> and <strong>Query Performance Insight</strong></li>
+        </ul>
+        <aside class="notes">
+          Azure AD auth: eliminates password management, supports MFA, and aligns with enterprise identity. Auto-failover
+          groups: automatically replicate to a secondary region with a read-write listener endpoint for seamless failover.
+          Long-term retention: keep weekly/monthly/yearly backups beyond the default 7-35 day PITR window for compliance.
+          Elastic pools: share DTU/vCore resources across multiple databases — ideal for SaaS patterns where individual
+          databases have unpredictable usage but aggregate usage is more stable. Query Performance Insight: identifies
+          top resource-consuming queries for optimization.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- AZURE COSMOS DB -->
+      <!-- ============================================= -->
+      <section data-background-color="#1a1a3e">
+        <h1>Azure Cosmos DB</h1>
+        <p class="subtitle">Globally distributed, multi-model database service</p>
+        <aside class="notes">
+          Now Azure Cosmos DB — Microsoft's globally distributed NoSQL database. Designed for applications that need
+          low latency anywhere in the world, flexible schemas, and massive scale. Fundamentally different from
+          relational databases — different trade-offs, different design patterns.
+        </aside>
+      </section>
+
+      <section>
+        <h2>What is Azure Cosmos DB?</h2>
+        <ul>
+          <li>Globally distributed <strong>NoSQL</strong> and relational database service</li>
+          <li>Single-digit millisecond reads and writes at any scale</li>
+          <li><strong>Turnkey global distribution</strong> — replicate data to any Azure region</li>
+          <li>Five <strong>consistency levels</strong> — tune availability vs. consistency</li>
+          <li>99.999% SLA for multi-region configurations</li>
+        </ul>
+        <aside class="notes">
+          Cosmos DB is built from the ground up for global scale. It's not a NoSQL database running on a VM — it's a
+          purpose-built distributed database engine. Sub-10ms reads, sub-15ms writes at the 99th percentile, guaranteed
+          by SLA. You can add or remove Azure regions at any time without downtime. The five consistency levels let you
+          make fine-grained trade-offs between consistency, availability, latency, and throughput — something unique to
+          Cosmos DB. Supports multiple data models through different APIs.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Cosmos DB APIs</h2>
+        <div class="card-grid cols-3">
+          <div class="card">
+            <span class="card-icon"><img src="Icons/databases/10121-icon-service-Azure-Cosmos-DB.svg" alt="Cosmos DB" style="height:1em"></span>
+            <div class="card-text">NoSQL</div>
+            <div class="text-secondary"><small>JSON docs — native, recommended</small></div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/databases/10121-icon-service-Azure-Cosmos-DB.svg" alt="Cosmos DB" style="height:1em"></span>
+            <div class="card-text">MongoDB</div>
+            <div class="text-secondary"><small>Wire-compatible with MongoDB</small></div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/databases/10131-icon-service-Azure-Database-PostgreSQL-Server.svg" alt="PostgreSQL" style="height:1em"></span>
+            <div class="card-text">PostgreSQL</div>
+            <div class="text-secondary"><small>Distributed PostgreSQL (Citus)</small></div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/databases/10121-icon-service-Azure-Cosmos-DB.svg" alt="Cosmos DB" style="height:1em"></span>
+            <div class="card-text">Gremlin</div>
+            <div class="text-secondary"><small>Graph database queries</small></div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/general/10841-icon-service-Table.svg" alt="Table" style="height:1em"></span>
+            <div class="card-text">Table</div>
+            <div class="text-secondary"><small>Key-value — Table Storage upgrade</small></div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/other/02663-icon-service-Managed-Instance-Apache-Cassandra.svg" alt="Cassandra" style="height:1em"></span>
+            <div class="card-text">Apache Cassandra</div>
+            <div class="text-secondary"><small>CQL-compatible column-family</small></div>
+          </div>
+        </div>
+        <aside class="notes">
+          NoSQL API (formerly SQL API): the native, most feature-rich API. Use SQL-like syntax to query JSON documents.
+          Best choice for new projects. MongoDB API: wire-compatible — use existing MongoDB drivers and tools. Good for
+          migrations from MongoDB. PostgreSQL API: distributed PostgreSQL powered by Citus — for relational data that
+          needs global distribution. Gremlin: graph traversal for relationship-heavy data (social networks, recommendation
+          engines). Table: simple key-value, great for migrating from Azure Table Storage. Cassandra: for existing
+          Cassandra workloads. For new projects, always start with the NoSQL API unless you have a specific protocol
+          requirement.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Consistency Levels</h2>
+        <img src="https://learn.microsoft.com/en-us/azure/cosmos-db/media/consistency-levels/five-consistency-levels.png"
+             alt="Five consistency levels in Azure Cosmos DB ranging from Strong to Eventual"
+             style="max-height: 320px; border-radius: 12px; background: white; padding: 10px;">
+        <p class="subtitle">Strong → Bounded Staleness → Session → Consistent Prefix → Eventual</p>
+        <aside class="notes">
+          This is one of Cosmos DB's most unique features. Five consistency levels form a spectrum. Strong: linearizable
+          reads — you always read the latest write. Highest latency, lowest throughput. Bounded Staleness: reads lag
+          behind writes by at most K versions or T time. Session: "read your own writes" within a session — the most
+          popular choice, great for user-facing applications. Consistent Prefix: guarantees ordering — you'll never see
+          out-of-order writes. Eventual: highest availability and throughput, lowest latency, but no ordering guarantees.
+          Default is Session, which works for 90% of applications.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Consistency Levels Compared</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Level</th>
+              <th>Guarantee</th>
+              <th>Latency</th>
+              <th>Use Case</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong class="text-cyan">Strong</strong></td>
+              <td>Linearizable</td>
+              <td>Higher</td>
+              <td>Financial transactions</td>
+            </tr>
+            <tr>
+              <td><strong class="text-cyan">Bounded Staleness</strong></td>
+              <td>Max lag (K, T)</td>
+              <td>Medium</td>
+              <td>Leaderboards, dashboards</td>
+            </tr>
+            <tr>
+              <td><strong class="text-cyan">Session</strong></td>
+              <td>Read your writes</td>
+              <td>Low</td>
+              <td>User profiles, carts (default)</td>
+            </tr>
+            <tr>
+              <td><strong class="text-cyan">Consistent Prefix</strong></td>
+              <td>No out-of-order</td>
+              <td>Low</td>
+              <td>Social updates, feeds</td>
+            </tr>
+            <tr>
+              <td><strong class="text-cyan">Eventual</strong></td>
+              <td>Eventually converge</td>
+              <td>Lowest</td>
+              <td>Hit counters, telemetry</td>
+            </tr>
+          </tbody>
+        </table>
+        <aside class="notes">
+          Walk through each level with concrete examples. Strong: when you absolutely cannot read stale data — financial
+          ledgers, inventory counts. Bounded Staleness: good when you need strong-ish consistency but can tolerate a small
+          lag — leaderboards where a few seconds delay is OK. Session: most applications — a user always sees their own
+          writes. Consistent Prefix: social feeds where order matters but immediacy doesn't. Eventual: telemetry, analytics,
+          non-critical counters. The cost of consistency: stronger = higher latency, higher RU cost, lower throughput.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Request Units (RUs)</h2>
+        <h3>The currency of Cosmos DB throughput</h3>
+        <ul>
+          <li>1 RU = cost of a 1 KB point read by ID and partition key</li>
+          <li>Writes cost ~5-6x more RUs than reads</li>
+          <li>Cross-partition queries cost more than single-partition</li>
+          <li>Provision RU/s per container or per database (shared)</li>
+          <li>Over-consumption returns <strong>HTTP 429</strong> — rate limiting</li>
+        </ul>
+        <aside class="notes">
+          Request Units are the abstraction that normalizes the cost of database operations. A simple point read of a
+          1KB document costs 1 RU. A write of the same document costs ~5-6 RUs. A query that scans multiple partitions
+          or returns many documents costs more. You provision RUs per second — this determines your throughput ceiling.
+          If you exceed it, Cosmos DB returns 429 (rate limited). The SDK handles retries automatically with backoff.
+          Understanding RU consumption is key to cost management with Cosmos DB.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Partitioning Strategy</h2>
+        <ul>
+          <li><strong>Partition key</strong> determines data distribution across physical partitions</li>
+          <li>Choose a key with <strong>high cardinality</strong> and even distribution</li>
+          <li>Good keys: userId, tenantId, deviceId</li>
+          <li>Avoid: status, country, category (low cardinality → hot partitions)</li>
+          <li><strong>Hierarchical partition keys</strong> for multi-level distribution</li>
+        </ul>
+        <aside class="notes">
+          Partitioning is THE most important design decision in Cosmos DB. The partition key determines how data is
+          distributed across physical partitions. A good partition key enables single-partition queries (fast, cheap)
+          and prevents hot spots. Bad keys concentrate data on few partitions, causing throttling. Hierarchical partition
+          keys (HPK) allow multi-level partitioning — e.g., tenantId/userId — to overcome the 20GB logical partition
+          limit while maintaining query locality. Design your partition key based on your most common query and write
+          patterns, not your data structure.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Cosmos DB Capacity Modes</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Mode</th>
+              <th>Scaling</th>
+              <th>Pricing</th>
+              <th>Best For</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong class="text-cyan">Provisioned</strong></td>
+              <td>Manual or autoscale</td>
+              <td>Per RU/s provisioned</td>
+              <td>Predictable workloads</td>
+            </tr>
+            <tr>
+              <td><strong class="text-cyan">Autoscale</strong></td>
+              <td>Auto (10% → 100% of max)</td>
+              <td>Per RU/s consumed</td>
+              <td>Variable but bounded load</td>
+            </tr>
+            <tr>
+              <td><strong class="text-cyan">Serverless</strong></td>
+              <td>On-demand (0 → 5000 RU/s)</td>
+              <td>Per RU consumed</td>
+              <td>Dev/test, light workloads</td>
+            </tr>
+          </tbody>
+        </table>
+        <aside class="notes">
+          Provisioned throughput: set a fixed RU/s value — you pay for this whether you use it or not. Best when you know
+          your throughput needs. Autoscale: set a maximum RU/s — Cosmos DB scales between 10% and 100% instantly. You pay
+          for the highest RU/s reached in each hour. Good for workloads with spiky but bounded traffic. Serverless: true
+          pay-per-request — no minimum charge when idle. Limited to 5000 RU/s burst and single-region. Perfect for
+          development, prototyping, or lightweight production workloads. Most production workloads use autoscale
+          provisioned throughput.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Cosmos DB Best Practices</h2>
+        <ul>
+          <li>Model data to <strong>minimize cross-partition queries</strong></li>
+          <li>Prefer <strong>embedding</strong> over referencing when data is read together</li>
+          <li>Use <strong>point reads</strong> (by ID + partition key) — cheapest at 1 RU</li>
+          <li>Reuse the <strong>CosmosClient</strong> instance — singleton pattern</li>
+          <li>Handle <strong>429 throttling</strong> with SDK retry logic</li>
+        </ul>
+        <aside class="notes">
+          Data modeling in Cosmos DB is different from relational. Embed related data in the same document when they're
+          always read together — no JOINs needed. But don't create documents over 2 MB (hard limit). Use point reads
+          whenever possible — they cost exactly 1 RU for a 1KB doc. Always reuse the CosmosClient — creating a new one
+          on every request is expensive due to connection overhead. The SDK has built-in retry logic for 429 (rate limiting).
+          Log diagnostics when latency exceeds thresholds. Use change feed for event-driven architectures — react to
+          every write in real-time.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- SQL vs COSMOS DB -->
+      <!-- ============================================= -->
+      <section data-background-color="#1a1a3e">
+        <h1>SQL vs Cosmos DB</h1>
+        <p class="subtitle">When to use which database service</p>
+        <aside class="notes">
+          The big question: should I use Azure SQL or Cosmos DB? They serve fundamentally different purposes.
+          Let's compare them directly and build a decision framework.
+        </aside>
+      </section>
+
+      <section>
+        <h2>SQL vs Cosmos DB Overview</h2>
+        <div class="two-columns">
+          <div>
+            <h3 class="text-cyan">Azure SQL</h3>
+            <ul>
+              <li>Relational, structured schema</li>
+              <li>ACID transactions, complex JOINs</li>
+              <li>Single-region primary (+ replicas)</li>
+              <li>Mature ecosystem &amp; tooling</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lavender">Azure Cosmos DB</h3>
+            <ul>
+              <li>Schema-flexible, document-oriented</li>
+              <li>Scale writes globally</li>
+              <li>Sub-10ms latency at any scale</li>
+              <li>Tunable consistency trade-offs</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Azure SQL: built on decades of relational database expertise. Strong schemas, ACID transactions, complex
+          multi-table queries with JOINs. Best when your data is highly structured and relationships are important.
+          Cosmos DB: designed for global scale, flexible schemas, and sub-10ms latency. Best when you need to serve
+          data globally, handle massive write throughput, or work with semi-structured/hierarchical data. They're
+          complementary — many applications use both.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Feature Comparison</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Dimension</th>
+              <th>Azure SQL</th>
+              <th>Cosmos DB</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Data model</td>
+              <td>Relational (tables)</td>
+              <td>Document / Multi-model</td>
+            </tr>
+            <tr>
+              <td>Schema</td>
+              <td>Fixed, enforced</td>
+              <td>Flexible, schema-optional</td>
+            </tr>
+            <tr>
+              <td>Transactions</td>
+              <td>Cross-table ACID</td>
+              <td>Single-partition ACID</td>
+            </tr>
+            <tr>
+              <td>Global writes</td>
+              <td>Single primary</td>
+              <td>Multi-region writes</td>
+            </tr>
+            <tr>
+              <td>Latency (p99)</td>
+              <td>~5-10ms</td>
+              <td>&lt;10ms read, &lt;15ms write</td>
+            </tr>
+          </tbody>
+        </table>
+        <aside class="notes">
+          Key differences: SQL gives you cross-table transactions and complex JOINs. Cosmos DB gives you global distribution
+          and guaranteed low latency but restricts transactions to a single partition. SQL has a fixed schema — you define
+          tables and columns up front. Cosmos DB stores JSON documents with no enforced schema — great for evolving data
+          structures. SQL is single-region primary with readable secondaries; Cosmos DB supports multi-region writes for
+          global active-active architectures. Pick based on your consistency, latency, and schema requirements.
+        </aside>
+      </section>
+
+      <section>
+        <h2>When to Use Which Database</h2>
+        <div class="two-columns">
+          <div>
+            <h3 class="text-cyan">Choose Azure SQL</h3>
+            <ul>
+              <li>Complex relationships &amp; JOINs</li>
+              <li>Strict schema requirements</li>
+              <li>Multi-table ACID transactions</li>
+              <li>Existing SQL Server workloads</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lavender">Choose Cosmos DB</h3>
+            <ul>
+              <li>Global distribution needed</li>
+              <li>Flexible / evolving schema</li>
+              <li>Massive read/write scale</li>
+              <li>Low-latency access worldwide</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Decision framework: If your data is highly relational, you need complex JOINs, cross-table transactions, or
+          you're migrating from SQL Server — use Azure SQL. If you need global distribution, sub-10ms latency everywhere,
+          massive scale, flexible schemas, or event-driven architectures (change feed) — use Cosmos DB. Many modern
+          applications use both: Azure SQL for transactional data (orders, accounts) and Cosmos DB for high-read
+          catalogs, user profiles, session state, or IoT telemetry. They're complementary, not competing.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- KEY TAKEAWAYS -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Key Takeaways</h2>
+        <ul>
+          <li><strong>App Service</strong> — start here for web apps &amp; APIs</li>
+          <li><strong>Functions</strong> — event-driven, pay-per-execution serverless</li>
+          <li><strong>Container Apps</strong> — the sweet spot for containerized workloads</li>
+          <li><strong>Key Vault</strong> — every production app needs centralized secret management</li>
+          <li><strong>Azure SQL &amp; Cosmos DB</strong> — complementary, not competing</li>
+        </ul>
+        <aside class="notes">
+          Quick summary: Start with the simplest service that meets your requirements. App Service for web apps,
+          Functions for event-driven code, Container Apps for microservices. Always use Key Vault for secrets.
+          Use Azure SQL for relational/transactional workloads and Cosmos DB for globally distributed NoSQL.
+          Move to AKS only when you need full Kubernetes. Use the Azure Architecture Center decision trees to guide
+          your choices. Questions?
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- RESOURCES -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Resources</h2>
+        <div class="card-grid cols-2">
+          <div class="card">
+            <span class="card-icon"><img src="Icons/general/10005-icon-service-Information.svg" alt="Architecture Center" style="height:1em"></span>
+            <div class="card-text">Azure Architecture Center</div>
+            <div class="text-secondary"><small>aka.ms/architecture</small></div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/general/00004-icon-service-Cost-Management-and-Billing.svg" alt="Pricing" style="height:1em"></span>
+            <div class="card-text">Azure Pricing Calculator</div>
+            <div class="text-secondary"><small>azure.microsoft.com/pricing/calculator</small></div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/general/10816-icon-service-Learn.svg" alt="Microsoft Learn" style="height:1em"></span>
+            <div class="card-text">Microsoft Learn</div>
+            <div class="text-secondary"><small>learn.microsoft.com</small></div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/management + governance/00003-icon-service-Advisor.svg" alt="Well-Architected" style="height:1em"></span>
+            <div class="card-text">Well-Architected Framework</div>
+            <div class="text-secondary"><small>aka.ms/waf</small></div>
+          </div>
+        </div>
+        <aside class="notes">
+          Useful follow-up resources. Azure Architecture Center has reference architectures, decision trees, and best
+          practices for every service we covered. The Pricing Calculator helps you estimate costs for your specific
+          configuration. Microsoft Learn has free, hands-on learning paths for all these services. The Well-Architected
+          Framework provides guidance on reliability, security, cost optimization, operational excellence, and
+          performance efficiency.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- LAB -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Hands-On Lab</h2>
+        <p class="subtitle">Create &amp; configure App Services, Container Apps, Key Vault &amp; CosmosDB</p>
+        <div class="two-columns">
+          <div>
+            <h3>Objectives</h3>
+            <ul>
+              <li>Deploy an Azure App Service and explore its configuration</li>
+              <li>Deploy an Azure Container App with a custom container image</li>
+              <li>Create a Key Vault, manage secrets &amp; RBAC permissions</li>
+              <li>Reference Key Vault secrets from App Service</li>
+              <li>Deploy a CosmosDB account, database &amp; container</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Prerequisites</h3>
+            <ul>
+              <li>Access to an Azure subscription &amp; resource group</li>
+              <li>(Optional) Azure CLI installed and configured</li>
+            </ul>
+          </div>
+        </div>
+        <div class="highlight-box" style="margin-top:0.8em;">
+          <p><a href="https://github.com/davidxw/azure-skills-public/blob/main/labs/3.%20App%20Platforms%20and%20Databases.md" target="_blank" style="color: var(--accent-blue);">Open Lab Guide &rarr;</a></p>
+        </div>
+        <aside class="notes">
+          Time for hands-on practice. Module 1 deploys an App Service and explores configuration,
+          identity, metrics, and networking options. Module 2 creates a Container App and swaps in
+          a custom Docker Hub image. Module 3 provisions a Key Vault, sets up RBAC, creates a
+          secret, and wires it into the App Service via a managed identity. Module 4 deploys a
+          CosmosDB account and experiments with schema-less data. All exercises follow Microsoft
+          Learn quickstarts with adjustments for the lab environment.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- CLOSING -->
+      <!-- ============================================= -->
+      <section>
+        <h1>Questions?</h1>
+        <p class="subtitle">Thank you!</p>
+        <aside class="notes">
+          Open the floor for questions. Refer back to specific slides if needed.
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="slides.js"></script>
+</body>
+
+</html>
