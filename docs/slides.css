@@ -356,16 +356,14 @@
   flex: 0 0 45%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
   padding: 48px 60px;
   box-sizing: border-box;
 }
 
 .title-hero .hero-logo {
-  position: absolute;
-  top: 36px;
-  left: 48px;
   height: 2em;
+  align-self: flex-start;
+  margin-bottom: 2em;
 }
 
 .title-hero h1,
@@ -483,3 +481,4 @@
   margin: 0;
   text-align: right;
 }
+

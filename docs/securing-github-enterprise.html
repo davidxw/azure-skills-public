@@ -1,0 +1,941 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Securing GitHub Enterprise</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/theme/black.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/highlight/monokai.css" />
+    <link rel="stylesheet" href="slides.css" />
+    <link rel="icon" type="image/svg+xml" href="https://revealjs.com/images/favicon.svg" />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+
+        <!-- ============================================= -->
+        <!-- SLIDE 1 — Title -->
+        <!-- ============================================= -->
+        <section class="title-hero">
+          <div class="hero-layout">
+            <div class="hero-text">
+              <img class="hero-logo" src="images/microsoft-logo.svg" alt="Microsoft" />
+              <h2>Securing GitHub Enterprise</h2>
+              <p class="hero-author">Security Settings, Best Practices &amp; Recommendations</p>
+            </div>
+            <div class="hero-image">
+              <img src="images/title.png" alt="Securing GitHub Enterprise" />
+            </div>
+          </div>
+          <aside class="notes">
+            Welcome to the Securing GitHub Enterprise session. We'll walk through every major security setting available in GitHub Enterprise, explain what each one does, when you should enable or disable it, and give a clear recommendation for each. This is aimed at admins and security teams managing GitHub Enterprise Cloud or Server.
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- SLIDE 2 — Agenda -->
+        <!-- ============================================= -->
+        <section>
+          <h2>Agenda</h2>
+          <div class="two-columns">
+            <div>
+              <h3>Identity &amp; Access</h3>
+              <ul>
+                <li>SAML SSO</li>
+                <li>Two-Factor Authentication</li>
+                <li>Enterprise Managed Users</li>
+                <li>Roles &amp; Permissions</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Code &amp; Supply Chain</h3>
+              <ul>
+                <li>Branch Protection &amp; Rulesets</li>
+                <li>Secret Scanning &amp; Push Protection</li>
+                <li>Dependabot</li>
+                <li>Code Scanning &amp; CodeQL</li>
+              </ul>
+            </div>
+          </div>
+          <div class="two-columns" style="margin-top: 0.6em;">
+            <div>
+              <h3>Platform Security</h3>
+              <ul>
+                <li>GitHub Actions Security</li>
+                <li>Deploy Keys &amp; SSH Certificates</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Governance</h3>
+              <ul>
+                <li>Audit Log &amp; SIEM</li>
+                <li>IP Allow Lists</li>
+                <li>Security Policies</li>
+              </ul>
+            </div>
+          </div>
+          <aside class="notes">
+            Here's a high-level view of the areas we'll cover. We'll start with identity and access controls, move into code and supply-chain security features, then cover platform-level security for Actions and deploy keys, and finish with governance topics like audit logging and IP restrictions.
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- SLIDE 3 — SAML SSO -->
+        <!-- ============================================= -->
+        <section>
+          <h2>SAML Single Sign-On (SSO)</h2>
+          <div class="two-columns">
+            <div>
+              <h3>What It Does</h3>
+              <ul>
+                <li>Federates authentication to your IdP (Entra ID, Okta, etc.)</li>
+                <li>Members must authenticate via IdP to access org resources</li>
+                <li>Enables centralized identity lifecycle management</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Recommendation</h3>
+              <div class="highlight-box">
+                <p><strong class="text-cyan">Enable &amp; Enforce</strong> for all organizations in your enterprise. Use SCIM provisioning for automated user lifecycle.</p>
+              </div>
+            </div>
+          </div>
+          <p class="text-secondary slide-links"><small><a href="https://docs.github.com/en/enterprise-cloud@latest/organizations/managing-saml-single-sign-on-for-your-organization/about-saml-single-sign-on">About SAML SSO</a> · <a href="https://docs.github.com/en/enterprise-cloud@latest/organizations/managing-saml-single-sign-on-for-your-organization/enforcing-saml-single-sign-on-for-your-organization">Enforcing SAML SSO</a> · <a href="https://docs.github.com/en/enterprise-cloud@latest/organizations/managing-saml-single-sign-on-for-your-organization/about-scim-for-organizations">About SCIM</a></small></p>
+          <aside class="notes">
+            SAML SSO is the foundation of enterprise identity management on GitHub. When enforced, all org members must authenticate through your identity provider before accessing any org resources. You can enable it without enforcing first — this lets members link their accounts gradually. Once ready, enforce it to require SSO for everyone.
+
+            Always pair SAML with SCIM (System for Cross-domain Identity Management) to automate provisioning and deprovisioning of users. Without SCIM, you must manually manage user access when people join or leave.
+
+            When NOT to use: If you have a very small team with no centralized IdP, SAML may be overkill. But for any enterprise deployment, this is table stakes.
+
+            Docs:
+            - https://docs.github.com/en/enterprise-cloud@latest/organizations/managing-saml-single-sign-on-for-your-organization/about-saml-single-sign-on
+            - https://docs.github.com/en/enterprise-cloud@latest/organizations/managing-saml-single-sign-on-for-your-organization/enforcing-saml-single-sign-on-for-your-organization
+            - https://docs.github.com/en/enterprise-cloud@latest/organizations/managing-saml-single-sign-on-for-your-organization/about-scim-for-organizations
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- SLIDE 4 — Two-Factor Authentication -->
+        <!-- ============================================= -->
+        <section>
+          <h2>Two-Factor Authentication (2FA)</h2>
+          <div class="two-columns">
+            <div>
+              <h3>What It Does</h3>
+              <ul>
+                <li>Requires a second factor (TOTP, SMS, security key, or passkey) at login</li>
+                <li>Can be required at org or enterprise level</li>
+                <li>Members without 2FA are removed from the org</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Recommendation</h3>
+              <div class="highlight-box">
+                <p><strong class="text-cyan">Require 2FA</strong> at the enterprise level. Prefer hardware security keys or passkeys over TOTP/SMS.</p>
+              </div>
+            </div>
+          </div>
+          <p class="text-secondary slide-links"><small><a href="https://docs.github.com/en/enterprise-cloud@latest/organizations/keeping-your-organization-secure/managing-two-factor-authentication-for-your-organization/requiring-two-factor-authentication-in-your-organization">Requiring 2FA</a> · <a href="https://docs.github.com/en/authentication/securing-your-account-with-two-factor-authentication-2fa/about-two-factor-authentication">About 2FA</a> · <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-security-settings-in-your-enterprise">Enterprise Security Policies</a></small></p>
+          <aside class="notes">
+            Two-factor authentication adds a critical second layer of protection. When you require 2FA at the enterprise or org level, any member who hasn't enabled it will be removed from the organization (they can rejoin once they set up 2FA).
+
+            GitHub now supports passkeys as a 2FA method, which are phishing-resistant and the most secure option. Security keys (WebAuthn/FIDO2) are the next best. TOTP apps are acceptable. SMS is the weakest option — avoid relying on it.
+
+            If you're using SAML SSO with an IdP that enforces MFA, you technically get two layers. But requiring 2FA on GitHub itself provides defense-in-depth in case a SAML session token is compromised.
+
+            When NOT to enforce: Only if your SSO IdP already enforces MFA and you trust that chain completely. Even then, enabling it on GitHub is still recommended.
+
+            Docs:
+            - https://docs.github.com/en/enterprise-cloud@latest/organizations/keeping-your-organization-secure/managing-two-factor-authentication-for-your-organization/requiring-two-factor-authentication-in-your-organization
+            - https://docs.github.com/en/authentication/securing-your-account-with-two-factor-authentication-2fa/about-two-factor-authentication
+            - https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-security-settings-in-your-enterprise
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- SLIDE 5 — Enterprise Managed Users -->
+        <!-- ============================================= -->
+        <section>
+          <h2>Enterprise Managed Users (EMU)</h2>
+          <div class="two-columns">
+            <div>
+              <h3>What It Does</h3>
+              <ul>
+                <li>User accounts are fully provisioned &amp; controlled by the IdP</li>
+                <li>Users cannot create personal repos or contribute outside the enterprise</li>
+                <li>Full lifecycle management via SCIM</li>
+              </ul>
+            </div>
+            <div>
+              <h3>When to Use</h3>
+              <ul>
+                <li class="text-cyan"><strong>Use:</strong> Strict compliance environments, regulated industries</li>
+                <li class="text-pink"><strong>Avoid:</strong> Teams that need OSS contributions or personal accounts</li>
+              </ul>
+            </div>
+          </div>
+          <div class="highlight-box">
+            <p><strong class="text-cyan">Recommendation:</strong> Choose EMU for maximum control. Choose standard SAML SSO if developers need to interact with the broader GitHub ecosystem.</p>
+          </div>
+          <p class="text-secondary slide-links"><small><a href="https://docs.github.com/en/enterprise-cloud@latest/admin/identity-and-access-management/understanding-iam-for-enterprises/about-enterprise-managed-users">About EMU</a> · <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/identity-and-access-management/provisioning-user-accounts-for-enterprise-managed-users">Provisioning EMU Accounts</a></small></p>
+          <aside class="notes">
+            Enterprise Managed Users is the strictest identity model GitHub offers. Unlike regular SAML SSO where users link their existing personal GitHub accounts, EMU accounts are entirely provisioned and owned by the enterprise through the IdP.
+
+            EMU users cannot fork public repos, contribute to repos outside the enterprise, or create personal repositories. This makes EMU ideal for highly regulated industries (finance, healthcare, government) where data leakage prevention is paramount.
+
+            The tradeoff is significant: developers lose the ability to participate in open-source communities with their managed account. Many organizations solve this by allowing developers to have a separate personal GitHub account for OSS work.
+
+            EMU requires GitHub Enterprise Cloud — it's not available on Server.
+
+            Docs:
+            - https://docs.github.com/en/enterprise-cloud@latest/admin/identity-and-access-management/understanding-iam-for-enterprises/about-enterprise-managed-users
+            - https://docs.github.com/en/enterprise-cloud@latest/admin/identity-and-access-management/provisioning-user-accounts-for-enterprise-managed-users
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- SLIDE 6 — Roles & Permissions -->
+        <!-- ============================================= -->
+        <section>
+          <h2>Organization Roles &amp; Permissions</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Role</th>
+                <th>Scope</th>
+                <th>Key Capabilities</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong class="text-cyan">Enterprise Owner</strong></td>
+                <td>Enterprise</td>
+                <td>Full control over all orgs, policies, billing</td>
+              </tr>
+              <tr>
+                <td><strong class="text-cyan">Org Owner</strong></td>
+                <td>Organization</td>
+                <td>Manage members, repos, teams, settings</td>
+              </tr>
+              <tr>
+                <td><strong class="text-cyan">Security Manager</strong></td>
+                <td>Organization</td>
+                <td>View alerts, manage security settings</td>
+              </tr>
+              <tr>
+                <td><strong class="text-cyan">Member</strong></td>
+                <td>Organization</td>
+                <td>Access repos, create repos (if allowed)</td>
+              </tr>
+              <tr>
+                <td><strong class="text-cyan">Outside Collaborator</strong></td>
+                <td>Repository</td>
+                <td>Access specific repos only</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="text-secondary slide-links"><small><a href="https://docs.github.com/en/enterprise-cloud@latest/admin/managing-accounts-and-repositories/managing-users-in-your-enterprise/roles-in-an-enterprise">Enterprise Roles</a> · <a href="https://docs.github.com/en/organizations/managing-peoples-access-to-your-organization-with-roles/roles-in-an-organization">Org Roles</a> · <a href="https://docs.github.com/en/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization">Security Managers</a></small></p>
+          <aside class="notes">
+            GitHub Enterprise provides a layered role model. Enterprise Owners sit at the top and can enforce policies across all organizations. Org Owners manage individual organizations. The Security Manager role is particularly useful — it grants read access to all security alerts and settings across the org without granting admin access to repositories.
+
+            Recommendation: Follow the principle of least privilege. Minimize the number of Enterprise Owners and Org Owners. Use the Security Manager role for your security team. Use custom repository roles to fine-tune access.
+
+            Docs:
+            - https://docs.github.com/en/enterprise-cloud@latest/admin/managing-accounts-and-repositories/managing-users-in-your-enterprise/roles-in-an-enterprise
+            - https://docs.github.com/en/organizations/managing-peoples-access-to-your-organization-with-roles/roles-in-an-organization
+            - https://docs.github.com/en/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- SLIDE 7 — Base Permissions -->
+        <!-- ============================================= -->
+        <section>
+          <h2>Repository Base Permissions</h2>
+          <div class="two-columns">
+            <div>
+              <h3>Setting</h3>
+              <ul>
+                <li><strong>None</strong> — members see only repos they're explicitly granted</li>
+                <li><strong>Read</strong> — all members can read all repos</li>
+                <li><strong>Write</strong> — all members can push to all repos</li>
+                <li><strong>Admin</strong> — all members are admins on all repos</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Recommendation</h3>
+              <div class="highlight-box">
+                <p><strong class="text-cyan">Set to "Read"</strong> for inner-source culture, or <strong>"None"</strong> for strict access control. Never use "Write" or "Admin" as the base.</p>
+              </div>
+              <ul>
+                <li>Use teams for granular repo access</li>
+                <li>Create custom repository roles for nuanced permissions</li>
+              </ul>
+            </div>
+          </div>
+          <p class="text-secondary slide-links"><small><a href="https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/managing-repository-roles/setting-base-permissions-for-an-organization">Setting Base Permissions</a> · <a href="https://docs.github.com/en/enterprise-cloud@latest/organizations/managing-user-access-to-your-organizations-repositories/managing-repository-roles/managing-custom-repository-roles-for-an-organization">Custom Repository Roles</a></small></p>
+          <aside class="notes">
+            Base permissions determine the default access level every org member gets on every repository. This is one of the most impactful security settings.
+
+            "Read" is a good default for organizations that value inner-source collaboration — everyone can see the code, but only designated teams can push changes. "None" is appropriate for highly regulated environments where access must be explicitly granted.
+
+            Never set the base to "Write" or "Admin" — this gives everyone push access to every repo, which violates least privilege and makes it impossible to enforce code review requirements.
+
+            Custom repository roles (available on Enterprise) let you create fine-grained permission levels between the built-in roles. For example, you could create a "Triage" role that can manage issues but not push code.
+
+            Docs:
+            - https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/managing-repository-roles/setting-base-permissions-for-an-organization
+            - https://docs.github.com/en/enterprise-cloud@latest/organizations/managing-user-access-to-your-organizations-repositories/managing-repository-roles/managing-custom-repository-roles-for-an-organization
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- SLIDE 8 — Branch Protection Rules -->
+        <!-- ============================================= -->
+        <section>
+          <h2>Branch Protection Rules</h2>
+          <div class="card-grid cols-2">
+            <div class="card">
+              <span class="card-icon">✅</span>
+              <div class="card-text">Require Pull Request Reviews<br><span class="text-secondary">Min 1-2 approvals before merge</span></div>
+            </div>
+            <div class="card">
+              <span class="card-icon">🔒</span>
+              <div class="card-text">Require Status Checks<br><span class="text-secondary">CI must pass before merge</span></div>
+            </div>
+            <div class="card">
+              <span class="card-icon">✍️</span>
+              <div class="card-text">Require Signed Commits<br><span class="text-secondary">Verify commit authorship</span></div>
+            </div>
+            <div class="card">
+              <span class="card-icon">🚫</span>
+              <div class="card-text">Restrict Force Pushes<br><span class="text-secondary">Prevent history rewriting</span></div>
+            </div>
+          </div>
+          <p class="text-secondary slide-links"><small><a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches">About Protected Branches</a> · <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule">Managing Branch Protection</a></small></p>
+          <aside class="notes">
+            Branch protection rules are your first line of defense for code integrity. Apply them to your default branch (main/master) and any release branches.
+
+            Key settings and recommendations:
+            - Require pull request reviews: Enable with at least 1 required approver (2 for sensitive repos). Enable "Dismiss stale reviews" so that new pushes invalidate existing approvals.
+            - Require status checks to pass: Ensure CI/CD pipelines run and pass before code can be merged. Mark critical checks as "required."
+            - Require signed commits: This verifies that commits were actually authored by the claimed person. Important for supply-chain security but can add friction — enable for high-value repos.
+            - Restrict force pushes: Always restrict force pushes to protected branches to prevent history tampering.
+
+            Also consider: "Require conversation resolution" (all review comments must be resolved), "Require linear history" (no merge commits), and "Include administrators" (rules apply to admins too).
+
+            Docs:
+            - https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches
+            - https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- SLIDE 9 — Repository Rulesets -->
+        <!-- ============================================= -->
+        <section>
+          <h2>Repository Rulesets</h2>
+          <div class="two-columns">
+            <div>
+              <h3>Why Rulesets?</h3>
+              <ul>
+                <li>Modern replacement for branch protection rules</li>
+                <li>Can target branches <em>and</em> tags</li>
+                <li>Layerable — multiple rulesets can apply</li>
+                <li>Enterprise-level rulesets apply across all repos</li>
+                <li>Bypass lists for specific roles/teams</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Recommendation</h3>
+              <div class="highlight-box">
+                <p><strong class="text-cyan">Prefer rulesets</strong> over branch protection for new configurations. Use enterprise-level rulesets to enforce baseline policies across all repos.</p>
+              </div>
+            </div>
+          </div>
+          <p class="text-secondary slide-links"><small><a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets">About Rulesets</a> · <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-your-enterprise-with-rulesets">Enterprise Rulesets</a> · <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/creating-rulesets-for-a-repository">Creating Rulesets</a></small></p>
+          <aside class="notes">
+            Rulesets are the newer, more flexible alternative to branch protection rules. They were introduced to address limitations of the older system.
+
+            Key advantages:
+            - Rulesets can be created at the organization or enterprise level, meaning you can enforce rules across all repos without configuring each repo individually.
+            - Multiple rulesets can apply to the same branch — they're layered, with the most restrictive setting winning.
+            - Rulesets support "Evaluate" mode, which lets you see what would be blocked without actually enforcing, great for rollout.
+            - Bypass lists let you specify which roles, teams, or apps are exempt from rules (e.g., a release automation bot).
+
+            When NOT to use: If you're on GitHub Enterprise Server below version 3.8, rulesets aren't available yet. Use branch protection rules in that case.
+
+            Recommendation: For greenfield setups, use rulesets exclusively. For existing setups, migrate from branch protection to rulesets incrementally. Create an enterprise-level ruleset for baseline policies (require PR, require status checks) and repo-level rulesets for specific requirements.
+
+            Docs:
+            - https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets
+            - https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-your-enterprise-with-rulesets
+            - https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/creating-rulesets-for-a-repository
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- SLIDE 10 — Section Divider: Code Security -->
+        <!-- ============================================= -->
+        <section data-background-color="#0d1321">
+          <h1>Code &amp; Supply Chain Security</h1>
+          <p class="subtitle">Secret Scanning, Dependabot, Code Scanning</p>
+          <aside class="notes">
+            Now we move into the code and supply chain security features. These are the tools GitHub provides to find vulnerabilities, leaked secrets, and insecure dependencies in your codebase.
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- SLIDE 11 — Secret Scanning -->
+        <!-- ============================================= -->
+        <section>
+          <h2>Secret Scanning</h2>
+          <div class="two-columns">
+            <div>
+              <h3>What It Does</h3>
+              <ul>
+                <li>Scans repos for known secret patterns (API keys, tokens, passwords)</li>
+                <li>Alerts repo admins and can notify the secret provider</li>
+                <li>Supports 200+ secret patterns from partner programs</li>
+                <li>Custom patterns for org-specific secrets</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Recommendation</h3>
+              <div class="highlight-box">
+                <p><strong class="text-cyan">Enable for all repositories</strong> at the enterprise level. Define custom patterns for internal secret formats.</p>
+              </div>
+            </div>
+          </div>
+          <p class="text-secondary slide-links"><small><a href="https://docs.github.com/en/code-security/secret-scanning/introduction/about-secret-scanning">About Secret Scanning</a> · <a href="https://docs.github.com/en/code-security/secret-scanning/using-advanced-secret-scanning-and-push-protection-features/custom-patterns/defining-custom-patterns-for-secret-scanning">Custom Patterns</a> · <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-code-security-and-analysis-for-your-enterprise">Enterprise Code Security Policies</a></small></p>
+          <aside class="notes">
+            Secret scanning automatically detects secrets that have been committed to your repositories. GitHub partners with service providers (AWS, Azure, Slack, etc.) so that when a secret is detected, the provider is notified and can automatically revoke the credential.
+
+            Enable this at the enterprise or org level to ensure every repository is covered. You can also define custom patterns using regular expressions — for example, if your company uses a specific format for internal API keys, you can create a pattern to detect those too.
+
+            Secret scanning works on both public and private repos (with GitHub Advanced Security license for private repos). For public repos, it's on by default.
+
+            When NOT to disable: There's no good reason to disable secret scanning. The only caveat is that scanning private repos requires a GitHub Advanced Security (GHAS) license.
+
+            Docs:
+            - https://docs.github.com/en/code-security/secret-scanning/introduction/about-secret-scanning
+            - https://docs.github.com/en/code-security/secret-scanning/using-advanced-secret-scanning-and-push-protection-features/custom-patterns/defining-custom-patterns-for-secret-scanning
+            - https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-code-security-and-analysis-for-your-enterprise
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- SLIDE 12 — Push Protection -->
+        <!-- ============================================= -->
+        <section>
+          <h2>Push Protection</h2>
+          <div class="two-columns">
+            <div>
+              <h3>What It Does</h3>
+              <ul>
+                <li>Blocks pushes that contain detected secrets <em>before</em> they reach the repo</li>
+                <li>Shift-left approach — prevents leaks rather than detecting after the fact</li>
+                <li>Developers see a clear error with remediation guidance</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Bypass Options</h3>
+              <ul>
+                <li>Developers can request a bypass with a reason</li>
+                <li>Delegated bypass requires approval from security team</li>
+                <li>All bypasses are logged in the audit log</li>
+              </ul>
+            </div>
+          </div>
+          <div class="highlight-box">
+            <p><strong class="text-cyan">Recommendation:</strong> Enable push protection for all repos. Use delegated bypass to require security team approval for exceptions.</p>
+          </div>
+          <p class="text-secondary slide-links"><small><a href="https://docs.github.com/en/code-security/secret-scanning/introduction/about-push-protection">About Push Protection</a> · <a href="https://docs.github.com/en/code-security/secret-scanning/using-advanced-secret-scanning-and-push-protection-features/delegated-bypass-for-push-protection">Delegated Bypass</a></small></p>
+          <aside class="notes">
+            Push protection is the proactive counterpart to secret scanning. Instead of alerting you after a secret has been committed, it blocks the push entirely, preventing the secret from ever entering the repository history.
+
+            This is critical because even if you later remove a secret from a file, it remains in the Git history and can be found by anyone with access to the repo.
+
+            Delegated bypass is a powerful feature: instead of letting developers self-approve bypasses, you can require that a member of the security team reviews and approves the bypass request. This creates an auditable approval workflow.
+
+            When NOT to use: If you have a large number of false positives with custom patterns, push protection can be frustrating for developers. Fine-tune your patterns first, then enable push protection.
+
+            Docs:
+            - https://docs.github.com/en/code-security/secret-scanning/introduction/about-push-protection
+            - https://docs.github.com/en/code-security/secret-scanning/using-advanced-secret-scanning-and-push-protection-features/delegated-bypass-for-push-protection
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- SLIDE 13 — Dependabot -->
+        <!-- ============================================= -->
+        <section>
+          <h2>Dependabot</h2>
+          <div class="card-grid cols-3">
+            <div class="card">
+              <span class="card-icon">🚨</span>
+              <div class="card-text">Dependabot Alerts<br><span class="text-secondary">Notify on vulnerable dependencies</span></div>
+            </div>
+            <div class="card">
+              <span class="card-icon">🔄</span>
+              <div class="card-text">Security Updates<br><span class="text-secondary">Auto-PRs to fix known CVEs</span></div>
+            </div>
+            <div class="card">
+              <span class="card-icon">📦</span>
+              <div class="card-text">Version Updates<br><span class="text-secondary">Keep all deps up to date via PRs</span></div>
+            </div>
+          </div>
+          <div class="highlight-box">
+            <p><strong class="text-cyan">Recommendation:</strong> Enable Dependabot alerts and security updates for all repos. Enable version updates selectively for actively maintained projects.</p>
+          </div>
+          <p class="text-secondary slide-links"><small><a href="https://docs.github.com/en/code-security/dependabot/dependabot-alerts/about-dependabot-alerts">Dependabot Alerts</a> · <a href="https://docs.github.com/en/code-security/dependabot/dependabot-security-updates/about-dependabot-security-updates">Security Updates</a> · <a href="https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/about-dependabot-version-updates">Version Updates</a> · <a href="https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file">dependabot.yml Config</a></small></p>
+          <aside class="notes">
+            Dependabot provides three tiers of dependency management:
+
+            1. Dependabot Alerts: Notifies you when a dependency has a known vulnerability in the GitHub Advisory Database. This is the minimum you should enable — it's free and available for all repos.
+
+            2. Dependabot Security Updates: Automatically creates pull requests to update vulnerable dependencies to the minimum patched version. This reduces the manual work of triaging and updating dependencies.
+
+            3. Dependabot Version Updates: Goes beyond security and keeps all dependencies up to date by creating PRs on a schedule (daily, weekly, monthly). This requires a dependabot.yml config file in the repo. Enable this selectively — it can create a high volume of PRs on repos with many dependencies.
+
+            When NOT to enable version updates: For legacy repos that aren't actively maintained, version update PRs will pile up and create noise. Focus on security updates for those repos.
+
+            Docs:
+            - https://docs.github.com/en/code-security/dependabot/dependabot-alerts/about-dependabot-alerts
+            - https://docs.github.com/en/code-security/dependabot/dependabot-security-updates/about-dependabot-security-updates
+            - https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/about-dependabot-version-updates
+            - https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- SLIDE 14 — Code Scanning & CodeQL -->
+        <!-- ============================================= -->
+        <section>
+          <h2>Code Scanning &amp; CodeQL</h2>
+          <div class="two-columns">
+            <div>
+              <h3>What It Does</h3>
+              <ul>
+                <li>Static analysis of source code for security vulnerabilities</li>
+                <li>CodeQL is GitHub's semantic analysis engine</li>
+                <li>Runs in GitHub Actions on push and PR</li>
+                <li>Supports 10+ languages (JS, Python, Java, C#, Go, etc.)</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Setup Options</h3>
+              <ul>
+                <li><strong class="text-cyan">Default setup</strong> — zero-config, GitHub manages everything</li>
+                <li><strong class="text-lavender">Advanced setup</strong> — custom workflow file for fine-tuned control</li>
+                <li><strong>Third-party</strong> — upload SARIF from any tool</li>
+              </ul>
+            </div>
+          </div>
+          <div class="highlight-box">
+            <p><strong class="text-cyan">Recommendation:</strong> Enable default setup for all repos. Use advanced setup for polyglot repos or custom queries. Enforce at the enterprise level.</p>
+          </div>
+          <p class="text-secondary slide-links"><small><a href="https://docs.github.com/en/code-security/code-scanning/introduction-to-code-scanning/about-code-scanning">About Code Scanning</a> · <a href="https://docs.github.com/en/code-security/code-scanning/enabling-code-scanning/configuring-default-setup-for-code-scanning">Default Setup</a> · <a href="https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/configuring-advanced-setup-for-code-scanning">Advanced Setup</a> · <a href="https://codeql.github.com/docs/">CodeQL Docs</a></small></p>
+          <aside class="notes">
+            Code scanning with CodeQL finds security vulnerabilities like SQL injection, XSS, path traversal, and more by analyzing the actual data flow through your code — it's not just pattern matching.
+
+            Default setup is the easiest way to get started: GitHub automatically detects languages, configures the analysis, and runs it. No workflow file needed. This is the recommended starting point.
+
+            Advanced setup gives you a codeql-analysis.yml workflow file you can customize — useful for monorepos, custom build steps, or running additional CodeQL query packs.
+
+            You can also upload SARIF results from third-party static analysis tools (Checkmarx, SonarQube, etc.) into the same code scanning interface for a unified view.
+
+            Requires GitHub Advanced Security license for private repos. Free for public repos.
+
+            When NOT to use CodeQL: If you're using a language CodeQL doesn't support, use a third-party tool and upload SARIF instead. Also, CodeQL analysis can be slow for very large codebases — advanced setup allows you to optimize the build and analysis steps.
+
+            Docs:
+            - https://docs.github.com/en/code-security/code-scanning/introduction-to-code-scanning/about-code-scanning
+            - https://docs.github.com/en/code-security/code-scanning/enabling-code-scanning/configuring-default-setup-for-code-scanning
+            - https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/configuring-advanced-setup-for-code-scanning
+            - https://codeql.github.com/docs/
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- SLIDE 15 — Section Divider: Platform Security -->
+        <!-- ============================================= -->
+        <section data-background-color="#0d1321">
+          <h1>Platform Security</h1>
+          <p class="subtitle">GitHub Actions, Deploy Keys, SSH Certificates</p>
+          <aside class="notes">
+            Let's move on to platform-level security topics. GitHub Actions introduces its own set of security considerations, and we'll also cover how to manage machine access via deploy keys and SSH certificates.
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- SLIDE 16 — GitHub Actions Security -->
+        <!-- ============================================= -->
+        <section>
+          <h2>GitHub Actions Security</h2>
+          <div class="card-grid cols-2">
+            <div class="card">
+              <span class="card-icon">📋</span>
+              <div class="card-text">Allowed Actions Policy<br><span class="text-secondary">Restrict which actions can run</span></div>
+            </div>
+            <div class="card">
+              <span class="card-icon">🔑</span>
+              <div class="card-text">OIDC for Cloud Auth<br><span class="text-secondary">Eliminate long-lived secrets</span></div>
+            </div>
+            <div class="card">
+              <span class="card-icon">🗝️</span>
+              <div class="card-text">Secrets Management<br><span class="text-secondary">Encrypted, scoped to env/repo/org</span></div>
+            </div>
+            <div class="card">
+              <span class="card-icon">🏃</span>
+              <div class="card-text">Self-Hosted Runners<br><span class="text-secondary">Isolate in ephemeral VMs, never on public repos</span></div>
+            </div>
+          </div>
+          <p class="text-secondary slide-links"><small><a href="https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions">Security Hardening for Actions</a> · <a href="https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/about-security-hardening-with-openid-connect">OIDC for Actions</a> · <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-github-actions-in-your-enterprise">Enterprise Actions Policies</a> · <a href="https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security">Runner Security</a></small></p>
+          <aside class="notes">
+            GitHub Actions is a powerful CI/CD platform, but it comes with security risks if not configured properly.
+
+            Allowed Actions: At the enterprise or org level, you can restrict which actions are allowed. Options are: "Allow all actions" (least secure), "Allow actions created by GitHub" + "Allow Marketplace verified creators", or "Allow select actions" (most secure). Recommendation: Allow GitHub-created and verified creators, plus explicitly approved third-party actions.
+
+            OIDC (OpenID Connect): Instead of storing long-lived cloud credentials as secrets, use OIDC to get short-lived tokens for AWS, Azure, or GCP. This is the recommended approach for all cloud deployments.
+
+            Secrets: Use environment-level secrets for deployment targets, org-level secrets for shared credentials, and repo-level secrets for repo-specific items. Never log secrets in workflow output. Use environments with required reviewers for production deployments.
+
+            Self-hosted runners: Never use self-hosted runners on public repositories — a malicious PR could execute arbitrary code on your infrastructure. For private repos, use ephemeral/disposable runners (e.g., Actions Runner Controller on Kubernetes) and never persist state between jobs.
+
+            Docs:
+            - https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions
+            - https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/about-security-hardening-with-openid-connect
+            - https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-github-actions-in-your-enterprise
+            - https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- SLIDE 17 — Actions: Workflow Permissions -->
+        <!-- ============================================= -->
+        <section>
+          <h2>Actions: Workflow Permissions</h2>
+          <div class="two-columns">
+            <div>
+              <h3>GITHUB_TOKEN Permissions</h3>
+              <ul>
+                <li><strong>Read-only (default)</strong> — workflows get read access only</li>
+                <li><strong>Read/write</strong> — workflows can push, create releases, etc.</li>
+                <li>Set at enterprise, org, or repo level</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Recommendation</h3>
+              <div class="highlight-box">
+                <p><strong class="text-cyan">Set default to read-only</strong> at the enterprise level. Workflows that need write access should declare specific permissions in the YAML.</p>
+              </div>
+            </div>
+          </div>
+          <p class="text-secondary slide-links"><small><a href="https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication">Automatic Token Auth</a> · <a href="https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token">Controlling GITHUB_TOKEN Permissions</a> · <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-github-actions-in-your-enterprise#enforcing-a-policy-for-workflow-permissions-in-your-enterprise">Enterprise Workflow Policies</a></small></p>
+          <aside class="notes">
+            The GITHUB_TOKEN is automatically provided to every workflow run. By default it has broad read/write permissions, but the enterprise setting lets you restrict the default to read-only.
+
+            This is important because if a workflow is compromised (e.g., via a malicious dependency), a read-only token limits the blast radius. Workflows that genuinely need write access can declare it explicitly using the `permissions` key in their workflow YAML:
+
+            permissions:
+              contents: write
+              pull-requests: write
+
+            Also disable "Allow GitHub Actions to create and approve pull requests" unless you have a specific automation use case that requires it.
+
+            The "Fork pull request workflows" setting is also critical: for public repos, configure "Require approval for first-time contributors" to prevent unauthorized workflow execution.
+
+            Docs:
+            - https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication
+            - https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token
+            - https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-github-actions-in-your-enterprise#enforcing-a-policy-for-workflow-permissions-in-your-enterprise
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- SLIDE 18 — Deploy Keys & SSH Certificates -->
+        <!-- ============================================= -->
+        <section>
+          <h2>Deploy Keys &amp; SSH Certificates</h2>
+          <div class="two-columns">
+            <div>
+              <h3>Deploy Keys</h3>
+              <ul>
+                <li>SSH keys scoped to a single repo</li>
+                <li>Read-only or read/write access</li>
+                <li>No user account required</li>
+                <li class="text-cyan"><strong>Use for:</strong> CI/CD systems, external integrations</li>
+              </ul>
+            </div>
+            <div>
+              <h3>SSH Certificate Authorities</h3>
+              <ul>
+                <li>Org-wide SSH CA for member authentication</li>
+                <li>Certificates are time-limited and auditable</li>
+                <li>No need to manage individual SSH keys</li>
+                <li class="text-cyan"><strong>Use for:</strong> Large teams needing centralized SSH key management</li>
+              </ul>
+            </div>
+          </div>
+          <div class="highlight-box">
+            <p><strong class="text-cyan">Recommendation:</strong> Prefer deploy keys (read-only) over PATs for machine access. Consider SSH CAs for organizations with 50+ developers.</p>
+          </div>
+          <p class="text-secondary slide-links"><small><a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys">Managing Deploy Keys</a> · <a href="https://docs.github.com/en/organizations/managing-git-access-to-your-organizations-repositories/about-ssh-certificate-authorities">SSH Certificate Authorities</a> · <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens">Managing PATs</a></small></p>
+          <aside class="notes">
+            Deploy keys are scoped to a single repository and don't require a user account, making them ideal for CI/CD systems and automation. Always prefer read-only deploy keys unless write access is explicitly needed.
+
+            SSH Certificate Authorities let you issue short-lived SSH certificates signed by your CA, rather than managing individual SSH keys for every developer. When you add your CA to the org, members can use certificates signed by that CA to access org repos. Certificates can have expiry times, making them more secure than long-lived SSH keys.
+
+            Avoid using Personal Access Tokens (PATs) for machine access where possible — they're tied to user accounts and often have broader scope than needed. If you must use PATs, use fine-grained PATs with minimal permissions and short expiry.
+
+            Docs:
+            - https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys
+            - https://docs.github.com/en/organizations/managing-git-access-to-your-organizations-repositories/about-ssh-certificate-authorities
+            - https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- SLIDE 19 — Section Divider: Governance -->
+        <!-- ============================================= -->
+        <section data-background-color="#0d1321">
+          <h1>Governance &amp; Compliance</h1>
+          <p class="subtitle">Audit Logs, IP Allow Lists, Security Policies</p>
+          <aside class="notes">
+            The final section covers governance and compliance features — how to monitor what's happening in your enterprise, restrict network access, and establish security policies.
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- SLIDE 20 — Audit Log -->
+        <!-- ============================================= -->
+        <section>
+          <h2>Audit Log &amp; SIEM Integration</h2>
+          <div class="two-columns">
+            <div>
+              <h3>What It Captures</h3>
+              <ul>
+                <li>Authentication events (SSO, 2FA)</li>
+                <li>Permission changes (roles, teams)</li>
+                <li>Repository actions (create, delete, visibility)</li>
+                <li>Security events (alerts, secret scanning)</li>
+                <li>Actions workflow runs</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Integration Options</h3>
+              <ul>
+                <li><strong class="text-cyan">Audit Log Streaming</strong> — to Azure, AWS, Datadog, Splunk, GCP</li>
+                <li><strong class="text-lavender">REST API</strong> — query events programmatically</li>
+                <li><strong>GraphQL API</strong> — advanced queries</li>
+              </ul>
+            </div>
+          </div>
+          <div class="highlight-box">
+            <p><strong class="text-cyan">Recommendation:</strong> Enable audit log streaming to your SIEM. Set up alerts for critical events (new enterprise owners, SSO bypass, repo visibility changes).</p>
+          </div>
+          <p class="text-secondary slide-links"><small><a href="https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/about-the-audit-log-for-your-enterprise">About the Audit Log</a> · <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/streaming-the-audit-log-for-your-enterprise">Audit Log Streaming</a> · <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/using-the-audit-log-api-for-your-enterprise">Audit Log API</a></small></p>
+          <aside class="notes">
+            The enterprise audit log records all significant events across your organization. It's essential for compliance, incident investigation, and security monitoring.
+
+            Audit log streaming sends events in near-real-time to your SIEM or log aggregation platform. Supported destinations include Azure Event Hubs, Amazon S3, Datadog, Splunk, and Google Cloud Storage. This is critical because the web UI only retains 180 days of data, while streaming lets you retain indefinitely in your own systems.
+
+            Key events to create alerts for:
+            - org.add_member with role = owner (new owners)
+            - repo.access / repo.visibility_change (repo exposure changes)
+            - team.add_member / team.remove_member (permission changes)
+            - secret_scanning_alert.created (new leaked secrets)
+            - enterprise.sso_response (failed SSO attempts)
+
+            When NOT to skip this: Every enterprise should have audit log streaming configured. It's one of the first things to set up.
+
+            Docs:
+            - https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/about-the-audit-log-for-your-enterprise
+            - https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/streaming-the-audit-log-for-your-enterprise
+            - https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/using-the-audit-log-api-for-your-enterprise
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- SLIDE 21 — IP Allow Lists -->
+        <!-- ============================================= -->
+        <section>
+          <h2>IP Allow Lists</h2>
+          <div class="two-columns">
+            <div>
+              <h3>What It Does</h3>
+              <ul>
+                <li>Restricts access to org resources by source IP</li>
+                <li>Applies to web UI, API, and Git operations</li>
+                <li>Set at enterprise or org level</li>
+                <li>Can include GitHub Actions runner IPs</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Recommendation</h3>
+              <div class="highlight-box">
+                <p><strong class="text-cyan">Enable for highly regulated environments.</strong> Start in audit-only mode to identify IPs before enforcing. Always include GitHub-hosted runner IPs.</p>
+              </div>
+            </div>
+          </div>
+          <p class="text-secondary slide-links"><small><a href="https://docs.github.com/en/enterprise-cloud@latest/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/managing-allowed-ip-addresses-for-your-organization">Managing IP Allow Lists</a> · <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-security-settings-in-your-enterprise#managing-allowed-ip-addresses-for-organizations-in-your-enterprise">Enterprise IP Policies</a></small></p>
+          <aside class="notes">
+            IP allow lists restrict which IP addresses can access your GitHub organization's resources. When enabled, any request from an IP not on the list is denied.
+
+            This is a blunt but effective control for organizations that require network-level restrictions (e.g., "all access must come from our corporate network or VPN").
+
+            Important considerations:
+            - If you use GitHub-hosted runners for Actions, you must include their IP ranges or enable the "Allow GitHub Actions" toggle.
+            - If developers work remotely without a VPN, IP allow lists will block them — ensure your VPN infrastructure can handle the load.
+            - Use audit-only mode first: enable the allow list but set it to log violations without blocking. This helps you discover all legitimate IPs before enforcing.
+
+            When NOT to use: If your developers are fully remote without a VPN, or if you use many third-party integrations that access your repos from dynamic IPs. In these cases, rely on SSO + 2FA + branch protection instead.
+
+            Docs:
+            - https://docs.github.com/en/enterprise-cloud@latest/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/managing-allowed-ip-addresses-for-your-organization
+            - https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-security-settings-in-your-enterprise#managing-allowed-ip-addresses-for-organizations-in-your-enterprise
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- SLIDE 22 — Security Policies -->
+        <!-- ============================================= -->
+        <section>
+          <h2>Security Policies &amp; Vulnerability Reporting</h2>
+          <div class="two-columns">
+            <div>
+              <h3>SECURITY.md</h3>
+              <ul>
+                <li>Defines how to report vulnerabilities</li>
+                <li>Placed in repo root or <code>.github/</code> folder</li>
+                <li>Org-wide default via <code>.github</code> repo</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Private Vulnerability Reporting</h3>
+              <ul>
+                <li>Researchers report vulnerabilities privately</li>
+                <li>Creates a private advisory in the repo</li>
+                <li>Collaborate on a fix before public disclosure</li>
+              </ul>
+            </div>
+          </div>
+          <div class="highlight-box">
+            <p><strong class="text-cyan">Recommendation:</strong> Create an org-level SECURITY.md. Enable private vulnerability reporting for all public repos.</p>
+          </div>
+          <p class="text-secondary slide-links"><small><a href="https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository">Adding a Security Policy</a> · <a href="https://docs.github.com/en/code-security/security-advisories/working-with-repository-security-advisories/configuring-private-vulnerability-reporting-for-a-repository">Private Vulnerability Reporting</a> · <a href="https://docs.github.com/en/code-security/security-advisories/working-with-repository-security-advisories/about-repository-security-advisories">About Security Advisories</a></small></p>
+          <aside class="notes">
+            A SECURITY.md file tells security researchers and users how to responsibly report vulnerabilities. Without it, researchers might open public issues, exposing vulnerabilities to attackers.
+
+            Create a SECURITY.md in your organization's .github repository to apply it as the default for all repos that don't have their own. Include:
+            - Supported versions
+            - How to report a vulnerability (email, private reporting, etc.)
+            - Expected response timeline
+            - Your disclosure policy
+
+            Private Vulnerability Reporting (PVR) is a GitHub-native feature that lets researchers submit vulnerability reports directly through GitHub. It creates a private security advisory that only repo admins and the reporter can see. You can collaborate on a fix in a private fork, then disclose publicly when ready.
+
+            Enable PVR at the org level for all repos. It provides a much better experience than expecting researchers to find a security email address.
+
+            When NOT to use PVR: There's no downside — enable it everywhere.
+
+            Docs:
+            - https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository
+            - https://docs.github.com/en/code-security/security-advisories/working-with-repository-security-advisories/configuring-private-vulnerability-reporting-for-a-repository
+            - https://docs.github.com/en/code-security/security-advisories/working-with-repository-security-advisories/about-repository-security-advisories
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- SLIDE 23 — Summary: Key Recommendations -->
+        <!-- ============================================= -->
+        <section>
+          <h2>Key Recommendations Summary</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Setting</th>
+                <th>Recommendation</th>
+                <th>Level</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>SAML SSO</td>
+                <td class="status-done">Enforce</td>
+                <td>Enterprise</td>
+              </tr>
+              <tr>
+                <td>Two-Factor Auth</td>
+                <td class="status-done">Require</td>
+                <td>Enterprise</td>
+              </tr>
+              <tr>
+                <td>Base Permissions</td>
+                <td class="status-done">Read or None</td>
+                <td>Organization</td>
+              </tr>
+              <tr>
+                <td>Rulesets</td>
+                <td class="status-done">Enforce baseline</td>
+                <td>Enterprise</td>
+              </tr>
+              <tr>
+                <td>Secret Scanning + Push Protection</td>
+                <td class="status-done">Enable all repos</td>
+                <td>Enterprise</td>
+              </tr>
+              <tr>
+                <td>Dependabot Alerts + Security Updates</td>
+                <td class="status-done">Enable all repos</td>
+                <td>Enterprise</td>
+              </tr>
+              <tr>
+                <td>Code Scanning (CodeQL)</td>
+                <td class="status-done">Default setup, all repos</td>
+                <td>Enterprise</td>
+              </tr>
+              <tr>
+                <td>GITHUB_TOKEN default</td>
+                <td class="status-done">Read-only</td>
+                <td>Enterprise</td>
+              </tr>
+              <tr>
+                <td>Audit Log Streaming</td>
+                <td class="status-done">Enable to SIEM</td>
+                <td>Enterprise</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="text-secondary slide-links"><small><a href="https://docs.github.com/en/enterprise-cloud@latest/admin/overview/about-github-enterprise-cloud">About GitHub Enterprise Cloud</a> · <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/getting-started/github-security-features">GitHub Security Features</a></small></p>
+          <aside class="notes">
+            Here's a quick-reference table of the most important settings and our recommendations. The key theme is: enforce security at the highest level possible (enterprise), use least-privilege defaults, and enable all code security features across all repositories.
+
+            These nine settings, properly configured, will give you a strong security baseline for GitHub Enterprise. Everything else we discussed (EMU, IP allow lists, SSH CAs, etc.) layers on top for additional hardening based on your specific requirements.
+
+            Docs (GitHub Enterprise security overview):
+            - https://docs.github.com/en/enterprise-cloud@latest/admin/overview/about-github-enterprise-cloud
+            - https://docs.github.com/en/enterprise-cloud@latest/code-security/getting-started/github-security-features
+          </aside>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- SLIDE 24 — Questions -->
+        <!-- ============================================= -->
+        <section>
+          <h1>Questions?</h1>
+          <p class="subtitle">Thank you</p>
+          <aside class="notes">
+            Open the floor for questions. Key documentation hub: https://docs.github.com/en/enterprise-cloud@latest/admin/overview/about-github-enterprise-cloud
+          </aside>
+        </section>
+
+      </div>
+    </div>
+
+    <script src="slides.js"></script>
+  </body>
+</html>
