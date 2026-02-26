@@ -1,0 +1,94 @@
+<svg width="1280" height="720" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+    overflow="hidden">
+    <defs>
+        <clipPath id="clip0">
+            <rect x="0" y="0" width="228600" height="219075" />
+        </clipPath>
+        <image width="32" height="32"
+            xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAC0UExURQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFJ7UbYAAAA8dFJOUwC//7EUzOElD8TnLSwLuuw1NLtLB7DxPQhABKX1R0amBQKa+FFQYIAgAY77XFuB/Wd0/nN1aH+NjJmYPvmnNqkAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADeSURBVDhPzdHZcoJAFATQpk3UYFyTgAu4gRrECIKaqP//XxZMLGdGy/KRfuFy+9QUC1CAGHwYAyV9pcbAyyvLFf1YkUo5A6i+0azpXZZ3k2YGUG+w2dJboN1k5yMH+PyiZeu9bbHU7QmA/oCOq/ZDh6MxLgCTKT1f7mcepxPkYL74BhAsGa6u/U/IZQABDPby3ZpRfOnjiOt8kAE2SZKKKU2SrZgUgF3ERXbdM9r9r1SAVcjfIPiTnkYD8D0ejvL76ACuQ+WL3ADYlnWSbm8B2spfuQPUFAc8zBOgADkD+pgRG3dO/0gAAAAASUVORK5CYII="
+            preserveAspectRatio="none" id="img1"></image>
+        <clipPath id="clip2">
+            <rect x="0" y="0" width="219075" height="219075" />
+        </clipPath>
+        <clipPath id="clip3">
+            <rect x="0" y="0" width="228600" height="228600" />
+        </clipPath>
+        <image width="32" height="32"
+            xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADAUExURQAAAM7Ozs3Nzc3NzczMzM3Nzc3Nzc/Pz8zMzMzMzM3NzczMzNHR0czMzNHR0c7Ozs3NzcrKys7Ozs3NzczMzNvb287Ozs3Nzc3Nzb+/v8vLy////87Ozs3Nzc3NzdDQ0MzMzMzMzP///83Nzc7Ozs3Nzc/Pz83Nzc3Nzc/Pz////83Nzc3Nzc3Nzc3Nzc7Ozs3Nzc3NzcvLy8zMzM3Nzc7OzszMzM3NzczMzM3Nzc7OzszMzM7Ozs3Nzc3NzcrKyu9j+HkAAABAdFJOUwC//7EUzOElD8TnLSznC7rsNTS7Swew8T0IQASl9UdGpgUCmvhRUGCAIAGO+1xbgf1nZ3T+c3N1aH9ojYyZmD4+lwR/AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA4ElEQVQ4T83Ra1OCQBgF4MOhsKy8VUIUXhCLEIWK7mX//1817Mq4uzqMHzlfeHnPMztcgAbEYm0s2OZKj4WjYzot81iZllMCnJyyfWZ2Zc4v2C4BOl32+mYLDHq8vBIA10O6ntl7Lu0bXwLc3jEY6f044GSKCiCcMZqr/X3EWQgBHuJHAMmC6XLbr1IuEkhg0Re7jPlT1T/nzMSgArwUxauc3oriXU4awEfOuLx+Mv/arHSAZcrvJPlRnsYAmEf8XavvYwKMAmpfZAfAc90/5XYXYKD9lT1AT3NAbQ4ADcg/StMRtG8/K+cAAAAASUVORK5CYII="
+            preserveAspectRatio="none" id="img4"></image>
+        <clipPath id="clip5">
+            <rect x="0" y="-0.25" width="228600" height="228600" />
+        </clipPath>
+        <clipPath id="clip6">
+            <rect x="0" y="0" width="228600" height="228600" />
+        </clipPath>
+        <clipPath id="clip7">
+            <rect x="0" y="-0.25" width="228600" height="228600" />
+        </clipPath>
+        <clipPath id="clip8">
+            <rect x="0" y="0" width="228600" height="228600" />
+        </clipPath>
+    </defs>
+    <g>
+        <rect x="110" y="200" width="600" height="120" fill="#FFFFFF" />
+        <path d="M232 254 299 254 299 246 315 262 299 278 299 270 232 270Z" fill="#0072C6" fill-rule="evenodd" /><text
+            font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400" font-size="23.5333"
+            transform="translate(125.096 267)">Queues</text>
+        <g clip-path="url(#clip0)" transform="matrix(0.000104987 0 0 0.000104987 255 227)">
+            <g clip-path="url(#clip2)" transform="matrix(1.04348 0 0 1 -0.25 0)">
+                <use width="100%" height="100%" xlink:href="#img1" transform="scale(6846.09 6846.09)"></use>
+            </g>
+        </g>
+        <rect x="339" y="218" width="222" height="88" stroke="#0C445E" stroke-width="2" stroke-miterlimit="8"
+            fill="#F2F2F2" />
+        <g>
+            <g>
+                <g>
+                    <path
+                        d="M352.266 224C351.506 224 351 224.506 351 225.266L351 240.466C351 241.226 351.506 241.732 352.266 241.732L359.866 241.732C360.626 241.732 361.132 241.226 361.132 240.466L361.132 234.134 416.866 234.134 416.866 240.468C416.866 241.228 417.372 241.734 418.386 241.734L425.732 241.734C426.492 241.734 426.998 241.228 426.998 240.468L426.998 232.868 426.998 225.268C427 224.506 426.494 224 425.734 224L425.734 224 352.266 224Z"
+                        fill="#0072C6" />
+                    <path
+                        d="M425.734 300C426.494 300 427 299.494 427 298.734L427 283.788C427 283.028 426.494 282.522 425.734 282.522L418.388 282.522C417.628 282.522 417.122 283.028 417.122 283.788L417.122 289.868 361.134 289.868 361.134 283.534C361.134 282.774 360.628 282.268 359.614 282.268L352.266 282.268C351.506 282.268 351 282.774 351 283.788L351 298.734C351 299.494 351.506 300 352.266 300L425.734 300Z"
+                        fill="#0072C6" />
+                    <path
+                        d="M396.383 263.669C394.411 265.64 391.789 266.727 389 266.727 386.211 266.727 383.589 265.642 381.616 263.669L367.466 249.519 367.466 278.282 410.532 278.282 410.532 249.518 396.383 263.669Z"
+                        fill="#59B4D9" />
+                    <path
+                        d="M389 264.627C391.228 264.627 393.323 263.759 394.898 262.184L410.532 246.549 410.532 245.721 367.466 245.721 367.466 246.551 383.101 262.182C384.677 263.759 386.772 264.627 389 264.627Z"
+                        fill="#59B4D9" />
+                </g>
+            </g>
+        </g>
+        <path
+            d="M456 237 532 237C542.493 237 551 248.193 551 262 551 275.807 542.493 287 532 287L456 287C445.507 287 437 275.807 437 262 437 248.193 445.507 237 456 237Z"
+            fill="#0D3512" fill-rule="evenodd" />
+        <path d="M532 287C521.507 287 513 275.807 513 262 513 248.193 521.507 237 532 237" stroke="#F2F2F2"
+            stroke-width="2" stroke-miterlimit="8" fill="none" fill-rule="evenodd" />
+        <path
+            d="M456 237 532 237C542.493 237 551 248.193 551 262 551 275.807 542.493 287 532 287L456 287C445.507 287 437 275.807 437 262 437 248.193 445.507 237 456 237Z"
+            stroke="#F2F2F2" stroke-width="2" stroke-miterlimit="8" fill="none" fill-rule="evenodd" />
+        <path
+            d="M653 286 551.312 286C538.99 286 529 276.01 529 263.688L529 263.688C529 251.365 538.99 241.375 551.312 241.375L609.25 241.375 609.25 235 622 247.75 609.25 260.5 609.25 254.125 551.312 254.125C546.031 254.125 541.75 258.406 541.75 263.688L541.75 263.688C541.75 268.969 546.031 273.25 551.312 273.25L653 273.25Z"
+            fill="#0072C6" fill-rule="evenodd" />
+        <g clip-path="url(#clip3)" transform="matrix(0.000104987 0 0 0.000104987 447 250)">
+            <g clip-path="url(#clip5)">
+                <use width="100%" height="100%" xlink:href="#img4" transform="matrix(7143.75 0 0 7143.75 0 -0.25)">
+                </use>
+            </g>
+        </g>
+        <g clip-path="url(#clip6)" transform="matrix(0.000104987 0 0 0.000104987 476 250)">
+            <g clip-path="url(#clip7)">
+                <use width="100%" height="100%" xlink:href="#img4" transform="matrix(7143.75 0 0 7143.75 0 -0.25)">
+                </use>
+            </g>
+        </g>
+        <g transform="matrix(0.000104987 0 0 0.000104987 635 236)">
+            <g clip-path="url(#clip8)">
+                <use width="100%" height="100%" xlink:href="#img1" transform="scale(7143.75 7143.75)"></use>
+            </g>
+        </g><text
+            font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400" font-size="10.6667"
+            transform="translate(255.842 291)">HTTP</text><text font-family="Segoe UI,Segoe UI_MSFontService,sans-serif"
+            font-weight="400" font-size="10.6667" transform="translate(243.176 304)">AMQP/WS</text>
+    </g>
+</svg>

@@ -1,0 +1,107 @@
+<svg width="1280" height="720" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+    overflow="hidden">
+    <defs>
+        <clipPath id="clip0">
+            <rect x="0" y="0" width="219075" height="219075" />
+        </clipPath>
+        <image width="32" height="32"
+            xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAC0UExURQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFJ7UbYAAAA8dFJOUwC//7EUzOElD8TnLSwLuuw1NLtLB7DxPQhABKX1R0amBQKa+FFQYIAgAY77XFuB/Wd0/nN1aH+NjJmYPvmnNqkAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADeSURBVDhPzdHZcoJAFATQpk3UYFyTgAu4gRrECIKaqP//XxZMLGdGy/KRfuFy+9QUC1CAGHwYAyV9pcbAyyvLFf1YkUo5A6i+0azpXZZ3k2YGUG+w2dJboN1k5yMH+PyiZeu9bbHU7QmA/oCOq/ZDh6MxLgCTKT1f7mcepxPkYL74BhAsGa6u/U/IZQABDPby3ZpRfOnjiOt8kAE2SZKKKU2SrZgUgF3ERXbdM9r9r1SAVcjfIPiTnkYD8D0ejvL76ACuQ+WL3ADYlnWSbm8B2spfuQPUFAc8zBOgADkD+pgRG3dO/0gAAAAASUVORK5CYII="
+            preserveAspectRatio="none" id="img1"></image>
+        <clipPath id="clip2">
+            <rect x="-0.25" y="0" width="219075" height="219075" />
+        </clipPath>
+        <clipPath id="clip3">
+            <rect x="0" y="0" width="219075" height="228600" />
+        </clipPath>
+        <clipPath id="clip4">
+            <rect x="0" y="0" width="219075" height="219075" />
+        </clipPath>
+    </defs>
+    <g>
+        <rect x="180" y="450" width="1000" height="170" fill="#FFFFFF" />
+        <rect x="468" y="488" width="185" height="89" stroke="#0C445E" stroke-width="2" stroke-miterlimit="8"
+            fill="#F2F2F2" />
+        <g>
+            <g>
+                <g>
+                    <path
+                        d="M-337.5 589.453C-337.5 590.156-337.969 590.625-338.672 590.625L-347.812 590.625C-348.516 590.625-348.984 590.156-348.984 589.453L-348.984 582.656C-348.984 581.953-348.516 581.484-347.812 581.484L-338.672 581.484C-337.969 581.484-337.5 581.953-337.5 582.656L-337.5 589.453Z"
+                        fill="#B8D432" transform="matrix(1.01333 0 0 1 867.125 -60.4688)" />
+                    <path
+                        d="M-321.094 596.484C-321.094 597.188-321.562 597.656-322.266 597.656L-331.406 597.656C-332.109 597.656-332.578 597.188-332.578 596.484L-332.578 589.688C-332.578 588.984-332.109 588.516-331.406 588.516L-322.266 588.516C-321.562 588.516-321.094 588.984-321.094 589.688L-321.094 596.484Z"
+                        fill="#B8D432" transform="matrix(1.01333 0 0 1 867.125 -60.4688)" />
+                    <path
+                        d="M-337.5 603.516C-337.5 604.219-337.969 604.688-338.672 604.688L-347.812 604.688C-348.516 604.688-348.984 604.219-348.984 603.516L-348.984 596.719C-348.984 596.016-348.516 595.547-347.812 595.547L-338.672 595.547C-337.969 595.547-337.5 596.016-337.5 596.719L-337.5 603.516Z"
+                        fill="#B8D432" transform="matrix(1.01333 0 0 1 867.125 -60.4688)" />
+                    <path
+                        d="M-353.906 582.422C-353.906 583.125-354.375 583.594-355.078 583.594L-364.453 583.594C-365.156 583.594-365.625 583.125-365.625 582.422L-365.625 575.391C-365.625 574.688-365.156 574.219-364.453 574.219L-355.312 574.219C-354.375 574.219-353.906 574.688-353.906 575.391L-353.906 582.422Z"
+                        fill="#B8D432" transform="matrix(1.01333 0 0 1 867.125 -60.4688)" />
+                    <path
+                        d="M-312.891 557.812-312.891 557.812-319.922 557.812-371.719 557.812-376.172 557.812-378.516 557.812C-379.219 557.812-379.688 558.281-379.688 558.984L-379.688 573.047C-379.688 573.75-379.219 574.219-378.516 574.219L-371.484 574.219C-370.781 574.219-370.312 573.75-370.312 573.047L-370.312 567.188-321.094 567.188-321.094 573.047C-321.094 573.75-320.625 574.219-319.688 574.219L-312.891 574.219C-312.188 574.219-311.719 573.75-311.719 573.047L-311.719 566.016-311.719 558.984C-311.719 558.281-312.188 557.812-312.891 557.812Z"
+                        fill="#0072C6" transform="matrix(1.01333 0 0 1 867.125 -60.4688)" />
+                    <path
+                        d="M-312.891 611.953-319.688 611.953C-320.391 611.953-320.859 612.422-320.859 613.125L-320.859 618.75-370.312 618.75-370.312 612.891C-370.312 612.188-370.781 611.719-371.719 611.719L-378.516 611.719C-379.219 611.719-379.688 612.188-379.688 613.125L-379.688 626.953C-379.688 627.656-379.219 628.125-378.516 628.125L-376.172 628.125-371.484 628.125-319.688 628.125-313.125 628.125-312.891 628.125C-312.188 628.125-311.719 627.656-311.719 626.953L-311.719 613.125C-311.719 612.422-312.188 611.953-312.891 611.953Z"
+                        fill="#0072C6" transform="matrix(1.01333 0 0 1 867.125 -60.4688)" />
+                    <path
+                        d="M-353.906 596.484C-353.906 597.188-354.375 597.656-355.078 597.656L-364.453 597.656C-365.156 597.656-365.625 597.188-365.625 596.484L-365.625 589.453C-365.625 588.75-365.156 588.281-364.453 588.281L-355.312 588.281C-354.375 588.281-353.906 588.75-353.906 589.453L-353.906 596.484Z"
+                        fill="#B8D432" transform="matrix(1.01333 0 0 1 867.125 -60.4688)" />
+                    <path
+                        d="M-353.906 610.547C-353.906 611.25-354.375 611.719-355.078 611.719L-364.453 611.719C-365.156 611.719-365.625 611.25-365.625 610.547L-365.625 603.516C-365.625 602.812-365.156 602.344-364.453 602.344L-355.312 602.344C-354.375 602.344-353.906 602.812-353.906 603.516L-353.906 610.547Z"
+                        fill="#B8D432" transform="matrix(1.01333 0 0 1 867.125 -60.4688)" />
+                </g>
+            </g>
+        </g>
+        <path d="M361 524.25 428.5 524.25 428.5 516 445 532.5 428.5 549 428.5 540.75 361 540.75Z" fill="#0072C6"
+            fill-rule="evenodd" />
+        <path
+            d="M611 543C599.402 543 590 533.15 590 521 590 508.85 599.402 499 611 499 622.598 499 632 508.85 632 521 632 526.835 629.787 532.431 625.849 536.556L632 536.556 632 543Z"
+            stroke="#F2F2F2" stroke-width="2" stroke-miterlimit="8" fill="#0D3512" fill-rule="evenodd" />
+        <path
+            d="M597.5 555C587.283 555 579 546.27 579 535.5 579 524.73 587.283 516 597.5 516 607.717 516 616 524.73 616 535.5 616 540.672 614.051 545.632 610.581 549.289L616 549.289 616 555Z"
+            stroke="#F2F2F2" stroke-width="2" stroke-miterlimit="8" fill="#0D3512" fill-rule="evenodd" />
+        <path
+            d="M584.5 566C575.94 566 569 558.837 569 550 569 541.163 575.94 534 584.5 534 593.06 534 600 541.163 600 550 600 554.243 598.367 558.313 595.46 561.314L600 561.314 600 566Z"
+            stroke="#F2F2F2" stroke-width="2" stroke-miterlimit="8" fill="#0D3512" fill-rule="evenodd" /><text
+            font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400" font-size="23.5333"
+            transform="translate(188.766 541)">Event Hubs</text><text
+            font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400" font-size="21.3333"
+            transform="translate(839.005 510)">Partitioned, high</text><text
+            font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400" font-size="21.3333"
+            transform="translate(994.265 510)">-</text><text font-family="Segoe UI,Segoe UI_MSFontService,sans-serif"
+            font-weight="400" font-size="21.3333" transform="translate(1002.77 510)">volume, tape</text><text
+            font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400" font-size="21.3333"
+            transform="translate(1124.14 510)">-</text><text font-family="Segoe UI,Segoe UI_MSFontService,sans-serif"
+            font-weight="400" font-size="21.3333" transform="translate(817.412 535)">drive</text><text
+            font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400" font-size="21.3333"
+            transform="translate(863.785 535)">-</text><text font-family="Segoe UI,Segoe UI_MSFontService,sans-serif"
+            font-weight="400" font-size="21.3333" transform="translate(872.285 535)">style sequential recording
+            and</text><text font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400"
+            font-size="21.3333" transform="translate(839.212 561)">unlimited, pull</text><text
+            font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400" font-size="21.3333"
+            transform="translate(973.045 561)">-</text><text font-family="Segoe UI,Segoe UI_MSFontService,sans-serif"
+            font-weight="400" font-size="21.3333" transform="translate(981.545 561)">style re</text><text
+            font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400" font-size="21.3333"
+            transform="translate(1048.6 561)">-</text><text font-family="Segoe UI,Segoe UI_MSFontService,sans-serif"
+            font-weight="400" font-size="21.3333" transform="translate(1057.1 561)">reads of</text><text
+            font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400" font-size="21.3333"
+            transform="translate(918.438 587)">event streams.</text>
+        <g clip-path="url(#clip0)" transform="matrix(0.000104987 0 0 0.000104987 330 521)">
+            <g clip-path="url(#clip2)">
+                <use width="100%" height="100%" xlink:href="#img1" transform="matrix(6846.09 0 0 6846.09 -0.25 0)">
+                </use>
+            </g>
+        </g>
+        <g clip-path="url(#clip3)" transform="matrix(0.000104987 0 0 0.000104987 752 509)">
+            <g clip-path="url(#clip4)" transform="matrix(1 0 0 1.04348 -0.5 0)">
+                <use width="100%" height="100%" xlink:href="#img1" transform="scale(6846.09 6846.09)"></use>
+            </g>
+        </g><text font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400" font-size="10.6667"
+            transform="translate(386.845 559)">HTTP</text><text font-family="Segoe UI,Segoe UI_MSFontService,sans-serif"
+            font-weight="400" font-size="10.6667" transform="translate(374.179 572)">AMQP/WS</text><text
+            font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400" font-size="10.6667"
+            transform="translate(386.679 585)">KRPC</text>
+        <path
+            d="M776 557 647.437 557C635.598 557 626 547.402 626 535.563L626 535.563C626 523.723 635.598 514.125 647.437 514.125L726.25 514.125 726.25 508 738.5 520.25 726.25 532.5 726.25 526.375 647.437 526.375C642.363 526.375 638.25 530.488 638.25 535.563L638.25 535.563C638.25 540.637 642.363 544.75 647.437 544.75L776 544.75Z"
+            fill="#0072C6" fill-rule="evenodd" />
+    </g>
+</svg>

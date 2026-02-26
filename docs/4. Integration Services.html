@@ -1,0 +1,940 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Integration Services</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/theme/black.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/highlight/monokai.css" />
+  <link rel="stylesheet" href="slides.css" />
+  <link rel="icon" type="image/svg+xml" href="Icons/integration/02631-icon-service-Logic-Apps.svg" />
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ============================================= -->
+      <!-- TITLE SLIDE -->
+      <!-- ============================================= -->
+      <section class="title-hero">
+        <div class="hero-layout">
+          <div class="hero-text">
+            <svg class="hero-logo" viewBox="0 0 337 73" xmlns="http://www.w3.org/2000/svg">
+              <rect x="1" y="1" width="33" height="33" fill="#f25022" />
+              <rect x="36" y="1" width="33" height="33" fill="#7fba00" />
+              <rect x="1" y="36" width="33" height="33" fill="#00a4ef" />
+              <rect x="36" y="36" width="33" height="33" fill="#ffb900" /><text x="82" y="50" fill="#ffffff"
+                font-family="Segoe UI,sans-serif" font-size="34" font-weight="600">Microsoft</text>
+            </svg>
+            <h2>Integration Services</h2>
+            <p class="hero-author">David Watson<br>Cloud Solution Architect</p>
+          </div>
+          <div class="hero-image">
+            <img src="images/title.png" alt="Title">
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- AGENDA -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Agenda</h2>
+        <div class="card-grid cols-3">
+          <div class="card">
+            <span class="card-icon" style="padding-top:0.65em; height:2em">🔗</span>
+            <div class="card-text">Why Integration?</div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="padding-top:0.65em;height:2em">☁️</span>
+            <div class="card-text">Azure Integration Services</div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/integration/10042-icon-service-API-Management-Services.svg"
+                alt="APIM" style="height:1.6em"></span>
+            <div class="card-text">API Management</div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/integration/02631-icon-service-Logic-Apps.svg" alt="Logic Apps"
+                style="height:1.6em"></span>
+            <div class="card-text">Logic Apps</div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/integration/10836-icon-service-Azure-Service-Bus.svg"
+                alt="Service Bus" style="height:1.6em"></span>
+            <div class="card-text">Service Bus</div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/integration/10206-icon-service-Event-Grid-Topics.svg"
+                alt="Event Grid" style="height:1.6em"></span>
+            <div class="card-text">Event Grid</div>
+          </div>
+        </div>
+        <aside class="notes">
+          We'll start with why integration matters, introduce Azure Integration Services as a suite,
+          then walk through each of the four core services: API Management, Logic Apps, Service Bus,
+          and Event Grid.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- WHY INTEGRATION? -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Why Integration?</h2>
+        <div class="two-columns">
+          <div>
+            <h3>The Challenge</h3>
+            <ul>
+              <li>Disparate systems, apps &amp; data sources</li>
+              <li>Cloud, on-premises, SaaS &amp; partner systems</li>
+              <li>Different protocols, formats &amp; APIs</li>
+              <li>Need for real-time &amp; reliable communication</li>
+            </ul>
+          </div>
+          <div>
+            <h3>The Goal</h3>
+            <ul>
+              <li>Seamless connectivity across boundaries</li>
+              <li>Loosely coupled, composable architectures</li>
+              <li>Automate business processes end-to-end</li>
+              <li>Expose &amp; manage APIs securely</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Modern enterprises have dozens or hundreds of systems that need to talk to each other.
+          Integration is about connecting these systems reliably, securely, and efficiently —
+          whether they're in the cloud, on-prem, or third-party SaaS platforms.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- COMMON INTEGRATION PATTERNS -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Common Integration Patterns</h2>
+        <div class="card-grid cols-2">
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-cyan)">🔄</span>
+            <div class="card-text">API-Led Connectivity<br><span class="text-secondary">Expose services via managed
+                APIs</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-blue)">📋</span>
+            <div class="card-text">Workflow Orchestration<br><span class="text-secondary">Coordinate multi-step
+                processes</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-lavender)">💬</span>
+            <div class="card-text">Messaging &amp; Queuing<br><span class="text-secondary">Decouple senders and
+                receivers</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-pink)">⚡</span>
+            <div class="card-text">Event-Driven<br><span class="text-secondary">React to state changes in real
+                time</span></div>
+          </div>
+        </div>
+        <aside class="notes">
+          These four patterns map directly to the four Azure Integration Services pillars.
+          API-led connectivity → APIM. Workflow orchestration → Logic Apps.
+          Messaging → Service Bus. Event-driven → Event Grid. Most real-world architectures
+          combine multiple patterns.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- SECTION DIVIDER: AIS -->
+      <!-- ============================================= -->
+      <section data-background-color="#0a1628">
+        <h1>Azure Integration Services</h1>
+        <p class="subtitle">A unified platform for enterprise integration</p>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- AIS OVERVIEW DIAGRAM -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Azure Integration Services</h2>
+        <div style="max-width:780px; margin:0.5em auto 0; position:relative;">
+          <!-- Integration Services box -->
+          <div
+            style="border:1.5px solid rgba(92,224,216,0.35); border-radius:12px; padding:1.2em 1em 0.8em; background:rgba(92,224,216,0.03);">
+            <div style="display:flex; justify-content:space-around; align-items:center; flex-wrap:nowrap; gap:0.5em;">
+              <div style="text-align:center; flex:1;">
+                <img src="Icons/integration/10126-icon-service-Data-Factories.svg" alt="Data Factory"
+                  style="height:3.2em;">
+                <div style="font-size:var(--fs-xs); color:var(--text-secondary); margin-top:0.3em; font-weight:600;">
+                  Data Factory</div>
+              </div>
+              <!-- Core AIS services highlighted with inner border -->
+              <div
+                style="display:flex; gap:0.5em; flex:4; border:1.5px solid rgba(74,158,255,0.4); border-radius:10px; padding:0.6em 0.5em; background:rgba(74,158,255,0.04);">
+                <div style="text-align:center; flex:1;">
+                  <img src="Icons/integration/10042-icon-service-API-Management-Services.svg" alt="API Management"
+                    style="height:3.2em;">
+                  <div style="font-size:var(--fs-xs); color:var(--text-secondary); margin-top:0.3em; font-weight:600;">
+                    API Management</div>
+                </div>
+                <div style="text-align:center; flex:1;">
+                  <img src="Icons/integration/02631-icon-service-Logic-Apps.svg" alt="Logic Apps" style="height:3.2em;">
+                  <div style="font-size:var(--fs-xs); color:var(--text-secondary); margin-top:0.3em; font-weight:600;">
+                    Logic Apps</div>
+                </div>
+                <div style="text-align:center; flex:1;">
+                  <img src="Icons/integration/10206-icon-service-Event-Grid-Topics.svg" alt="Event Grid"
+                    style="height:3.2em;">
+                  <div style="font-size:var(--fs-xs); color:var(--text-secondary); margin-top:0.3em; font-weight:600;">
+                    Event Grid</div>
+                </div>
+                <div style="text-align:center; flex:1;">
+                  <img src="Icons/integration/10836-icon-service-Azure-Service-Bus.svg" alt="Service Bus"
+                    style="height:3.2em;">
+                  <div style="font-size:var(--fs-xs); color:var(--text-secondary); margin-top:0.3em; font-weight:600;">
+                    Service Bus</div>
+                </div>
+              </div>
+              <div style="text-align:center; flex:1;">
+                <img src="Icons/compute/10029-icon-service-Function-Apps.svg" alt="Functions" style="height:3.2em;">
+                <div style="font-size:var(--fs-xs); color:var(--text-secondary); margin-top:0.3em; font-weight:600;">
+                  Functions</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Service descriptions -->
+        <div
+          style="max-width:780px; margin:0.8em auto 0; display:grid; grid-template-columns:1fr 1fr; gap:0.3em 2em; text-align:left;">
+          <div style="display:flex; align-items:start; gap:0.5em;">
+            <span style="color:var(--accent-cyan); font-size:var(--fs-s);">✔</span>
+            <span style="font-size:var(--fs-xs); color:var(--text-primary);">Microservice and API orchestration with
+              <span class="text-cyan">Logic Apps</span></span>
+          </div>
+          <div style="display:flex; align-items:start; gap:0.5em;">
+            <span style="color:var(--accent-cyan); font-size:var(--fs-s);">✔</span>
+            <span style="font-size:var(--fs-xs); color:var(--text-primary);">Create, manage, and monitor APIs with <span
+                class="text-cyan">API Management</span></span>
+          </div>
+          <div style="display:flex; align-items:start; gap:0.5em;">
+            <span style="color:var(--accent-cyan); font-size:var(--fs-s);">✔</span>
+            <span style="font-size:var(--fs-xs); color:var(--text-primary);">Serverless compute with <span
+                class="text-cyan">Functions</span></span>
+          </div>
+          <div style="display:flex; align-items:start; gap:0.5em;">
+            <span style="color:var(--accent-cyan); font-size:var(--fs-s);">✔</span>
+            <span style="font-size:var(--fs-xs); color:var(--text-primary);">Reliable event delivery at massive scale
+              with <span class="text-cyan">Event Grid</span></span>
+          </div>
+          <div style="display:flex; align-items:start; gap:0.5em;">
+            <span style="color:var(--accent-cyan); font-size:var(--fs-s);">✔</span>
+            <span style="font-size:var(--fs-xs); color:var(--text-primary);">Extract, load, transform with <span
+                class="text-cyan">Data Factory</span></span>
+          </div>
+          <div style="display:flex; align-items:start; gap:0.5em;">
+            <span style="color:var(--accent-cyan); font-size:var(--fs-s);">✔</span>
+            <span style="font-size:var(--fs-xs); color:var(--text-primary);">Enterprise messaging with <span
+                class="text-cyan">Service Bus</span></span>
+          </div>
+        </div>
+        <aside class="notes">
+          Azure Integration Services is a collection of services that work together to solve enterprise
+          integration challenges. Data Factory for data movement, API Management as the API gateway,
+          Logic Apps for workflow orchestration, Event Grid for event routing, Service Bus for
+          enterprise messaging, and Functions for serverless compute. The four core services are
+          highlighted: API Management, Logic Apps, Event Grid, and Service Bus.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- AIS FOUR PILLARS -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Azure Integration Services</h2>
+        <div class="card-grid cols-2">
+          <div class="card">
+            <span class="card-icon"><img src="Icons/integration/10042-icon-service-API-Management-Services.svg"
+                alt="APIM" style="height:1.6em;vertical-align:middle;"></span>
+            <div class="card-text"><span class="text-cyan">API Management</span><br><span
+                class="text-secondary">Publish, secure, transform &amp; monitor APIs</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/integration/02631-icon-service-Logic-Apps.svg" alt="Logic Apps"
+                style="height:1.6em;vertical-align:middle;"></span>
+            <div class="card-text"><span class="text-lavender">Logic Apps</span><br><span class="text-secondary">Visual
+                workflow designer for business processes</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/integration/10836-icon-service-Azure-Service-Bus.svg"
+                alt="Service Bus" style="height:1.6em;vertical-align:middle;"></span>
+            <div class="card-text"><span class="text-cyan">Service Bus</span><br><span class="text-secondary">Enterprise
+                messaging with queues &amp; topics</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon"><img src="Icons/integration/10206-icon-service-Event-Grid-Topics.svg"
+                alt="Event Grid" style="height:1.6em;vertical-align:middle;"></span>
+            <div class="card-text"><span class="text-pink">Event Grid</span><br><span class="text-secondary">Reactive
+                event routing at scale</span></div>
+          </div>
+        </div>
+        <aside class="notes">
+          These four services form the core of Azure Integration Services. Each addresses a different
+          integration pattern. Together they provide a comprehensive platform for connecting systems,
+          automating workflows, and building event-driven architectures.
+        </aside>
+      </section>
+
+      
+      <section>
+        <h2>Azure Integration Services</h2>
+        <div style="display:flex; justify-content:center; align-items:top; flex:1;">
+          <img
+            src="images/ais-all.png"
+            alt="Logic Apps Enterprise Workflow" style="background-color:white; padding:1em; max-height:70%; max-width:100%; border-radius:6px;">
+        </div>
+      </section>
+
+
+      <!-- ============================================= -->
+      <!-- SECTION DIVIDER: API MANAGEMENT -->
+      <!-- ============================================= -->
+      <section data-background-color="#0a1628">
+        <h1>API Management</h1>
+        <p class="subtitle">The front door for your APIs</p>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- API MANAGEMENT OVERVIEW -->
+      <!-- ============================================= -->
+      <section>
+        <h2>API Management</h2>
+        <div class="two-columns">
+          <div>
+            <h3>What Is It?</h3>
+            <ul>
+              <li>Full lifecycle <strong>API management</strong> platform</li>
+              <li>API Gateway, Developer Portal &amp; Management Plane</li>
+              <li>Unified entry point for internal &amp; external consumers</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Key Capabilities</h3>
+            <ul>
+              <li><strong>Security</strong> — OAuth, JWT, certificates, IP filtering</li>
+              <li><strong>Transformation</strong> — request/response rewriting</li>
+              <li><strong>Rate limiting</strong> &amp; throttling policies</li>
+              <li><strong>Analytics</strong> &amp; developer onboarding portal</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          APIM has three main components: the Gateway (processes API calls, applies policies),
+          the Azure portal management plane (define APIs, products, policies), and the Developer Portal
+          (self-service API discovery and onboarding for consumers). It supports REST, SOAP, WebSocket,
+          and GraphQL APIs.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- APIM: COMPONENTS DIAGRAM -->
+      <!-- ============================================= -->
+      <section>
+        <h2>API Management</h2>
+        <div style="display:flex; justify-content:center; align-items:top; flex:1;">
+          <img
+            src="https://learn.microsoft.com/en-us/azure/api-management/media/api-management-key-concepts/api-management-components.png"
+            alt="API Management Components" style="max-height:70%; max-width:100%; border-radius:12px;">
+        </div>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- APIM: POLICIES & TIERS -->
+      <!-- ============================================= -->
+      <section>
+        <h2>APIM Tiers &amp; Hosting</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Tier</th>
+              <th>Use Case</th>
+              <th>SLA</th>
+              <th>VNet</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="text-cyan">Consumption</span></td>
+              <td>Serverless, pay-per-call</td>
+              <td>99.95%</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><span class="text-cyan">Developer</span></td>
+              <td>Dev/test, non-production</td>
+              <td>—</td>
+              <td class="status-done">✓</td>
+            </tr>
+            <tr>
+              <td><span class="text-lavender">Basic / Standard</span></td>
+              <td>Production workloads</td>
+              <td>99.95%</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><span class="text-pink">Premium</span></td>
+              <td>Enterprise, multi-region</td>
+              <td>99.99%</td>
+              <td class="status-done">✓</td>
+            </tr>
+            <tr>
+              <td><span class="text-cyan">v2 Tiers</span></td>
+              <td>Next-gen with fast provisioning</td>
+              <td>99.95%+</td>
+              <td class="status-done">✓</td>
+            </tr>
+          </tbody>
+        </table>
+        <aside class="notes">
+          The Consumption tier is serverless — no infrastructure to manage, ideal for spiky or low-volume
+          APIs. Developer tier is for testing. Standard and Premium are for production. Premium adds
+          multi-region deployment and VNet integration. The newer v2 tiers offer improved provisioning
+          speed and VNet support at lower tiers.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- SECTION DIVIDER: LOGIC APPS -->
+      <!-- ============================================= -->
+      <section data-background-color="#0a1628">
+        <h1>Logic Apps</h1>
+        <p class="subtitle">Visual workflow automation</p>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- LOGIC APPS OVERVIEW -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Logic Apps</h2>
+        <div class="two-columns">
+          <div>
+            <h3>What Is It?</h3>
+            <ul>
+              <li>Cloud-based <strong>workflow automation</strong> platform</li>
+              <li>Visual designer — low-code / no-code</li>
+              <li><strong>1400+</strong> pre-built connectors</li>
+              <li>Connects SaaS, on-prem &amp; custom systems</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Common Scenarios</h3>
+            <ul>
+              <li>B2B integration (EDI, AS2, X12)</li>
+              <li>SaaS orchestration (O365, Dynamics, SAP)</li>
+              <li>Data transformation &amp; routing</li>
+              <li>Automated approval workflows</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Logic Apps is the workflow engine of Azure Integration Services. It lets you design
+          multi-step integration workflows visually. The massive connector ecosystem means you can
+          connect to almost anything out of the box — from Salesforce and SAP to Twitter and
+          file systems. For B2B scenarios, Integration Accounts add EDI, schema validation, and
+          partner management.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- LOGIC APPS: WORKFLOW DIAGRAM -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Logic Apps</h2>
+        <div style="display:flex; justify-content:center; align-items:top; flex:1;">
+          <img
+            src="https://learn.microsoft.com/en-us/azure/logic-apps/media/logic-apps-overview/example-enterprise-workflow.png"
+            alt="Logic Apps Enterprise Workflow" style="max-height:70%; max-width:100%; border-radius:12px;">
+        </div>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- LOGIC APPS: HOSTING OPTIONS -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Logic Apps Hosting</h2>
+        <div class="two-columns">
+          <div>
+            <h3>Consumption (Multi-tenant)</h3>
+            <ul>
+              <li>Pay per action execution</li>
+              <li>Visual designer in Azure portal</li>
+              <li>Stateful workflows only</li>
+              <li>Easiest to get started</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Standard (Single-tenant)</h3>
+            <ul>
+              <li>Runs on Azure App Service / ASE</li>
+              <li>Stateful <strong>and</strong> stateless workflows</li>
+              <li>VNet integration &amp; private endpoints</li>
+              <li>Local development with VS Code</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Consumption Logic Apps run in a shared multi-tenant environment — great for simple workflows
+          and getting started quickly. Standard Logic Apps run on dedicated compute (App Service plan)
+          and support VNet integration, making them suitable for enterprise scenarios requiring network
+          isolation. Standard also supports stateless workflows for high-throughput, low-latency scenarios.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- LOGIC APPS: CONNECTORS -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Logic Apps Connectors</h2>
+        <div>
+          <p>1400+ connectors for Azure services, SaaS, enterprise systems, and more</p>
+        </div>
+        <div class="card-grid cols-3">
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-cyan)">☁️</span>
+            <div class="card-text">Azure Services<br><span class="text-secondary">Blob, SQL, Service Bus, Event
+                Grid</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-blue)">🏢</span>
+            <div class="card-text">Enterprise<br><span class="text-secondary">SAP, Oracle, IBM MQ, DB2</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-lavender)">📱</span>
+            <div class="card-text">SaaS<br><span class="text-secondary">Salesforce, O365, Dynamics, ServiceNow</span>
+            </div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-pink)">🔌</span>
+            <div class="card-text">On-Premises<br><span class="text-secondary">Via data gateway — files, SQL, SAP</span>
+            </div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-cyan)">🌐</span>
+            <div class="card-text">HTTP &amp; Custom<br><span class="text-secondary">REST, SOAP, webhooks, custom
+                connectors</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-blue)">📊</span>
+            <div class="card-text">B2B / EDI<br><span class="text-secondary">AS2, X12, EDIFACT via integration
+                accounts</span></div>
+          </div>
+        </div>
+        <aside class="notes">
+          The connector ecosystem is one of Logic Apps' biggest strengths. Built-in connectors run
+          natively within the Logic App runtime. Managed connectors are hosted by Microsoft. Custom
+          connectors let you wrap any REST or SOAP API. Enterprise connectors for SAP and IBM MQ
+          require Premium tier. On-premises connectivity uses the data gateway agent.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- SECTION DIVIDER: SERVICE BUS -->
+      <!-- ============================================= -->
+      <section data-background-color="#0a1628">
+        <h1>Service Bus</h1>
+        <p class="subtitle">Enterprise-grade messaging</p>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- SERVICE BUS OVERVIEW -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Service Bus</h2>
+        <div class="two-columns">
+          <div>
+            <h3>Queues</h3>
+            <ul>
+              <li>Point-to-point messaging</li>
+              <li>Competing consumers pattern</li>
+              <li>FIFO with <strong>sessions</strong></li>
+              <li>Dead-letter queue for failures</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Topics &amp; Subscriptions</h3>
+            <ul>
+              <li>Publish/subscribe pattern</li>
+              <li>Multiple independent subscribers</li>
+              <li>SQL &amp; correlation <strong>filters</strong></li>
+              <li>Fan-out to different consumers</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Service Bus provides two messaging primitives: Queues for point-to-point and Topics for
+          pub/sub. Queues support competing consumers — multiple receivers processing messages in
+          parallel. Topics let you broadcast to multiple subscriptions, each with filters so
+          subscribers only receive relevant messages. Both support advanced features like sessions,
+          dead-lettering, scheduled delivery, and duplicate detection.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- SERVICE BUS: KEY FEATURES -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Service Bus Key Features</h2>
+        <div class="card-grid cols-3">
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-cyan)">🔒</span>
+            <div class="card-text">Peek-Lock<br><span class="text-secondary">At-least-once delivery guarantee</span>
+            </div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-blue)">📦</span>
+            <div class="card-text">Sessions<br><span class="text-secondary">Ordered, grouped message delivery</span>
+            </div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-lavender)">💀</span>
+            <div class="card-text">Dead-Lettering<br><span class="text-secondary">Isolate unprocessable messages</span>
+            </div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-pink)">🔁</span>
+            <div class="card-text">Duplicate Detection<br><span class="text-secondary">Idempotent message
+                handling</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-cyan)">⏱️</span>
+            <div class="card-text">Scheduled Delivery<br><span class="text-secondary">Future-dated message
+                processing</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-blue)">🔄</span>
+            <div class="card-text">Auto-Forwarding<br><span class="text-secondary">Chain queues and topics
+                together</span></div>
+          </div>
+        </div>
+        <aside class="notes">
+          These features make Service Bus the right choice for mission-critical enterprise messaging.
+          Peek-lock ensures messages aren't lost — the consumer must acknowledge processing before the
+          message is removed. Sessions provide FIFO ordering within a session group. Dead-lettering
+          captures poison messages. Auto-forwarding enables chaining entities for complex routing
+          scenarios.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- SECTION DIVIDER: EVENT GRID -->
+      <!-- ============================================= -->
+      <section data-background-color="#0a1628">
+        <h1>Event Grid</h1>
+        <p class="subtitle">Reactive, event-driven architectures</p>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- EVENT GRID OVERVIEW -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Event Grid</h2>
+        <div class="two-columns">
+          <div>
+            <h3>What Is It?</h3>
+            <ul>
+              <li>Fully managed <strong>event routing</strong> service</li>
+              <li><strong>Push-based</strong> delivery to handlers</li>
+              <li>First-class Azure service integration</li>
+              <li>Pay per event — no idle cost</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Key Concepts</h3>
+            <ul>
+              <li><strong>Events</strong> — what happened</li>
+              <li><strong>Sources</strong> — where it happened (Blob, custom, etc.)</li>
+              <li><strong>Topics</strong> — endpoint for ingesting events</li>
+              <li><strong>Subscriptions</strong> — route events to handlers</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Event Grid is purpose-built for event-driven architectures. Unlike Service Bus (which is
+          pull-based), Event Grid pushes events to subscribers via HTTP webhooks, Functions, or
+          other supported handlers. It has deep integration with Azure services — when a blob is
+          created, a resource changes, or an IoT device sends data, Event Grid can route those
+          events with minimal configuration and near real-time latency.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- EVENT GRID: SOURCES & HANDLERS -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Event Grid Ecosystem</h2>
+        <div class="two-columns">
+          <div>
+            <h3>Event Sources</h3>
+            <ul>
+              <li>Azure Blob Storage</li>
+              <li>Resource Groups &amp; Subscriptions</li>
+              <li>IoT Hub, Service Bus, Event Hubs</li>
+              <li>Custom topics (your applications)</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Event Handlers</h3>
+            <ul>
+              <li>Azure Functions</li>
+              <li>Logic Apps</li>
+              <li>Webhooks (any HTTP endpoint)</li>
+              <li>Queues, Service Bus, Event Hubs</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Event Grid connects dozens of Azure and third-party event sources to event handlers.
+          Custom topics let you publish events from your own apps. System topics automatically
+          capture events from Azure resources. Handlers can be serverless functions, workflows,
+          webhooks, or other messaging services. Filtering on event type, subject, and data
+          fields ensures handlers only receive relevant events.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- HOW AIS SERVICES WORK TOGETHER -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Better Together</h2>
+        <div class="highlight-box">
+          <ul>
+            <li><strong>APIM</strong> exposes backend APIs and routes requests to Logic Apps, Functions, or direct
+              services</li>
+            <li><strong>Logic Apps</strong> orchestrates multi-step workflows, using Service Bus for reliable messaging
+            </li>
+            <li><strong>Service Bus</strong> decouples producers and consumers with guaranteed delivery</li>
+            <li><strong>Event Grid</strong> reacts to Azure and custom events, triggering Functions and Logic Apps</li>
+          </ul>
+        </div>
+        <aside class="notes">
+          The real power of Azure Integration Services is using them together. A typical enterprise
+          architecture might have APIM at the edge receiving API calls, Logic Apps orchestrating a
+          business process, Service Bus providing reliable async communication between microservices,
+          and Event Grid triggering reactive workflows when resources change. Each service has a
+          distinct role, but they compose naturally.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- EXAMPLE ARCHITECTURE -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Example: Order Processing</h2>
+        <svg viewBox="0 0 900 380" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+          style="max-width:820px; margin:0 auto; display:block;">
+          <defs>
+            <marker id="arrow2" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="#4a9eff" />
+            </marker>
+            <linearGradient id="boxGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:#1e3a5f;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#0d1b2a;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+
+          <!-- Client -->
+          <rect x="10" y="130" width="120" height="88" rx="10" fill="url(#boxGrad2)" stroke="rgba(255,255,255,0.25)"
+            stroke-width="1.5" />
+          <text x="70" y="172" text-anchor="middle" fill="#ddd" font-size="12" font-weight="bold">Client App</text>
+
+          <!-- APIM -->
+          <rect x="175" y="130" width="140" height="90" rx="10" fill="url(#boxGrad2)" stroke="rgba(255,255,255,0.25)"
+            stroke-width="1.5" />
+          <image href="Icons/integration/10042-icon-service-API-Management-Services.svg" x="225" y="138" width="40"
+            height="40" />
+          <text x="245" y="195" text-anchor="middle" fill="#ddd" font-size="11" font-weight="bold">API Management</text>
+
+          <!-- Logic Apps -->
+          <rect x="360" y="130" width="140" height="90" rx="10" fill="url(#boxGrad2)" stroke="rgba(255,255,255,0.25)"
+            stroke-width="1.5" />
+          <image href="Icons/integration/02631-icon-service-Logic-Apps.svg" x="410" y="138" width="40" height="40" />
+          <text x="430" y="195" text-anchor="middle" fill="#ddd" font-size="11" font-weight="bold">Logic Apps</text>
+
+          <!-- Service Bus -->
+          <rect x="545" y="45" width="140" height="90" rx="10" fill="url(#boxGrad2)" stroke="rgba(255,255,255,0.25)"
+            stroke-width="1.5" />
+          <image href="Icons/integration/10836-icon-service-Azure-Service-Bus.svg" x="595" y="53" width="40"
+            height="40" />
+          <text x="615" y="110" text-anchor="middle" fill="#ddd" font-size="11" font-weight="bold">Service Bus</text>
+
+          <!-- Event Grid -->
+          <rect x="545" y="215" width="140" height="90" rx="10" fill="url(#boxGrad2)" stroke="rgba(255,255,255,0.25)"
+            stroke-width="1.5" />
+          <image href="Icons/integration/10206-icon-service-Event-Grid-Topics.svg" x="595" y="223" width="40"
+            height="40" />
+          <text x="615" y="280" text-anchor="middle" fill="#ddd" font-size="11" font-weight="bold">Event Grid</text>
+
+          <!-- Inventory Service -->
+          <rect x="730" y="45" width="150" height="90" rx="10" fill="url(#boxGrad2)" stroke="rgba(255,255,255,0.25)"
+            stroke-width="1.5" />
+          <image href="Icons/compute/10029-icon-service-Function-Apps.svg" x="785" y="53" width="40" height="40" />
+          <text x="805" y="105" text-anchor="middle" fill="#ddd" font-size="11" font-weight="bold">Inventory</text>
+          <text x="805" y="120" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="10">Function App</text>
+
+          <!-- Notification Service -->
+          <rect x="730" y="215" width="150" height="90" rx="10" fill="url(#boxGrad2)" stroke="rgba(255,255,255,0.25)"
+            stroke-width="1.5" />
+          <image href="Icons/compute/10029-icon-service-Function-Apps.svg" x="785" y="223" width="40" height="40" />
+          <text x="805" y="275" text-anchor="middle" fill="#ddd" font-size="11" font-weight="bold">Notification</text>
+          <text x="805" y="290" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="10">Function App</text>
+
+          <!-- Arrows -->
+          <line x1="130" y1="175" x2="175" y2="175" stroke="#4a9eff" stroke-width="1.5" marker-end="url(#arrow2)" />
+          <line x1="315" y1="175" x2="360" y2="175" stroke="#4a9eff" stroke-width="1.5" marker-end="url(#arrow2)" />
+
+          <line x1="500" y1="155" x2="545" y2="90" stroke="#4a9eff" stroke-width="1.5" marker-end="url(#arrow2)" />
+          <line x1="500" y1="195" x2="545" y2="260" stroke="#4a9eff" stroke-width="1.5" marker-end="url(#arrow2)" />
+
+          <line x1="685" y1="90" x2="730" y2="90" stroke="#4a9eff" stroke-width="1.5" marker-end="url(#arrow2)" />
+          <line x1="685" y1="260" x2="730" y2="260" stroke="#4a9eff" stroke-width="1.5" marker-end="url(#arrow2)" />
+
+          <!-- Labels on arrows -->
+          <text x="152" y="165" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="9">HTTPS</text>
+          <text x="337" y="165" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="9">Route</text>
+          <text x="515" y="115" fill="rgba(255,255,255,0.4)" font-size="9">Queue</text>
+          <text x="515" y="235" fill="rgba(255,255,255,0.4)" font-size="9">Event</text>
+
+          <!-- Flow description -->
+          <text x="450" y="360" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="10"
+            font-style="italic">Client → APIM → Logic App orchestrates → Service Bus (inventory) + Event Grid
+            (notifications)</text>
+        </svg>
+        <aside class="notes">
+          This example shows a typical order processing flow. The client submits an order through
+          API Management. APIM routes to a Logic App that orchestrates the workflow. The Logic App
+          sends an inventory update to Service Bus (reliable, decoupled processing). An event is
+          published to Event Grid for notifications. Downstream Function Apps handle inventory
+          updates and sending customer notifications independently.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- SECURITY & GOVERNANCE -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Security &amp; Governance</h2>
+        <div class="card-grid cols-3">
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-cyan)">🔐</span>
+            <div class="card-text">Managed Identity<br><span class="text-secondary">Passwordless Azure AD auth</span>
+            </div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-blue)">🌐</span>
+            <div class="card-text">VNet Integration<br><span class="text-secondary">Private endpoints &amp; network
+                isolation</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-lavender)">🔑</span>
+            <div class="card-text">Key Vault<br><span class="text-secondary">Secrets &amp; certificate management</span>
+            </div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-pink)">📜</span>
+            <div class="card-text">Azure Policy<br><span class="text-secondary">Enforce compliance at scale</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-cyan)">📊</span>
+            <div class="card-text">Azure Monitor<br><span class="text-secondary">Logging, metrics &amp; alerts</span>
+            </div>
+          </div>
+          <div class="card">
+            <span class="card-icon" style="color:var(--accent-blue)">🛡️</span>
+            <div class="card-text">RBAC<br><span class="text-secondary">Fine-grained access control</span></div>
+          </div>
+        </div>
+        <aside class="notes">
+          All Azure Integration Services support Managed Identity for passwordless authentication,
+          VNet integration and private endpoints for network isolation, and Azure Monitor for
+          observability. APIM adds OAuth/JWT policies. Service Bus and Event Grid support RBAC
+          and SAS for access control. Logic Apps Standard can run inside an ASE for full network
+          isolation.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- KEY TAKEAWAYS -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Key Takeaways</h2>
+        <div class="highlight-box">
+          <ul>
+            <li><strong>API Management</strong> — the front door: publish, secure &amp; monitor APIs</li>
+            <li><strong>Logic Apps</strong> — visual workflow orchestration with 1000+ connectors</li>
+            <li><strong>Service Bus</strong> — reliable enterprise messaging (queues &amp; topics)</li>
+            <li><strong>Event Grid</strong> — reactive event routing at cloud scale</li>
+            <li><strong>Better together</strong> — compose services to build end-to-end integrations</li>
+          </ul>
+        </div>
+        <aside class="notes">
+          The four pillars of Azure Integration Services each solve a distinct integration challenge.
+          APIM for API lifecycle management, Logic Apps for workflow automation, Service Bus for
+          reliable messaging, and Event Grid for event-driven architectures. The real power comes
+          from combining them. Next sessions will deep dive into APIM and Azure Messaging independently.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- LAB -->
+      <!-- ============================================= -->
+      <section>
+        <h2>Hands-On Lab</h2>
+        <p class="subtitle">Publish, secure &amp; test APIs with Azure API Management</p>
+        <div class="two-columns">
+          <div>
+            <h3>Objectives</h3>
+            <ul>
+              <li>Create an Azure API Management instance</li>
+              <li>Import &amp; publish backend APIs (manual &amp; OpenAPI)</li>
+              <li>Test API operations from the APIM Test console</li>
+              <li>Explore rate-limiting &amp; quota policies</li>
+              <li>Apply inbound policies to strip headers</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Prerequisites</h3>
+            <ul>
+              <li>Access to an Azure subscription &amp; resource group</li>
+            </ul>
+          </div>
+        </div>
+        <div class="highlight-box" style="margin-top:0.8em;">
+          <p><a href="https://github.com/davidxw/azure-skills-public/blob/main/labs/4.%20Integration%20Services.md"
+              target="_blank" style="color: var(--accent-blue);">Open Lab Guide &rarr;</a></p>
+        </div>
+        <aside class="notes">
+          Time for hands-on practice. Participants will stand up an APIM instance, import the
+          Star Wars API manually and the Colors API via OpenAPI spec, test calls, observe
+          rate-limiting on the Starter product vs Unlimited, and apply a policy to strip the
+          subscription key header before forwarding to the backend. Allow 30-60 minutes for
+          APIM deployment if using the stv2 Developer tier, or ~5 minutes with v2 Basic tier.
+        </aside>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- CLOSING -->
+      <!-- ============================================= -->
+      <section>
+        <h2 class="r-fit-text">Questions?</h2>
+        <p class="subtitle">Thank you!</p>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="slides.js"></script>
+</body>
+
+</html>

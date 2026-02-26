@@ -1,0 +1,87 @@
+<svg width="1280" height="720" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+    overflow="hidden">
+    <defs>
+        <clipPath id="clip0">
+            <rect x="485" y="346" width="75" height="69" />
+        </clipPath>
+        <clipPath id="clip1">
+            <rect x="485" y="346" width="75" height="69" />
+        </clipPath>
+        <clipPath id="clip2">
+            <rect x="485" y="346" width="75" height="69" />
+        </clipPath>
+        <clipPath id="clip3">
+            <rect x="0" y="0" width="209550" height="200025" />
+        </clipPath>
+        <image width="32" height="32"
+            xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAC0UExURQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFJ7UbYAAAA8dFJOUwC//7EUzOElD8TnLSwLuuw1NLtLB7DxPQhABKX1R0amBQKa+FFQYIAgAY77XFuB/Wd0/nN1aH+NjJmYPvmnNqkAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADeSURBVDhPzdHZcoJAFATQpk3UYFyTgAu4gRrECIKaqP//XxZMLGdGy/KRfuFy+9QUC1CAGHwYAyV9pcbAyyvLFf1YkUo5A6i+0azpXZZ3k2YGUG+w2dJboN1k5yMH+PyiZeu9bbHU7QmA/oCOq/ZDh6MxLgCTKT1f7mcepxPkYL74BhAsGa6u/U/IZQABDPby3ZpRfOnjiOt8kAE2SZKKKU2SrZgUgF3ERXbdM9r9r1SAVcjfIPiTnkYD8D0ejvL76ACuQ+WL3ADYlnWSbm8B2spfuQPUFAc8zBOgADkD+pgRG3dO/0gAAAAASUVORK5CYII="
+            preserveAspectRatio="none" id="img4"></image>
+        <clipPath id="clip5">
+            <rect x="0" y="0" width="200025" height="200025" />
+        </clipPath>
+        <clipPath id="clip6">
+            <rect x="0" y="0" width="209550" height="209550" />
+        </clipPath>
+    </defs>
+    <g>
+        <rect x="180" y="300" width="1000" height="170" fill="#FFFFFF" />
+        <rect x="473" y="340" width="184" height="81" stroke="#0C445E" stroke-width="2" stroke-miterlimit="8"
+            fill="#F2F2F2" />
+        <g clip-path="url(#clip0)">
+            <g clip-path="url(#clip1)">
+                <g clip-path="url(#clip2)">
+                    <path
+                        d="M1.14954 0C0.45954 0 0 0.45954 0 1.14954L0 14.9495C0 15.6395 0.45954 16.0991 1.14954 16.0991L8.04954 16.0991C8.73954 16.0991 9.19908 15.6395 9.19908 14.9495L9.19908 9.20046 59.7995 9.20046 59.7995 14.9509C59.7995 15.6409 60.2591 16.1005 61.1795 16.1005L67.8491 16.1005C68.5391 16.1005 68.9986 15.6409 68.9986 14.9509L68.9986 8.05092 68.9986 1.15092C69 0.45954 68.5405 0 67.8505 0L67.8505 0 1.14954 0Z"
+                        fill="#0072C6" transform="matrix(1.08696 0 0 1 485 346)" />
+                    <path
+                        d="M67.8505 69C68.5405 69 69 68.5405 69 67.8505L69 54.2809C69 53.5909 68.5405 53.1314 67.8505 53.1314L61.1809 53.1314C60.4909 53.1314 60.0314 53.5909 60.0314 54.2809L60.0314 59.8009 9.20046 59.8009 9.20046 54.0505C9.20046 53.3605 8.74092 52.9009 7.82046 52.9009L1.14954 52.9009C0.45954 52.9009 0 53.3605 0 54.2809L0 67.8505C0 68.5405 0.45954 69 1.14954 69L67.8505 69Z"
+                        fill="#0072C6" transform="matrix(1.08696 0 0 1 485 346)" />
+                    <path
+                        d="M41.2027 36.0152C39.4128 37.8051 37.0323 38.7918 34.5 38.7918 31.9677 38.7918 29.5872 37.8065 27.796 36.0152L14.9495 23.1688 14.9495 49.2826 54.0491 49.2826 54.0491 23.1674 41.2027 36.0152Z"
+                        fill="#59B4D9" transform="matrix(1.08696 0 0 1 485 346)" />
+                    <path
+                        d="M34.5 36.8846C36.5231 36.8846 38.4247 36.0967 39.8544 34.667L54.0491 20.4723 54.0491 19.7202 14.9495 19.7202 14.9495 20.4737 29.1442 34.6656C30.5753 36.0967 32.4769 36.8846 34.5 36.8846Z"
+                        fill="#59B4D9" transform="matrix(1.08696 0 0 1 485 346)" />
+                </g>
+            </g>
+        </g>
+        <path d="M365 373.25 434.5 373.25 434.5 366 449 380.5 434.5 395 434.5 387.75 365 387.75Z" fill="#0072C6"
+            fill-rule="evenodd" />
+        <path
+            d="M588.833 360 632.167 360C638.15 360 643 370.074 643 382.5 643 394.926 638.15 405 632.167 405L588.833 405C582.85 405 578 394.926 578 382.5 578 370.074 582.85 360 588.833 360Z"
+            fill="#0D3512" fill-rule="evenodd" />
+        <path d="M632.167 405C626.184 405 621.333 394.926 621.333 382.5 621.333 370.074 626.184 360 632.167 360"
+            stroke="#F2F2F2" stroke-width="2" stroke-miterlimit="8" fill="none" fill-rule="evenodd" />
+        <path
+            d="M588.833 360 632.167 360C638.15 360 643 370.074 643 382.5 643 394.926 638.15 405 632.167 405L588.833 405C582.85 405 578 394.926 578 382.5 578 370.074 582.85 360 588.833 360Z"
+            stroke="#F2F2F2" stroke-width="2" stroke-miterlimit="8" fill="none" fill-rule="evenodd" />
+        <path
+            d="M780 403 655.688 403C644.814 403 636 394.186 636 383.312L636 383.312C636 372.439 644.814 363.625 655.688 363.625L732.75 363.625 732.75 358 744 369.25 732.75 380.5 732.75 374.875 655.688 374.875C651.028 374.875 647.25 378.653 647.25 383.312L647.25 383.312C647.25 387.972 651.028 391.75 655.688 391.75L780 391.75Z"
+            fill="#0072C6" fill-rule="evenodd" /><text font-family="Segoe UI,Segoe UI_MSFontService,sans-serif"
+            font-weight="400" font-size="23.5333" transform="translate(192.344 391)">Service Bus</text><text
+            font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400" font-size="21.3333"
+            transform="translate(829.597 366)">Pull</text><text font-family="Segoe UI,Segoe UI_MSFontService,sans-serif"
+            font-weight="400" font-size="21.3333" transform="translate(863.93 366)">-</text><text
+            font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400" font-size="21.3333"
+            transform="translate(872.43 366)">style, queue</text><text
+            font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400" font-size="21.3333"
+            transform="translate(984.597 366)">-</text><text font-family="Segoe UI,Segoe UI_MSFontService,sans-serif"
+            font-weight="400" font-size="21.3333" transform="translate(993.097 366)">based transfer of</text><text
+            font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400" font-size="21.3333"
+            transform="translate(854.157 391)">jobs and control via message</text><text
+            font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400" font-size="21.3333"
+            transform="translate(904.93 417)">queues and topics</text>
+        <g clip-path="url(#clip3)" transform="matrix(0.000104987 0 0 0.000104987 337 370)">
+            <g clip-path="url(#clip5)" transform="matrix(1.04762 0 0 1 0 -0.25)">
+                <use width="100%" height="100%" xlink:href="#img4" transform="scale(6250.78 6250.78)"></use>
+            </g>
+        </g>
+        <g transform="matrix(0.000104987 0 0 0.000104987 757 357)">
+            <g clip-path="url(#clip6)">
+                <use width="100%" height="100%" xlink:href="#img4" transform="scale(6548.44 6548.44)"></use>
+            </g>
+        </g><text font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400" font-size="10.6667"
+            transform="translate(390.086 406)">HTTP</text><text font-family="Segoe UI,Segoe UI_MSFontService,sans-serif"
+            font-weight="400" font-size="10.6667" transform="translate(377.419 419)">AMQP/WS</text>
+    </g>
+</svg>

@@ -1,0 +1,120 @@
+<svg width="1280" height="720" xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink" overflow="hidden">
+    <defs>
+        <clipPath id="clip0">
+            <rect x="485" y="192" width="75" height="76" />
+        </clipPath>
+        <clipPath id="clip1">
+            <rect x="485" y="192" width="75" height="76" />
+        </clipPath>
+        <clipPath id="clip2">
+            <rect x="485" y="192" width="75" height="76" />
+        </clipPath>
+        <clipPath id="clip3">
+            <rect x="0" y="0" width="228600" height="219075" />
+        </clipPath>
+        <image width="32" height="32"
+            xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAC0UExURQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFJ7UbYAAAA8dFJOUwC//7EUzOElD8TnLSwLuuw1NLtLB7DxPQhABKX1R0amBQKa+FFQYIAgAY77XFuB/Wd0/nN1aH+NjJmYPvmnNqkAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADeSURBVDhPzdHZcoJAFATQpk3UYFyTgAu4gRrECIKaqP//XxZMLGdGy/KRfuFy+9QUC1CAGHwYAyV9pcbAyyvLFf1YkUo5A6i+0azpXZZ3k2YGUG+w2dJboN1k5yMH+PyiZeu9bbHU7QmA/oCOq/ZDh6MxLgCTKT1f7mcepxPkYL74BhAsGa6u/U/IZQABDPby3ZpRfOnjiOt8kAE2SZKKKU2SrZgUgF3ERXbdM9r9r1SAVcjfIPiTnkYD8D0ejvL76ACuQ+WL3ADYlnWSbm8B2spfuQPUFAc8zBOgADkD+pgRG3dO/0gAAAAASUVORK5CYII="
+            preserveAspectRatio="none" id="img4"></image>
+        <clipPath id="clip5">
+            <rect x="0" y="0" width="219075" height="219075" />
+        </clipPath>
+        <clipPath id="clip6">
+            <rect x="0" y="0" width="228600" height="228600" />
+        </clipPath>
+        <clipPath id="clip7">
+            <rect x="0" y="0" width="228600" height="219075" />
+        </clipPath>
+        <clipPath id="clip8">
+            <rect x="0" y="0" width="219075" height="219075" />
+        </clipPath>
+        <clipPath id="clip9">
+            <rect x="0" y="0" width="219075" height="219075" />
+        </clipPath>
+    </defs>
+    <g>
+        <rect x="180" y="150" width="1000" height="170" fill="#FFFFFF" />
+        <rect x="473" y="183" width="99" height="95" stroke="#0C445E" stroke-width="2"
+            stroke-miterlimit="8" fill="#F2F2F2" />
+        <g clip-path="url(#clip0)">
+            <g clip-path="url(#clip1)">
+                <g clip-path="url(#clip2)">
+                    <path
+                        d="M58.5 33 58.5 30 36.006 30 35.994 29.994 25.4865 40.5 17.73 40.5 35.73 22.5 48 22.5 48 19.5 34.5 19.5 34.5 19.5075 34.488 19.5 13.4865 40.5 10.5 40.5 10.5 43.5 19.5 43.5 30 53.9985 30 53.9985 30 54 55.5 54 55.5 51 31.242 51 23.7435 43.5 42 43.5 42 40.5 29.73 40.5 37.23 33Z"
+                        fill="#0072C6" transform="matrix(1 0 0 1.01333 485 192)" />
+                    <path
+                        d="M49.35 42C49.35 44.4024 47.4024 46.35 45 46.35 42.5976 46.35 40.65 44.4024 40.65 42 40.65 39.5976 42.5976 37.65 45 37.65 47.4024 37.65 49.35 39.5976 49.35 42Z"
+                        fill="#59B4D9" transform="matrix(1 0 0 1.01333 485 192)" />
+                    <path
+                        d="M54.2049 21.1384C54.2049 23.5567 52.2445 25.5171 49.8262 25.5171 47.408 25.5171 45.4476 23.5567 45.4476 21.1384 45.4476 18.7201 47.408 16.7597 49.8262 16.7597 52.2445 16.7597 54.2049 18.7201 54.2049 21.1384Z"
+                        fill="#59B4D9"
+                        transform="matrix(0.70247 -0.711836 0.70247 0.711836 484.649 233.701)" />
+                    <path
+                        d="M64.7741 31.7076C64.7741 34.1259 62.8137 36.0863 60.3954 36.0863 57.9772 36.0863 56.0168 34.1259 56.0168 31.7076 56.0168 29.2893 57.9772 27.3289 60.3954 27.3289 62.8137 27.3289 64.7741 29.2893 64.7741 31.7076Z"
+                        fill="#B8D432"
+                        transform="matrix(0.70247 -0.711836 0.70247 0.711836 480.3 244.341)" />
+                    <path
+                        d="M60.2445 52.846C60.2445 55.2643 58.2841 57.2247 55.8658 57.2247 53.4475 57.2247 51.4871 55.2643 51.4871 52.846 51.4871 50.4277 53.4475 48.4673 55.8658 48.4673 58.2841 48.4673 60.2445 50.4277 60.2445 52.846Z"
+                        fill="#B8D432"
+                        transform="matrix(0.70247 -0.711836 0.70247 0.711836 464.133 247.349)" />
+                    <path
+                        d="M1.2015 0C0.45 0 0 0.45 0 1.2L0 16.2C0 16.95 0.45 17.4 1.2015 17.4L8.7135 17.4C9.465 17.4 9.915 16.95 9.915 16.2L9.915 10.05 65.055 10.05 65.055 16.35C65.055 17.1 65.505 17.55 66.558 17.55L73.77 17.55C74.5215 17.55 74.9715 17.1 74.9715 16.35L74.9715 8.85 74.9715 1.35C75.1215 0.45 74.6715 4.996e-16 73.92 4.996e-16L73.92 4.996e-16 1.2015 4.996e-16Z"
+                        fill="#0072C6" transform="matrix(1 0 0 1.01333 485 192)" />
+                    <path
+                        d="M73.8 75C74.55 75 75 74.55 75 73.8L75 59.1C75 58.35 74.55 57.9 73.8 57.9L66.6 57.9C65.85 57.9 65.4 58.35 65.4 59.1L65.4 65.1 10.05 65.1 10.05 58.8C10.05 58.05 9.6 57.6 8.55 57.6L1.2 57.6C0.45 57.6 0 58.05 0 59.1L0 73.8C0 74.55 0.45 75 1.2 75L73.8 75Z"
+                        fill="#0072C6" transform="matrix(1 0 0 1.01333 485 192)" />
+                </g>
+            </g>
+        </g>
+        <path d="M365 222 433 222 433 214 449 230 433 246 433 238 365 238Z" fill="#0072C6"
+            fill-rule="evenodd" />
+        <path d="M566 222.25 737.5 222.25 737.5 216 750 228.5 737.5 241 737.5 234.75 566 234.75Z"
+            fill="#0072C6" fill-rule="evenodd" />
+        <path
+            d="M579.059 222.933 739.305 192.047 738.122 185.908 752.766 195.82 742.854 210.465 741.671 204.325 581.425 235.211Z"
+            fill="#0072C6" fill-rule="evenodd" />
+        <path
+            d="M574.147 222.672 741.704 256.126 742.928 249.995 752.742 264.705 738.031 274.519 739.255 268.388 571.698 234.934Z"
+            fill="#0072C6" fill-rule="evenodd" />
+        <text font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400"
+            font-size="23.5333" transform="translate(202.078 237)">Event Grid</text>
+        <text font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400"
+            font-size="21.3333" transform="translate(870.12 211)">Push</text>
+        <text font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400"
+            font-size="21.3333" transform="translate(915.12 211)">-</text>
+        <text font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400"
+            font-size="21.3333" transform="translate(923.62 211)">style distribution of</text>
+        <text font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400"
+            font-size="21.3333" transform="translate(856.353 236)">discrete events to serverless</text>
+        <text font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400"
+            font-size="21.3333" transform="translate(942.433 262)">workloads</text>
+        <g clip-path="url(#clip3)" transform="matrix(0.000104987 0 0 0.000104987 336 218)">
+            <g clip-path="url(#clip5)" transform="matrix(1.04348 0 0 1 -0.25 -0.125)">
+                <use width="100%" height="100%" xlink:href="#img4"
+                    transform="scale(6846.09 6846.09)"></use>
+            </g>
+        </g>
+        <g transform="matrix(0.000104987 0 0 0.000104987 756 184)">
+            <g clip-path="url(#clip6)">
+                <use width="100%" height="100%" xlink:href="#img4"
+                    transform="scale(7143.75 7143.75)"></use>
+            </g>
+        </g>
+        <g clip-path="url(#clip7)" transform="matrix(0.000104987 0 0 0.000104987 756 218)">
+            <g clip-path="url(#clip8)" transform="matrix(1.04348 0 0 1 0 -0.125)">
+                <use width="100%" height="100%" xlink:href="#img4"
+                    transform="scale(6846.09 6846.09)"></use>
+            </g>
+        </g>
+        <g transform="matrix(0.000104987 0 0 0.000104987 756 251)">
+            <g clip-path="url(#clip9)" transform="scale(1 1.04348)">
+                <use width="100%" height="100%" xlink:href="#img4"
+                    transform="scale(6846.09 6846.09)"></use>
+            </g>
+        </g>
+        <text font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400"
+            font-size="10.6667" transform="translate(390.874 257)">HTTP</text>
+        <text font-family="Segoe UI,Segoe UI_MSFontService,sans-serif" font-weight="400"
+            font-size="10.6667" transform="translate(375.041 270)">(AMQP/WS)</text>
+    </g>
+</svg>
